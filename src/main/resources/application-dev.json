@@ -1,11 +1,12 @@
 {
   "appEnable": 1,
-  "qq": "",
-  "password": "",
+  "qq": "2696864316",
+  "password": "aa1230..",
   "plugins": [
     {
       "name": "一言插件",
       "enable": 1,
+      "handler": "cn.zjiali.robot.handler.SenHandler",
       "properties": {
         "command": "一言"
       }
@@ -13,6 +14,7 @@
     {
       "name": "签到插件",
       "enable": 1,
+      "handler": "cn.zjiali.robot.handler.SignInHandler",
       "properties": {
         "command": "签到",
         "cur_level": "1",
@@ -22,6 +24,7 @@
     {
       "name": "今日运势",
       "enable": 1,
+      "handler": "cn.zjiali.robot.handler.FortuneHandler",
       "properties": {
         "command": "运势",
         "sign_text": "1",

@@ -34,6 +34,11 @@ public class ApplicationConfig {
         private int enable;
 
         /**
+         * 消息处理器
+         */
+        private String handler;
+
+        /**
          * 插件配置
          */
         private HashMap<String, String> properties;
@@ -60,6 +65,14 @@ public class ApplicationConfig {
 
         public void setProperties(HashMap<String, String> properties) {
             this.properties = properties;
+        }
+
+        public String getHandler() {
+            return handler;
+        }
+
+        public void setHandler(String handler) {
+            this.handler = handler;
         }
     }
 

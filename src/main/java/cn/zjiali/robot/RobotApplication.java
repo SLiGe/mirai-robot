@@ -2,9 +2,11 @@ package cn.zjiali.robot;
 
 import cn.zjiali.robot.config.AppConfig;
 import cn.zjiali.robot.config.ConfigLoader;
+import cn.zjiali.robot.handler.MessageHandler;
 import kotlin.coroutines.CoroutineContext;
 import net.mamoe.mirai.Bot;
 import net.mamoe.mirai.BotFactoryJvm;
+import net.mamoe.mirai.contact.Group;
 import net.mamoe.mirai.event.EventHandler;
 import net.mamoe.mirai.event.Events;
 import net.mamoe.mirai.event.ListeningStatus;
@@ -26,7 +28,7 @@ public class RobotApplication {
     static {
         try {
             ConfigLoader.loadAppConfig();
-        } catch (IOException e) {
+        } catch (Exception e) {
             System.err.println("[loadAppConfig]====加载应用配置出错! e: " + e.getMessage());
         }
     }
@@ -42,15 +44,13 @@ public class RobotApplication {
 
             @EventHandler
             public ListeningStatus onGroupMessage(GroupMessageEvent event) {
-                String msgString = event.getMessage().contentToString();
-
+                MessageHandler.handleGroupMessage(event);
                 return ListeningStatus.LISTENING;
             }
 
             @EventHandler
             public ListeningStatus onFriendMessage(FriendMessageEvent event) {
-                String senderName = event.getSenderName();
-                System.out.println(senderName);
+                MessageHandler.handleFriendMessage(event);
                 return ListeningStatus.LISTENING;
             }
 
