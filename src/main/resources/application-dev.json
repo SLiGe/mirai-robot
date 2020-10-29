@@ -1,3 +1,35 @@
 {
-
+  "appEnable": 1,
+  "qq": "",
+  "password": "",
+  "plugins": [
+    {
+      "name": "一言插件",
+      "enable": 1,
+      "properties": {
+        "command": "一言"
+      }
+    },
+    {
+      "name": "签到插件",
+      "enable": 1,
+      "properties": {
+        "command": "签到",
+        "cur_level": "1",
+        "day_sen": "1"
+      }
+    },
+    {
+      "name": "今日运势",
+      "enable": 1,
+      "properties": {
+        "command": "运势",
+        "sign_text": "1",
+        "star_num": "1",
+        "un_sign": "1",
+        "day_one": "1",
+        "point": "1"
+      }
+    }
+  ]
 }

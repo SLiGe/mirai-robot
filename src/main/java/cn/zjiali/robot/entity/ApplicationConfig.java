@@ -37,7 +37,61 @@ public class ApplicationConfig {
          * 插件配置
          */
         private HashMap<String, String> properties;
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public int getEnable() {
+            return enable;
+        }
+
+        public void setEnable(int enable) {
+            this.enable = enable;
+        }
+
+        public HashMap<String, String> getProperties() {
+            return properties;
+        }
+
+        public void setProperties(HashMap<String, String> properties) {
+            this.properties = properties;
+        }
     }
 
+    public int getAppEnable() {
+        return appEnable;
+    }
 
+    public void setAppEnable(int appEnable) {
+        this.appEnable = appEnable;
+    }
+
+    public List<Plugin> getPlugins() {
+        return plugins;
+    }
+
+    public void setPlugins(List<Plugin> plugins) {
+        this.plugins = plugins;
+    }
+
+    public String getQq() {
+        return qq;
+    }
+
+    public void setQq(String qq) {
+        this.qq = qq;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 }

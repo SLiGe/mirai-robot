@@ -1,5 +1,7 @@
 package cn.zjiali.robot;
 
+import cn.zjiali.robot.config.AppConfig;
+import cn.zjiali.robot.config.ConfigLoader;
 import kotlin.coroutines.CoroutineContext;
 import net.mamoe.mirai.Bot;
 import net.mamoe.mirai.BotFactoryJvm;
@@ -13,14 +15,26 @@ import net.mamoe.mirai.message.data.QuoteReply;
 import net.mamoe.mirai.utils.BotConfiguration;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.IOException;
+
 /**
  * @author zJiaLi
  * @since 2020-10-29 11:09
  */
 public class RobotApplication {
 
+    static {
+        try {
+            ConfigLoader.loadAppConfig();
+        } catch (IOException e) {
+            System.err.println("[loadAppConfig]====加载应用配置出错! e: " + e.getMessage());
+        }
+    }
+
     public static void main(String[] args) {
-        Bot bot = BotFactoryJvm.newBot(111L, "111");
+        long qq = Long.parseLong(AppConfig.applicationConfig.getQq());
+        String password = AppConfig.applicationConfig.getPassword();
+        Bot bot = BotFactoryJvm.newBot(qq, password);
 
         bot.login();
 
@@ -28,8 +42,8 @@ public class RobotApplication {
 
             @EventHandler
             public ListeningStatus onGroupMessage(GroupMessageEvent event) {
-                String senderName = event.getSenderName();
-                System.out.println(senderName);
+                String msgString = event.getMessage().contentToString();
+
                 return ListeningStatus.LISTENING;
             }
 
