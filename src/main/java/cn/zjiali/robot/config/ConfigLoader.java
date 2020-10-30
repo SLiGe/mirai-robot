@@ -1,6 +1,7 @@
 package cn.zjiali.robot.config;
 
 import cn.zjiali.robot.entity.ApplicationConfig;
+import cn.zjiali.robot.factory.HandlerFactory;
 import cn.zjiali.robot.handler.Handler;
 import com.google.gson.Gson;
 
@@ -37,6 +38,7 @@ public class ConfigLoader {
                 String pluginHandler = plugin.getHandler();
                 int pluginEnable = plugin.getEnable();
                 if (pluginEnable == 1) {
+                    HandlerFactory.put(pluginName, pluginHandler);
                     Class<?> aClass = Class.forName(pluginHandler);
                     Object instance = aClass.getDeclaredConstructor().newInstance();
                     if (instance instanceof Handler) {
