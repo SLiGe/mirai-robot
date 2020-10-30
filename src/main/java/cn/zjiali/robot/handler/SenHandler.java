@@ -1,7 +1,7 @@
 package cn.zjiali.robot.handler;
 
-import cn.zjiali.robot.config.ServerUrlConfig;
-import cn.zjiali.robot.net.HttpUtil;
+import cn.zjiali.robot.constant.ServerUrl;
+import cn.zjiali.robot.util.HttpUtil;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import net.mamoe.mirai.message.FriendMessageEvent;
@@ -26,7 +26,7 @@ public class SenHandler implements Handler {
     }
 
     private String getSen() {
-        String sen = HttpUtil.httpGet(ServerUrlConfig.SEN_URL);
+        String sen = HttpUtil.httpGet(ServerUrl.SEN_URL);
         JsonObject jsonObject = new Gson().fromJson(sen, JsonObject.class);
         return jsonObject.get("data").getAsString();
     }
