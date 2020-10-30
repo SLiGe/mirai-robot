@@ -10,6 +10,7 @@ import net.mamoe.mirai.message.GroupMessageEvent;
 public class SignInHandler implements Handler{
     @Override
     public void handleGroupMessage(GroupMessageEvent event) {
+        long id = event.getSender().getId();
 
     }
 

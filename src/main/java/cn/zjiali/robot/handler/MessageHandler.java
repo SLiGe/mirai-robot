@@ -1,9 +1,13 @@
 package cn.zjiali.robot.handler;
 
 import cn.zjiali.robot.config.AppConfig;
+import cn.zjiali.robot.config.PluginConfig;
+import cn.zjiali.robot.entity.ApplicationConfig;
+import cn.zjiali.robot.factory.HandlerFactory;
 import net.mamoe.mirai.message.FriendMessageEvent;
 import net.mamoe.mirai.message.GroupMessageEvent;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -15,16 +19,29 @@ import java.util.List;
 public class MessageHandler {
 
     public static void handleGroupMessage(GroupMessageEvent event) {
-        List<Handler> msgHandlers = AppConfig.getMsgHandlers();
-        if (msgHandlers != null && msgHandlers.size() > 0) {
-            msgHandlers.forEach(handler -> handler.handleGroupMessage(event));
-        }
+        handleMessage(true, event, null);
     }
 
     public static void handleFriendMessage(FriendMessageEvent event) {
-        List<Handler> msgHandlers = AppConfig.getMsgHandlers();
-        if (msgHandlers != null && msgHandlers.size() > 0) {
-            msgHandlers.forEach(handler -> handler.handleFriendMessage(event));
+        handleMessage(false, null, event);
+    }
+
+    private static void handleMessage(boolean isGroup, GroupMessageEvent groupMessageEvent, FriendMessageEvent friendMessageEvent) {
+        String msg = isGroup ? groupMessageEvent.getMessage().contentToString() : friendMessageEvent.getMessage().contentToString();
+        List<ApplicationConfig.Plugin> plugins = AppConfig.getApplicationConfig().getPlugins();
+        for (ApplicationConfig.Plugin plugin : plugins) {
+            HashMap<String, String> pluginProperties = plugin.getProperties();
+            int enable = plugin.getEnable();
+            String pluginName = plugin.getName();
+            String command = pluginProperties.get("command");
+            if (enable == 1 && msg.contains(command)) {
+                Handler handler = HandlerFactory.get(pluginName);
+                if (isGroup) {
+                    handler.handleGroupMessage(groupMessageEvent);
+                } else {
+                    handler.handleFriendMessage(friendMessageEvent);
+                }
+            }
         }
     }
 }
