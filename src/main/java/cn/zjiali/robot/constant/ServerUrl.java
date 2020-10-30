@@ -1,10 +1,10 @@
-package cn.zjiali.robot.config;
+package cn.zjiali.robot.constant;
 
 /**
  * @author zJiaLi
  * @since 2020-10-29 21:29
  */
-public class ServerUrlConfig {
+public class ServerUrl {
     /**
      * 一言接口
      */
