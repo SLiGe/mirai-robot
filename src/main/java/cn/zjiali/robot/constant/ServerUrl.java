@@ -16,6 +16,11 @@ public class ServerUrl {
     public static final String SIGN_IN_URL = "https://api.fanlisky.cn/niuren/signIn";
 
     /**
+     * 获取签到数据接口
+     */
+    public static final String SIGN_IN_DATA_URL = "https://api.fanlisky.cn/niuren/querySignInData";
+
+    /**
      * 运势接口
      */
     public static final String FORTUNE_URL = "https://api.fanlisky.cn/api/qr-fortune/getFortuneOfToday";
