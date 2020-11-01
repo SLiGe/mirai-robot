@@ -3,6 +3,8 @@ package cn.zjiali.robot.util;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
+import java.lang.reflect.Type;
+
 /**
  * @author zJiaLi
  * @since 2020-10-30 14:54
@@ -18,7 +20,8 @@ public class JsonUtil {
         return GSON.toJson(obj);
     }
 
-    public static JsonObject json2obj(String json){
-        return GSON.fromJson(json,JsonObject.class);
+    public static <T>T json2obj(String json,Class t){
+
+        return GSON.fromJson(json, (Type) t);
     }
 }
