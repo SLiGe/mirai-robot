@@ -1,12 +1,12 @@
 package cn.zjiali.robot.handler;
 
 import cn.zjiali.robot.config.AppConfig;
-import cn.zjiali.robot.config.PluginConfig;
 import cn.zjiali.robot.entity.ApplicationConfig;
 import cn.zjiali.robot.factory.HandlerFactory;
 import net.mamoe.mirai.message.FriendMessageEvent;
 import net.mamoe.mirai.message.GroupMessageEvent;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -34,7 +34,8 @@ public class MessageHandler {
             int enable = plugin.getEnable();
             String pluginName = plugin.getName();
             String command = pluginProperties.get("command");
-            if (enable == 1 && msg.contains(command)) {
+            List<String> commandArray = Arrays.asList(command.split(","));
+            if (enable == 1 && containCommand(msg, commandArray)) {
                 Handler handler = HandlerFactory.get(pluginName);
                 if (isGroup) {
                     handler.handleGroupMessage(groupMessageEvent);
@@ -43,5 +44,13 @@ public class MessageHandler {
                 }
             }
         }
+    }
+
+    private static boolean containCommand(String msg, List<String> commandArray) {
+        for (String command : commandArray) {
+            if (msg.contains(command))
+                return true;
+        }
+        return false;
     }
 }
