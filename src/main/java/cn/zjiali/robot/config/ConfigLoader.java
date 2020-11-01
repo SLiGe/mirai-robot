@@ -3,6 +3,7 @@ package cn.zjiali.robot.config;
 import cn.zjiali.robot.entity.ApplicationConfig;
 import cn.zjiali.robot.factory.HandlerFactory;
 import cn.zjiali.robot.handler.Handler;
+import cn.zjiali.robot.util.JsonUtil;
 import com.google.gson.Gson;
 
 import java.io.BufferedReader;
@@ -10,6 +11,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Properties;
 import java.util.stream.Collectors;
@@ -27,9 +29,9 @@ public class ConfigLoader {
         appProfileProperties.load(appStream);
         String appProfile = appProfileProperties.getProperty("application.profile");
         InputStream configStream = ConfigLoader.class.getResourceAsStream("/application-" + appProfile + ".json");
-        String appConfigJson = new BufferedReader(new InputStreamReader(configStream))
+        String appConfigJson = new BufferedReader(new InputStreamReader(configStream, StandardCharsets.UTF_8))
                 .lines().collect(Collectors.joining(System.lineSeparator()));
-        final ApplicationConfig applicationConfig = new Gson().fromJson(appConfigJson, ApplicationConfig.class);
+        final ApplicationConfig applicationConfig =  JsonUtil.json2obj(appConfigJson, ApplicationConfig.class);
         AppConfig.applicationConfig = applicationConfig;
         final List<ApplicationConfig.Plugin> plugins = applicationConfig.getPlugins();
         if (plugins != null) {

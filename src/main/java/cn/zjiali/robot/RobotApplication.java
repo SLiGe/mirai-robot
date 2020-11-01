@@ -11,6 +11,7 @@ import net.mamoe.mirai.event.EventHandler;
 import net.mamoe.mirai.event.Events;
 import net.mamoe.mirai.event.ListeningStatus;
 import net.mamoe.mirai.event.SimpleListenerHost;
+import net.mamoe.mirai.event.events.FriendAddEvent;
 import net.mamoe.mirai.message.FriendMessageEvent;
 import net.mamoe.mirai.message.GroupMessageEvent;
 import net.mamoe.mirai.message.data.QuoteReply;
@@ -36,7 +37,11 @@ public class RobotApplication {
     public static void main(String[] args) {
         long qq = Long.parseLong(AppConfig.applicationConfig.getQq());
         String password = AppConfig.applicationConfig.getPassword();
-        Bot bot = BotFactoryJvm.newBot(qq, password);
+        Bot bot = BotFactoryJvm.newBot(qq, password, new BotConfiguration() {
+            {
+                fileBasedDeviceInfo("deviceInfo.json");
+            }
+        });
 
         bot.login();
 
@@ -47,6 +52,7 @@ public class RobotApplication {
                 MessageHandler.handleGroupMessage(event);
                 return ListeningStatus.LISTENING;
             }
+
 
             @EventHandler
             public ListeningStatus onFriendMessage(FriendMessageEvent event) {
