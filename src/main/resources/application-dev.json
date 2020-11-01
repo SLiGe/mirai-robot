@@ -16,7 +16,7 @@
       "enable": 1,
       "handler": "cn.zjiali.robot.handler.SignInHandler",
       "properties": {
-        "command": "签到",
+        "command": "签到,积分查询",
         "cur_level": "1",
         "day_sen": "1"
       }
@@ -30,8 +30,8 @@
         "sign_text": "1",
         "star_num": "1",
         "un_sign": "1",
-        "day_one": "1",
-        "point": "1"
+        "day_one": "0",
+        "point": "0"
       }
     }
   ]
