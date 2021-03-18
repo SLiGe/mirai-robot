@@ -4,8 +4,8 @@ import cn.zjiali.robot.constant.ServerUrl;
 import cn.zjiali.robot.util.HttpUtil;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import net.mamoe.mirai.message.FriendMessageEvent;
-import net.mamoe.mirai.message.GroupMessageEvent;
+import net.mamoe.mirai.event.events.FriendMessageEvent;
+import net.mamoe.mirai.event.events.GroupMessageEvent;
 
 /**
  * 一言处理器

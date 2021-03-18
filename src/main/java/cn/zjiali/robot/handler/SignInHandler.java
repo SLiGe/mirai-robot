@@ -3,10 +3,9 @@ package cn.zjiali.robot.handler;
 import cn.zjiali.robot.config.PluginConfig;
 import cn.zjiali.robot.entity.response.SignInDataResponse;
 import cn.zjiali.robot.service.SignInService;
-import net.mamoe.mirai.message.FriendMessageEvent;
-import net.mamoe.mirai.message.GroupMessageEvent;
+import net.mamoe.mirai.event.events.FriendMessageEvent;
+import net.mamoe.mirai.event.events.GroupMessageEvent;
 import net.mamoe.mirai.message.data.At;
-import net.mamoe.mirai.utils.PlatformLogger;
 
 
 /**
@@ -27,7 +26,7 @@ public class SignInHandler implements Handler {
         long senderQQ = event.getSender().getId();
         long groupNum = event.getGroup().getId();
         String signInMsg = getSignInMsg(message, senderQQ, groupNum, 2);
-        event.getGroup().sendMessage(new At(event.getSender()).plus(signInMsg));
+        event.getGroup().sendMessage(new At(event.getSender().getId()).plus(signInMsg));
     }
 
 

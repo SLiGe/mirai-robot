@@ -3,8 +3,8 @@ package cn.zjiali.robot.handler;
 import cn.zjiali.robot.config.AppConfig;
 import cn.zjiali.robot.entity.ApplicationConfig;
 import cn.zjiali.robot.factory.HandlerFactory;
-import net.mamoe.mirai.message.FriendMessageEvent;
-import net.mamoe.mirai.message.GroupMessageEvent;
+import net.mamoe.mirai.event.events.FriendMessageEvent;
+import net.mamoe.mirai.event.events.GroupMessageEvent;
 
 import java.util.Arrays;
 import java.util.HashMap;

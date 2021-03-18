@@ -1,7 +1,8 @@
 package cn.zjiali.robot.handler;
 
-import net.mamoe.mirai.message.FriendMessageEvent;
-import net.mamoe.mirai.message.GroupMessageEvent;
+
+import net.mamoe.mirai.event.events.FriendMessageEvent;
+import net.mamoe.mirai.event.events.GroupMessageEvent;
 
 /**
  * @author zJiaLi

@@ -6,8 +6,8 @@ import cn.zjiali.robot.entity.response.FortuneResponse;
 import cn.zjiali.robot.util.HttpUtil;
 import cn.zjiali.robot.util.JsonUtil;
 import com.google.gson.JsonObject;
-import net.mamoe.mirai.message.FriendMessageEvent;
-import net.mamoe.mirai.message.GroupMessageEvent;
+import net.mamoe.mirai.event.events.FriendMessageEvent;
+import net.mamoe.mirai.event.events.GroupMessageEvent;
 import net.mamoe.mirai.message.data.At;
 
 /**
@@ -26,7 +26,7 @@ public class FortuneHandler implements Handler {
         if ("运势".equals(msgString)) {
             String fortuneMsg = getFortuneMsg(qq, groupNum, 2);
             if (fortuneMsg != null) {
-                event.getGroup().sendMessage(new At(event.getSender()).plus(fortuneMsg));
+                event.getGroup().sendMessage(new At(event.getSender().getId()).plus(fortuneMsg));
             }
         }
     }
