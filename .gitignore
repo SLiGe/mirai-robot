@@ -18,6 +18,9 @@
 *.ipr
 application-prod.json
 
+cache
+
+
 ### NetBeans ###
 /nbproject/private/
 /build/
@@ -50,3 +53,5 @@ application-prod.json
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 >>>>>>> 6adb284acd4f0a1d202cc280ecc64a6e00b2db1b
+!/dependency-reduced-pom.xml
+!/deviceInfo.json
