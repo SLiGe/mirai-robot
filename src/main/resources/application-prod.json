@@ -1,0 +1,41 @@
+{
+  "appEnable": 1,
+  "qq": "2696864316",
+  "password": "...",
+  "plugins": [
+    {
+      "name": "一言",
+      "enable": 1,
+      "handler": "cn.zjiali.robot.handler.SenHandler",
+      "configClass": "cn.zjiali.robot.config.plugin.SenConfig",
+      "properties": {
+        "command": "一言"
+      }
+    },
+    {
+      "name": "签到",
+      "enable": 1,
+      "handler": "cn.zjiali.robot.handler.SignInHandler",
+      "configClass": "cn.zjiali.robot.config.plugin.SignInConfig",
+      "properties": {
+        "command": "签到,积分查询",
+        "cur_level": "1",
+        "day_sen": "1"
+      }
+    },
+    {
+      "name": "今日运势",
+      "enable": 1,
+      "handler": "cn.zjiali.robot.handler.FortuneHandler",
+      "configClass": "cn.zjiali.robot.config.plugin.FortuneConfig",
+      "properties": {
+        "command": "运势",
+        "sign_text": "1",
+        "star_num": "1",
+        "un_sign": "1",
+        "day_one": "0",
+        "point": "0"
+      }
+    }
+  ]
+}

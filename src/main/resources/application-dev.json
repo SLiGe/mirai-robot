@@ -1,0 +1,91 @@
+{
+  "appEnable": 1,
+  "qq": "2364051402",
+  "password": "..",
+  "plugins": [
+    {
+      "name": "一言",
+      "enable": 1,
+      "handler": "cn.zjiali.robot.handler.SenHandler",
+      "configClass": "cn.zjiali.robot.config.plugin.SenConfig",
+      "properties": {
+        "command": "一言"
+      }
+    },
+    {
+      "name": "签到",
+      "enable": 1,
+      "handler": "cn.zjiali.robot.handler.SignInHandler",
+      "configClass": "cn.zjiali.robot.config.plugin.SignInConfig",
+      "properties": {
+        "command": "签到,积分查询",
+        "cur_level": "1",
+        "day_sen": "1"
+      }
+    },
+    {
+      "name": "今日运势",
+      "enable": 1,
+      "handler": "cn.zjiali.robot.handler.FortuneHandler",
+      "configClass": "cn.zjiali.robot.config.plugin.FortuneConfig",
+      "properties": {
+        "command": "运势",
+        "sign_text": "1",
+        "star_num": "1",
+        "un_sign": "1",
+        "day_one": "0",
+        "point": "0"
+      }
+    },
+    {
+      "name": "老黄历",
+      "enable": 0,
+      "handler": "cn.zjiali.robot.handler.YellowCalendarHandler",
+      "configClass": "cn.zjiali.robot.config.plugin.YellowCalendarConfig",
+      "properties": {
+        "command": "老黄历",
+        "key": "1",
+        "url": "1",
+        "template": "1"
+      }
+    },
+    {
+      "name": "万年历",
+      "enable": 0,
+      "handler": "cn.zjiali.robot.handler.CalendarHandler",
+      "configClass": "cn.zjiali.robot.config.plugin.CalendarConfig",
+      "properties": {
+        "command": "万年历",
+        "key": "1",
+        "url": "1",
+        "template": "1"
+      }
+    },
+    {
+      "name": "茉莉聊天",
+      "enable": 1,
+      "handler": "cn.zjiali.robot.handler.MoLiHandler",
+      "configClass": "cn.zjiali.robot.config.plugin.MoLiConfig",
+      "properties": {
+        "chatGroupAt": "1",
+        "jokeCommand": "笑话",
+        "jokeTemplate": "",
+        "jokeEnable": "1",
+        "gylqCommand": "观音灵签",
+        "gylqTemplate": "签号:{number1}\n好坏:{haohua}\n签语:{qianyu}\n诗意解签:{shiyi}\n白话解签:{jieqian}",
+        "gylqEnable": "1",
+        "yllqCommand": "月老灵签",
+        "yllqTemplate": "签号:{number1}\n好坏:{haohua}\n诗意解签:{shiyi}\n解签:{jieqian}\n注释:{zhushi}\n白话浅释:{baihua}",
+        "yllqEnable": "1",
+        "csylqCommand": "财神爷灵签",
+        "csylqTemplate": "签号:{number1}\n签语:{qianyu}\n注释:{zhushi}\n解签:{jieqian}\n解说:{jieshuo}\n结果:{jieguo}\n婚姻:{hunyin}\n交易:{jiaoyi}\n白话浅释:{baihua}",
+        "csylqEnable": "1",
+        "limit": "5",
+        "api_key": "",
+        "api_secret": "",
+        "type": "",
+        "url": "http://i.itpk.cn/api.php"
+      }
+    }
+  ]
+}
