@@ -1,7 +1,11 @@
 package cn.zjiali.robot.main;
 
+import cn.zjiali.robot.util.Threads;
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
+
 import javax.annotation.PreDestroy;
 import java.util.TimerTask;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
@@ -13,7 +17,18 @@ import java.util.concurrent.TimeUnit;
  */
 public class AsyncManager {
 
-    private static final ScheduledThreadPoolExecutor scheduledThreadPoolExecutor = new ScheduledThreadPoolExecutor(Runtime.getRuntime().availableProcessors());
+    private static final ScheduledExecutorService scheduledExecutorService;
+
+    static {
+        scheduledExecutorService = new ScheduledThreadPoolExecutor(Runtime.getRuntime().availableProcessors(),
+                new ThreadFactoryBuilder().setDaemon(true).setNameFormat("schedule-pool-%d").build()) {
+            @Override
+            protected void afterExecute(Runnable r, Throwable t) {
+                super.afterExecute(r, t);
+                Threads.printException(r, t);
+            }
+        };
+    }
 
     /**
      * 操作延迟10毫秒
@@ -38,7 +53,7 @@ public class AsyncManager {
      * @param task 任务
      */
     public void execute(TimerTask task) {
-        scheduledThreadPoolExecutor.schedule(task, OPERATE_DELAY_TIME, TimeUnit.MILLISECONDS);
+        scheduledExecutorService.schedule(task, OPERATE_DELAY_TIME, TimeUnit.MILLISECONDS);
     }
 
     /**
@@ -46,6 +61,6 @@ public class AsyncManager {
      */
     @PreDestroy
     public void shutdown() {
-        scheduledThreadPoolExecutor.shutdownNow();
+        Threads.shutdownAndAwaitTermination(scheduledExecutorService);
     }
 }
