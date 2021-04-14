@@ -49,6 +49,7 @@
     </repositories>
 
     <build>
+        <finalName>mirai-robot</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
