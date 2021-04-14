@@ -30,6 +30,7 @@ public class RobotApplication {
         try {
             ApplicationBootStrap.getInstance().init();
             miraiLogger.info("====初始化配置完成====");
+            miraiLogger.info("⭐⭐⭐⭐⭐⭐GitHub: https://github.com/SLiGe/mirai-robot ⭐⭐⭐⭐⭐⭐");
         } catch (Exception e) {
             miraiLogger.error("====初始化配置出错,e: " + e.getMessage());
         }

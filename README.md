@@ -102,6 +102,3 @@ mirai-robot机器人插件,基于mirai机器人协议,依赖`mirai-core-jvm`
 
 - 进入到项目目录,执行``mvn clean package``
 - 执行 java -jar mirai-robot.jar
-
-# 联系方式
-- QQ群 809647649
