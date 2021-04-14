@@ -1,6 +1,7 @@
-# mirai-robot
-mirai-robot机器人插件
+# Mirai-Robot
+mirai-robot机器人插件,基于mirai机器人协议,依赖`mirai-core-jvm`
 # 如何使用
+- 安装OpenJDK8+,使用其他版本jdk可能会出现未知异常
 - 在application.properties修改环境参数``application.profile``为dev或其他自定义环境
 - 修改application-{dev}.json
 ```json
@@ -42,13 +43,65 @@ mirai-robot机器人插件
         "day_one": "0", //是否每日一次(群内生效)
         "point": "0" //是否积分制
       }
+    },
+     {
+       "name": "老黄历", //待完成
+       "enable": 0,
+       "handler": "cn.zjiali.robot.handler.YellowCalendarHandler",
+       "configClass": "cn.zjiali.robot.config.plugin.YellowCalendarConfig",
+       "properties": {
+         "command": "老黄历",
+         "key": "1", //聚合平台密钥
+         "url": "1",  //调用URL
+         "template": "1" //发送消息模板
+       }
+     },
+     {
+       "name": "万年历", //待完成
+       "enable": 0,
+       "handler": "cn.zjiali.robot.handler.CalendarHandler",
+       "configClass": "cn.zjiali.robot.config.plugin.CalendarConfig",
+       "properties": {
+         "command": "万年历",
+         "key": "1",
+         "url": "1",
+         "template": "1"
+       }
+     },
+     {
+       "name": "茉莉聊天",
+       "enable": 1,
+       "handler": "cn.zjiali.robot.handler.MoLiHandler",
+       "configClass": "cn.zjiali.robot.config.plugin.MoLiConfig",
+       "properties": {
+         "chatGroupAt": "1", //群里是否@机器人才发言
+         "jokeCommand": "笑话", //笑话命令
+         "jokeTemplate": "", //笑话模板,默认为空,直接发送一段话
+         "jokeEnable": "1", //是否启用笑话功能
+         "gylqCommand": "观音灵签", //观音灵签命令
+         "gylqTemplate": "签号:{number1}\n好坏:{haohua}\n签语:{qianyu}\n诗意解签:{shiyi}\n白话解签:{jieqian}",
+         "gylqEnable": "1",
+         "yllqCommand": "月老灵签",
+         "yllqTemplate": "签号:{number1}\n好坏:{haohua}\n诗意解签:{shiyi}\n解签:{jieqian}\n注释:{zhushi}\n白话浅释:{baihua}",
+         "yllqEnable": "1",
+         "csylqCommand": "财神爷灵签",
+         "csylqTemplate": "签号:{number1}\n签语:{qianyu}\n注释:{zhushi}\n解签:{jieqian}\n解说:{jieshuo}\n结果:{jieguo}\n婚姻:{hunyin}\n交易:{jiaoyi}\n白话浅释:{baihua}",
+         "csylqEnable": "1",
+         "limit": "5", //茉莉平台需要的参数 2-8,数值越大回复越准确,但是速度会下降
+         "api_key": "", //茉莉平台key,可空
+         "api_secret": "", //茉莉平台密钥,可空
+         "type": "", //茉莉平台返回消息类型,可空
+         "url": "http://i.itpk.cn/api.php" //茉莉平台URL
+       }
     }
   ]
 }
 
 ```
+- 消息模板中{}里的字段可在`src\main\java\cn\zjiali\robot\entity\response` 中查看各插件对应的实体
 
 - 进入到项目目录,执行``mvn clean package``
+- 执行 java -jar mirai-robot.jar
 
 # 联系方式
 - QQ群 809647649
