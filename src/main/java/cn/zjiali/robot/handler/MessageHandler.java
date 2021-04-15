@@ -1,14 +1,12 @@
 package cn.zjiali.robot.handler;
 
 import cn.zjiali.robot.config.AppConfig;
-import cn.zjiali.robot.config.plugin.MoLiConfig;
 import cn.zjiali.robot.entity.ApplicationConfig;
 import cn.zjiali.robot.factory.HandlerFactory;
 import net.mamoe.mirai.event.events.FriendMessageEvent;
 import net.mamoe.mirai.event.events.GroupMessageEvent;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * 消息处理器
@@ -30,11 +28,6 @@ public class MessageHandler {
         // 茉莉插件需要单独拦截
         String msg = isGroup ? groupMessageEvent.getMessage().contentToString() : friendMessageEvent.getMessage().contentToString();
         List<ApplicationConfig.Plugin> plugins = AppConfig.getApplicationConfig().getPlugins();
-       /* List<String> commandExcludeMoLi = new ArrayList<>();
-        plugins.stream().filter(plugin -> !"茉莉聊天".equals(plugin.getName()) && plugin.getEnable() == 1).map(ApplicationConfig.Plugin::getProperties)
-                .map(p -> p.get("command").split(",")).forEach(
-                commandArray -> commandExcludeMoLi.addAll(Arrays.asList(commandArray))
-        );*/
         plugins.stream().filter(plugin -> "茉莉聊天".equals(plugin.getName()) && plugin.getEnable() == 1)
                 .findFirst().ifPresent((plugin) -> {
             Handler handler = HandlerFactory.get(plugin.getName());
