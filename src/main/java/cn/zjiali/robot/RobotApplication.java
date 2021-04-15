@@ -8,9 +8,7 @@ import kotlin.Unit;
 import net.mamoe.mirai.Bot;
 import net.mamoe.mirai.BotFactory;
 import net.mamoe.mirai.event.*;
-import net.mamoe.mirai.event.events.BotEvent;
-import net.mamoe.mirai.event.events.FriendMessageEvent;
-import net.mamoe.mirai.event.events.GroupMessageEvent;
+import net.mamoe.mirai.event.events.*;
 import net.mamoe.mirai.utils.BotConfiguration;
 import net.mamoe.mirai.utils.MiraiLogger;
 import net.mamoe.mirai.utils.PlatformLogger;
@@ -54,6 +52,7 @@ public class RobotApplication {
         });
         eventChannel.subscribeAlways(GroupMessageEvent.class, MessageHandler::handleGroupMessage);
         eventChannel.subscribeAlways(FriendMessageEvent.class, MessageHandler::handleFriendMessage);
+        eventChannel.subscribeAlways(NewFriendRequestEvent.class, NewFriendRequestEvent::accept);
         bot.join(); // 阻塞当前线程直到 bot 离线
     }
 
