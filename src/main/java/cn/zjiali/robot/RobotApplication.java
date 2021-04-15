@@ -23,10 +23,10 @@ public class RobotApplication {
 
     private static final MiraiLogger miraiLogger = new PlatformLogger(RobotApplication.class.getName());
 
-    static {
+    private static void init(String[] args) {
         miraiLogger.info("====初始化配置中====");
         try {
-            ApplicationBootStrap.getInstance().init();
+            ApplicationBootStrap.getInstance().init(args);
             miraiLogger.info("====初始化配置完成====");
             miraiLogger.info("⭐⭐⭐⭐⭐⭐GitHub: https://github.com/SLiGe/mirai-robot ⭐⭐⭐⭐⭐⭐");
         } catch (Exception e) {
@@ -35,6 +35,7 @@ public class RobotApplication {
     }
 
     public static void main(String[] args) {
+        init(args);
         long qq = Long.parseLong(AppConfig.applicationConfig.getQq());
         String password = AppConfig.applicationConfig.getPassword();
         Bot bot = BotFactory.INSTANCE.newBot(qq, password, new BotConfiguration() {

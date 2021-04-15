@@ -16,10 +16,7 @@ import cn.zjiali.robot.util.PackageUtil;
 import net.mamoe.mirai.utils.MiraiLogger;
 import net.mamoe.mirai.utils.PlatformLogger;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.lang.reflect.Field;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
@@ -46,9 +43,9 @@ public class ApplicationBootStrap {
         return applicationBootStrap;
     }
 
-    public void init() throws IOException, IllegalAccessException, InstantiationException, ClassNotFoundException {
+    public void init(String[] args) throws IOException, IllegalAccessException, InstantiationException, ClassNotFoundException {
         loadService();
-        loadAppConfig();
+        loadAppConfig(args);
         loadServerUrl();
         loadPluginConfig();
     }
@@ -85,12 +82,28 @@ public class ApplicationBootStrap {
      *
      * @throws IOException
      */
-    private void loadAppConfig() throws IOException {
+    private void loadAppConfig(String[] args) throws IOException {
         InputStream appStream = ApplicationBootStrap.class.getResourceAsStream("/application.properties");
         Properties appProfileProperties = new Properties();
         appProfileProperties.load(appStream);
-        String appProfile = appProfileProperties.getProperty("application.profile");
-        InputStream configStream = ApplicationBootStrap.class.getResourceAsStream("/application-" + appProfile + ".json");
+        InputStream configStream = null;
+        String localConfigFileFlag = appProfileProperties.getProperty("application.config.file.local");
+        if ("true".equals(localConfigFileFlag)) {
+            if (args.length > 0) {
+                String configFilePath = args[0];
+                File configFile = new File(configFilePath);
+                if (configFile.exists()) {
+                    configStream = new FileInputStream(configFile);
+                }
+            }
+        } else {
+            String appProfile = appProfileProperties.getProperty("application.profile");
+            configStream = ApplicationBootStrap.class.getResourceAsStream("/application-" + appProfile + ".json");
+        }
+        if (configStream == null) {
+            miraiLogger.error("[loadAppConfig]====加载配置文件失败,自动退出!");
+            System.exit(0);
+        }
         String appConfigJson = new BufferedReader(new InputStreamReader(configStream, StandardCharsets.UTF_8))
                 .lines().collect(Collectors.joining(System.lineSeparator()));
         final ApplicationConfig applicationConfig = JsonUtil.json2obj(appConfigJson, ApplicationConfig.class);
@@ -187,7 +200,7 @@ public class ApplicationBootStrap {
 
     public static void main(String[] args) {
         try {
-            getInstance().init();
+            getInstance().init(args);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {
