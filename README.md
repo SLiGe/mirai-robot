@@ -3,6 +3,7 @@ mirai-robot机器人插件,基于mirai机器人协议,依赖`mirai-core-jvm`
 # 如何使用
 - 安装OpenJDK8+,使用其他版本jdk可能会出现未知异常
 - 在application.properties修改环境参数``application.profile``为dev或其他自定义环境
+- 参照 **Config.md** 配置application.properties
 - 修改application-{dev}.json
 ```json
 {

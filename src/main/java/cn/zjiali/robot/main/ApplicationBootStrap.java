@@ -87,6 +87,7 @@ public class ApplicationBootStrap {
         Properties appProfileProperties = new Properties();
         appProfileProperties.load(appStream);
         InputStream configStream = null;
+        // 是否启用本地配置文件
         String localConfigFileFlag = appProfileProperties.getProperty("application.config.file.local");
         if ("true".equals(localConfigFileFlag)) {
             if (args.length > 0) {
