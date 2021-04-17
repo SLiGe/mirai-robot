@@ -57,6 +57,16 @@ public class AsyncManager {
     }
 
     /**
+     * 执行任务
+     *
+     * @param flag 执行标志
+     * @param task 任务
+     */
+    public void execute(String flag, TimerTask task) {
+        if ("true".equals(flag)) execute(task);
+    }
+
+    /**
      * 停止任务线程池
      */
     @PreDestroy
