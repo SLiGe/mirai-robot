@@ -13,6 +13,7 @@ import cn.zjiali.robot.handler.Handler;
 import cn.zjiali.robot.util.JsonUtil;
 import cn.zjiali.robot.util.ObjectUtil;
 import cn.zjiali.robot.util.PackageUtil;
+import cn.zjiali.robot.util.PropertiesUtil;
 import net.mamoe.mirai.utils.MiraiLogger;
 import net.mamoe.mirai.utils.PlatformLogger;
 
@@ -21,7 +22,6 @@ import java.lang.reflect.Field;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Properties;
 import java.util.stream.Collectors;
 
 /**
@@ -83,12 +83,9 @@ public class ApplicationBootStrap {
      * @throws IOException
      */
     private void loadAppConfig(String[] args) throws IOException {
-        InputStream appStream = ApplicationBootStrap.class.getResourceAsStream("/application.properties");
-        Properties appProfileProperties = new Properties();
-        appProfileProperties.load(appStream);
         InputStream configStream = null;
         // 是否启用本地配置文件
-        String localConfigFileFlag = appProfileProperties.getProperty("application.config.file.local");
+        String localConfigFileFlag = PropertiesUtil.getProperty("application.properties","application.config.file.local");
         if ("true".equals(localConfigFileFlag)) {
             if (args.length > 0) {
                 String configFilePath = args[0];
@@ -98,7 +95,7 @@ public class ApplicationBootStrap {
                 }
             }
         } else {
-            String appProfile = appProfileProperties.getProperty("application.profile");
+            String appProfile = PropertiesUtil.getProperty("application.properties","application.profile");
             configStream = ApplicationBootStrap.class.getResourceAsStream("/application-" + appProfile + ".json");
         }
         if (configStream == null) {
@@ -123,7 +120,6 @@ public class ApplicationBootStrap {
             }
         }
         configStream.close();
-        appStream.close();
     }
 
     /**
@@ -134,9 +130,6 @@ public class ApplicationBootStrap {
      */
     private void loadServerUrl() throws IOException, IllegalAccessException {
         Class<ServerUrl> serverUrlClass = ServerUrl.class;
-        InputStream apiInputStream = serverUrlClass.getResourceAsStream("/api.properties");
-        Properties apiProperties = new Properties();
-        apiProperties.load(apiInputStream);
         Field[] declaredFields = serverUrlClass.getDeclaredFields();
         for (Field declaredField : declaredFields) {
             Property property = declaredField.getAnnotation(Property.class);
@@ -144,7 +137,7 @@ public class ApplicationBootStrap {
                 String name = property.name();
                 String value = property.value();
                 declaredField.setAccessible(true);
-                String apiValue = apiProperties.getProperty(name);
+                String apiValue = PropertiesUtil.getProperty("api.properties",name);
                 if ("".equals(value)) {
                     declaredField.set(null, apiValue);
                 } else {
