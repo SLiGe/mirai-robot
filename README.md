@@ -1,7 +1,7 @@
 # Mirai-Robot
-mirai-robot机器人插件,基于mirai机器人协议,依赖`mirai-core-jvm`
+    mirai-robot机器人插件,基于mirai机器人协议,依赖`mirai-core-jvm`
 # 如何使用
-- 安装OpenJDK8+,使用其他版本jdk可能会出现未知异常
+- 安装[OpenJDK8]<https://adoptopenjdk.net/?variant=openjdk8&jvmVariant=hotspot>,使用其他版本jdk可能会出现未知异常
 - 在application.properties修改环境参数``application.profile``为dev或其他自定义环境
 - 参照 **Config.md** 配置application.properties
 - 修改application-{dev}.json
@@ -102,4 +102,9 @@ mirai-robot机器人插件,基于mirai机器人协议,依赖`mirai-core-jvm`
 - 消息模板中{}里的字段可在`src\main\java\cn\zjiali\robot\entity\response` 中查看各插件对应的实体
 
 - 进入到项目目录,执行``mvn clean package``
+  
+- 启动参数(args) ,在启动命令后追加即可,如: `java -jar C:\application-dev.json 0`
+  - 0 配置文件地址
+  - 1 协议选择使用协议(0 - Android 手机, 1 - Android 平板, 2 - Android 手表)
+
 - 执行 java -jar mirai-robot.jar
