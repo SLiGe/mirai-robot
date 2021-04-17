@@ -72,4 +72,10 @@ public class ServerUrl {
 
     @Property(name = "saveData.api")
     public static String SAVE_DATA_URL;
+
+    /**
+     * 获取验证码图片接口
+     */
+    @Property(name = "verifyCode.view.url")
+    public static String VERIFY_CODE_VIEW_URL;
 }
