@@ -2,16 +2,18 @@ package cn.zjiali.robot;
 
 import cn.zjiali.robot.annotation.Application;
 import cn.zjiali.robot.config.AppConfig;
+import cn.zjiali.robot.factory.ServiceFactory;
 import cn.zjiali.robot.handler.MessageHandler;
 import cn.zjiali.robot.main.ApplicationBootStrap;
+import cn.zjiali.robot.system.SysLoginSolver;
+import cn.zjiali.robot.util.DeviceUtil;
+import cn.zjiali.robot.util.ObjectUtil;
 import kotlin.Unit;
 import net.mamoe.mirai.Bot;
 import net.mamoe.mirai.BotFactory;
 import net.mamoe.mirai.event.*;
 import net.mamoe.mirai.event.events.*;
-import net.mamoe.mirai.utils.BotConfiguration;
-import net.mamoe.mirai.utils.MiraiLogger;
-import net.mamoe.mirai.utils.PlatformLogger;
+import net.mamoe.mirai.utils.*;
 
 
 /**
@@ -34,13 +36,34 @@ public class RobotApplication {
         }
     }
 
+    /**
+     * main启动方法
+     *
+     * @param args 0 应用配置文件 1 使用协议(0 - Android 手机, 1 - Android 平板, 2 - Android 手表)
+     */
     public static void main(String[] args) {
         init(args);
         long qq = Long.parseLong(AppConfig.applicationConfig.getQq());
         String password = AppConfig.applicationConfig.getPassword();
         Bot bot = BotFactory.INSTANCE.newBot(qq, password, new BotConfiguration() {
             {
-                fileBasedDeviceInfo("deviceInfo.json");
+                //加载设备信息
+                loadDeviceInfoJson(DeviceUtil.getDeviceInfoJson(AppConfig.applicationConfig.getQq()));
+                //设置登录解决器
+                setLoginSolver((LoginSolver) ServiceFactory.get(SysLoginSolver.class.getSimpleName()));
+                // 选择协议
+                if (args.length >= 2 && ObjectUtil.isNullOrEmpty(args[1])) {
+                    String protocolFlag = args[1];
+                    if ("0".equals(protocolFlag)) {
+                        setProtocol(MiraiProtocol.ANDROID_PHONE);
+                    } else if ("1".equals(protocolFlag)) {
+                        setProtocol(MiraiProtocol.ANDROID_PAD);
+                    } else if ("2".equals(protocolFlag)) {
+                        setProtocol(MiraiProtocol.ANDROID_WATCH);
+                    }
+                } else {
+                    setProtocol(MiraiProtocol.ANDROID_PHONE);
+                }
             }
         });
 
