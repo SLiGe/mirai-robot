@@ -103,8 +103,8 @@
 
 - 进入到项目目录,执行``mvn clean package``
   
-- 启动参数(args) ,在启动命令后追加即可,如: `java -jar C:\application-dev.json 0`
-  - 0 配置文件地址
-  - 1 协议选择使用协议(0 - Android 手机, 1 - Android 平板, 2 - Android 手表)
+- 启动参数 ,在启动命令后追加即可,如: `java -jar -Drobot.protocol=0`
+  - application.config.file 配置文件地址
+  - robot.protocol 协议选择使用协议(0 - Android 手机, 1 - Android 平板, 2 - Android 手表)
 
 - 执行 java -jar mirai-robot.jar

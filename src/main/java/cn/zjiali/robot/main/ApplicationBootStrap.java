@@ -43,9 +43,9 @@ public class ApplicationBootStrap {
         return applicationBootStrap;
     }
 
-    public void init(String[] args) throws IOException, IllegalAccessException, InstantiationException, ClassNotFoundException {
+    public void init() throws IOException, IllegalAccessException, InstantiationException, ClassNotFoundException {
         loadService();
-        loadAppConfig(args);
+        loadAppConfig();
         loadServerUrl();
         loadPluginConfig();
     }
@@ -82,20 +82,18 @@ public class ApplicationBootStrap {
      *
      * @throws IOException
      */
-    private void loadAppConfig(String[] args) throws IOException {
+    private void loadAppConfig() throws IOException {
         InputStream configStream = null;
         // 是否启用本地配置文件
-        String localConfigFileFlag = PropertiesUtil.getProperty("application.properties","application.config.file.local");
+        String localConfigFileFlag = PropertiesUtil.getProperty("application.properties", "application.config.file.local");
         if ("true".equals(localConfigFileFlag)) {
-            if (args.length > 0) {
-                String configFilePath = args[0];
-                File configFile = new File(configFilePath);
-                if (configFile.exists()) {
-                    configStream = new FileInputStream(configFile);
-                }
+            String configFilePath = System.getProperty("application.config.file");
+            File configFile = new File(configFilePath);
+            if (configFile.exists()) {
+                configStream = new FileInputStream(configFile);
             }
         } else {
-            String appProfile = PropertiesUtil.getProperty("application.properties","application.profile");
+            String appProfile = PropertiesUtil.getProperty("application.properties", "application.profile");
             configStream = ApplicationBootStrap.class.getResourceAsStream("/application-" + appProfile + ".json");
         }
         if (configStream == null) {
@@ -137,7 +135,7 @@ public class ApplicationBootStrap {
                 String name = property.name();
                 String value = property.value();
                 declaredField.setAccessible(true);
-                String apiValue = PropertiesUtil.getProperty("api.properties",name);
+                String apiValue = PropertiesUtil.getProperty("api.properties", name);
                 if ("".equals(value)) {
                     declaredField.set(null, apiValue);
                 } else {
@@ -194,7 +192,7 @@ public class ApplicationBootStrap {
 
     public static void main(String[] args) {
         try {
-            getInstance().init(args);
+            getInstance().init();
         } catch (IOException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {

@@ -25,10 +25,10 @@ public class RobotApplication {
 
     private static final MiraiLogger miraiLogger = new PlatformLogger(RobotApplication.class.getName());
 
-    private static void init(String[] args) {
+    private static void init() {
         miraiLogger.info("====初始化配置中====");
         try {
-            ApplicationBootStrap.getInstance().init(args);
+            ApplicationBootStrap.getInstance().init();
             miraiLogger.info("====初始化配置完成====");
             miraiLogger.info("⭐⭐⭐⭐⭐⭐GitHub: https://github.com/SLiGe/mirai-robot ⭐⭐⭐⭐⭐⭐");
         } catch (Exception e) {
@@ -36,13 +36,8 @@ public class RobotApplication {
         }
     }
 
-    /**
-     * main启动方法
-     *
-     * @param args 0 应用配置文件 1 使用协议(0 - Android 手机, 1 - Android 平板, 2 - Android 手表)
-     */
     public static void main(String[] args) {
-        init(args);
+        init();
         long qq = Long.parseLong(AppConfig.applicationConfig.getQq());
         String password = AppConfig.applicationConfig.getPassword();
         Bot bot = BotFactory.INSTANCE.newBot(qq, password, new BotConfiguration() {
@@ -52,18 +47,7 @@ public class RobotApplication {
                 //设置登录解决器
                 setLoginSolver((LoginSolver) ServiceFactory.get(SysLoginSolver.class.getSimpleName()));
                 // 选择协议
-                if (args.length >= 2 && ObjectUtil.isNullOrEmpty(args[1])) {
-                    String protocolFlag = args[1];
-                    if ("0".equals(protocolFlag)) {
-                        setProtocol(MiraiProtocol.ANDROID_PHONE);
-                    } else if ("1".equals(protocolFlag)) {
-                        setProtocol(MiraiProtocol.ANDROID_PAD);
-                    } else if ("2".equals(protocolFlag)) {
-                        setProtocol(MiraiProtocol.ANDROID_WATCH);
-                    }
-                } else {
-                    setProtocol(MiraiProtocol.ANDROID_PHONE);
-                }
+                setProtocol(switchProtocol());
             }
         });
 
@@ -78,6 +62,26 @@ public class RobotApplication {
         eventChannel.subscribeAlways(FriendMessageEvent.class, MessageHandler::handleFriendMessage);
         eventChannel.subscribeAlways(NewFriendRequestEvent.class, NewFriendRequestEvent::accept);
         bot.join(); // 阻塞当前线程直到 bot 离线
+    }
+
+    /**
+     * 选择协议
+     *
+     * @return 协议
+     */
+    private static BotConfiguration.MiraiProtocol switchProtocol() {
+        String robotProtocol = System.getProperty("robot.protocol");
+        if (!ObjectUtil.isNullOrEmpty(robotProtocol)) {
+            switch (robotProtocol) {
+                case "0":
+                    return (BotConfiguration.MiraiProtocol.ANDROID_PHONE);
+                case "1":
+                    return (BotConfiguration.MiraiProtocol.ANDROID_PAD);
+                case "2":
+                    return (BotConfiguration.MiraiProtocol.ANDROID_WATCH);
+            }
+        }
+        return (BotConfiguration.MiraiProtocol.ANDROID_PHONE);
     }
 
 }
