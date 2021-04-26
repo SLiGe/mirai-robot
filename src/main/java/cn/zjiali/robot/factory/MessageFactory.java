@@ -1,6 +1,9 @@
 package cn.zjiali.robot.factory;
 
-import cn.zjiali.robot.config.plugin.*;
+import cn.zjiali.robot.config.plugin.CalendarConfig;
+import cn.zjiali.robot.config.plugin.FortuneConfig;
+import cn.zjiali.robot.config.plugin.TodayOfHistoryConfig;
+import cn.zjiali.robot.config.plugin.YellowCalendarConfig;
 import cn.zjiali.robot.constant.ServerUrl;
 import cn.zjiali.robot.entity.response.*;
 import cn.zjiali.robot.util.HttpUtil;
@@ -158,18 +161,6 @@ public class MessageFactory {
         return msgContentBuilder.toString();
     }
 
-    /**
-     * TODO 笑话消息
-     *
-     * @param message
-     * @return
-     */
-    public static String getJokeMessage(String message) {
-        if (JokeConfig.joke_command.equals(message)) {
-
-        }
-        return "";
-    }
 
     /**
      * 获取一言
