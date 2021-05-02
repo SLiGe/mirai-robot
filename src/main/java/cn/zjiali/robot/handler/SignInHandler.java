@@ -46,9 +46,9 @@ public class SignInHandler implements Handler {
             //签到成功200  已经签到203
             if ("200".equals(status)) {
                 msgContentBuilder.append("签到成功！\n");
-                msgContentBuilder.append("\uD83D\uDCB8获得积分：").append(response.getPoints()).append("点\n");
+                msgContentBuilder.append("\uD83D\uDCB8获得积分：").append(response.getGetPoints()).append("点\n");
                 msgContentBuilder.append("⭐本月积累签到：").append(response.getMonthDay()).append("天\n");
-                msgContentBuilder.append("\uD83D\uDCB3当前积分：").append(response.getIntegral()).append("点");
+                msgContentBuilder.append("\uD83D\uDCB3当前积分：").append(response.getPoints()).append("点");
                 if ("1".equals(SignInConfig.sign_in_cur_level)) {
                     msgContentBuilder.append("\n⭐当前等级:").append(response.getCurrentLevel());
                 }
@@ -63,7 +63,7 @@ public class SignInHandler implements Handler {
             if (response == null) {
                 return "签到服务异常,请联系管理员!";
             }
-            msgContentBuilder.append("\uD83D\uDCB8总积分：").append(response.getIntegral()).append("点\n");
+            msgContentBuilder.append("\uD83D\uDCB8总积分：").append(response.getPoints()).append("点\n");
             msgContentBuilder.append("⭐连续签到：").append(response.getMonthDay()).append("天\n");
             msgContentBuilder.append("\uD83D\uDCB3总签到天数：").append(response.getTotalDay()).append("天");
             if ("1".equals(SignInConfig.sign_in_cur_level)) {

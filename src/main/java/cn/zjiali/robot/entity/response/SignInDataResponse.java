@@ -12,7 +12,10 @@ public class SignInDataResponse {
 
     private String qq;
 
-    private String integral;
+    /**
+     * 获得的积分
+     */
+    private Integer getPoints;
 
 
     private String todayMsg;
@@ -21,7 +24,7 @@ public class SignInDataResponse {
 
     private String status;
 
-    private int points;
+    private Integer points;
 
     private String currentLevel;
 
@@ -29,13 +32,6 @@ public class SignInDataResponse {
 
     private String totalDay;
 
-    public int getPoints() {
-        return points;
-    }
-
-    public void setPoints(int points) {
-        this.points = points;
-    }
 
     public String getStatus() {
         return status;
@@ -54,12 +50,20 @@ public class SignInDataResponse {
         this.qq = qq;
     }
 
-    public String getIntegral() {
-        return integral;
+    public Integer getGetPoints() {
+        return getPoints;
     }
 
-    public void setIntegral(String integral) {
-        this.integral = integral;
+    public void setGetPoints(Integer getPoints) {
+        this.getPoints = getPoints;
+    }
+
+    public Integer getPoints() {
+        return points;
+    }
+
+    public void setPoints(Integer points) {
+        this.points = points;
     }
 
     public String getTodayMsg() {
