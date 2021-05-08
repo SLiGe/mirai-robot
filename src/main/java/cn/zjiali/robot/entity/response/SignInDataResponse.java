@@ -1,16 +1,17 @@
 package cn.zjiali.robot.entity.response;
 
 
+import lombok.Data;
+
 /**
  * 签到数据类
  *
  * @author zJiaLi
  * @since 2020-10-30 22:44
  */
+@Data
 public class SignInDataResponse {
 
-
-    private String qq;
 
     /**
      * 获得的积分
@@ -18,91 +19,53 @@ public class SignInDataResponse {
     private Integer getPoints;
 
 
-    private String todayMsg;
+    private Integer status;
 
-    private int ranking;
+    private String message;
 
-    private String status;
+    private DataResponse dataResponse;
 
-    private Integer points;
+    @Data
+    public static class DataResponse {
+        /**
+         * QQ号
+         */
+        private String qq;
 
-    private String currentLevel;
+        /**
+         * 积分数
+         */
+        private Integer points;
 
-    private String monthDay;
+        /**
+         * 月签到天数
+         */
+        private Integer monthDay;
 
-    private String totalDay;
+        /**
+         * 总签到天数
+         */
+        private Integer totalDay;
+
+        /**
+         * 当前等级
+         *
+         * @note 2020/10/31 修改
+         */
+        private String currentLevel;
+
+        /**
+         * 每日一句
+         */
+        private String todayMsg;
+
+        /**
+         * 排名
+         */
+        private int ranking;
 
 
-    public String getStatus() {
-        return status;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
-    }
 
-
-    public String getQq() {
-        return qq;
-    }
-
-    public void setQq(String qq) {
-        this.qq = qq;
-    }
-
-    public Integer getGetPoints() {
-        return getPoints;
-    }
-
-    public void setGetPoints(Integer getPoints) {
-        this.getPoints = getPoints;
-    }
-
-    public Integer getPoints() {
-        return points;
-    }
-
-    public void setPoints(Integer points) {
-        this.points = points;
-    }
-
-    public String getTodayMsg() {
-        return todayMsg;
-    }
-
-    public void setTodayMsg(String todayMsg) {
-        this.todayMsg = todayMsg;
-    }
-
-    public int getRanking() {
-        return ranking;
-    }
-
-    public void setRanking(int ranking) {
-        this.ranking = ranking;
-    }
-
-    public String getCurrentLevel() {
-        return currentLevel;
-    }
-
-    public void setCurrentLevel(String currentLevel) {
-        this.currentLevel = currentLevel;
-    }
-
-    public String getMonthDay() {
-        return monthDay;
-    }
-
-    public void setMonthDay(String monthDay) {
-        this.monthDay = monthDay;
-    }
-
-    public String getTotalDay() {
-        return totalDay;
-    }
-
-    public void setTotalDay(String totalDay) {
-        this.totalDay = totalDay;
-    }
 }
