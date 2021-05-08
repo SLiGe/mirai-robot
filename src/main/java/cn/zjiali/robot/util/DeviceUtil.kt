@@ -1,11 +1,12 @@
-package cn.zjiali.robot.util;
+package cn.zjiali.robot.util
 
-import cn.hutool.core.io.file.FileReader;
-import cn.hutool.core.io.file.FileWriter;
-import cn.hutool.json.JSONObject;
-import net.mamoe.mirai.utils.DeviceInfo;
-
-import java.io.File;
+import cn.hutool.core.io.file.FileReader
+import cn.hutool.core.io.file.FileWriter
+import cn.hutool.json.JSONObject
+import net.mamoe.mirai.utils.DeviceInfo
+import java.io.File
+import kotlin.random.Random
+import kotlin.random.asJavaRandom
 
 /**
  * 设备信息工具类
@@ -13,27 +14,30 @@ import java.io.File;
  * @author zJiaLi
  * @since 2021-04-17 14:46
  */
-public class DeviceUtil {
-    private DeviceUtil() {
-    }
-
+object DeviceUtil {
     /**
      * 获取机器人设备信息的JSON字符串
      *
      * @return
      */
-    public static String getDeviceInfoJson(String qq) {
+    @JvmStatic
+    fun getDeviceInfoJson(qq: String): String? {
         // 设备信息文件
-        File file = new File("deviceInfo-".concat(qq).concat(".json"));
-        String deviceInfoJson = null;
+        val file = File("deviceInfo-$qq.json")
+        val deviceInfoJson: String?
         if (file.exists()) {
-            FileReader fileReader = new FileReader(file);
-            deviceInfoJson = fileReader.readString();
+            val fileReader = FileReader(file)
+            deviceInfoJson = fileReader.readString()
         } else {
-            deviceInfoJson = new JSONObject(DeviceInfo.random()).toString();
-            FileWriter fileWriter = new FileWriter(file);
-            fileWriter.write(deviceInfoJson);
+            deviceInfoJson = JSONObject(DeviceInfo.random()).toString()
+            val fileWriter = FileWriter(file)
+            fileWriter.write(deviceInfoJson)
         }
-        return deviceInfoJson;
+        return deviceInfoJson
+    }
+
+    @JvmStatic
+    fun main(args: Array<String>) {
+        getDeviceInfoJson("357078415")
     }
 }

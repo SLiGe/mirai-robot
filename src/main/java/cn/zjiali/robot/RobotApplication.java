@@ -15,6 +15,8 @@ import net.mamoe.mirai.event.*;
 import net.mamoe.mirai.event.events.*;
 import net.mamoe.mirai.utils.*;
 
+import java.util.Objects;
+
 
 /**
  * @author zJiaLi
@@ -43,7 +45,7 @@ public class RobotApplication {
         Bot bot = BotFactory.INSTANCE.newBot(qq, password, new BotConfiguration() {
             {
                 //加载设备信息
-                loadDeviceInfoJson(DeviceUtil.getDeviceInfoJson(AppConfig.applicationConfig.getQq()));
+                loadDeviceInfoJson(Objects.requireNonNull(DeviceUtil.getDeviceInfoJson(AppConfig.applicationConfig.getQq())));
                 //设置登录解决器
                 setLoginSolver((LoginSolver) ServiceFactory.get(SysLoginSolver.class.getSimpleName()));
                 // 选择协议
