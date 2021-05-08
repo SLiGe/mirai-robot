@@ -1,61 +1,47 @@
 package cn.zjiali.robot.entity.response;
 
+import lombok.Data;
+
 /**
  * 运势实体
  *
  * @author zJiaLi
  * @since 2020-10-31 22:54
  */
+@Data
 public class FortuneResponse {
-    /**
-     * 运情总结
-     */
-    private String fortuneSummary;
 
-    /**
-     * 幸运星
-     */
-    private String luckyStar;
+    private int status;
 
-    /**
-     * 签文
-     */
-    private String signText;
+    private String message;
 
-    /**
-     * 解签
-     */
-    private String unSignText;
+    private DataResponse dataResponse;
 
-    public String getFortuneSummary() {
-        return fortuneSummary;
+    @Data
+    public static class DataResponse {
+
+        private Long id;
+
+        /**
+         * 运情总结
+         */
+        private String fortuneSummary;
+
+        /**
+         * 幸运星
+         */
+        private String luckyStar;
+
+        /**
+         * 签文
+         */
+        private String signText;
+
+        /**
+         * 解签
+         */
+        private String unSignText;
     }
 
-    public void setFortuneSummary(String fortuneSummary) {
-        this.fortuneSummary = fortuneSummary;
-    }
 
-    public String getLuckyStar() {
-        return luckyStar;
-    }
-
-    public void setLuckyStar(String luckyStar) {
-        this.luckyStar = luckyStar;
-    }
-
-    public String getSignText() {
-        return signText;
-    }
-
-    public void setSignText(String signText) {
-        this.signText = signText;
-    }
-
-    public String getUnSignText() {
-        return unSignText;
-    }
-
-    public void setUnSignText(String unSignText) {
-        this.unSignText = unSignText;
-    }
 }

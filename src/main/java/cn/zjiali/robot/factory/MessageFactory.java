@@ -137,25 +137,29 @@ public class MessageFactory {
         jsonObject.addProperty("isIntegral", FortuneConfig.fortune_point);
         jsonObject.addProperty("groupNum", Long.toString(groupNum));
         String response = HttpUtil.httpPost(ServerUrl.FORTUNE_URL, jsonObject);
-        System.out.println(response);
         if (response == null) {
             return "运势服务故障,请联系管理员!";
         }
-        JsonObject resObj = JsonUtil.json2obj(response, JsonObject.class);
-        final String status = resObj.get("status").getAsString();
-        if ("40010".equals(status)) {
+        Type type = new TypeToken<RobotBaseResponse<FortuneResponse>>() {
+        }.getType();
+        RobotBaseResponse<FortuneResponse> robotBaseResponse = JsonUtil.toObjByType(response, type);
+        if (robotBaseResponse.getStatus() == 500) { //server has  error
             return null;
         }
-        if ("20011".equals(status)) {
-            String data = resObj.get("data").toString();
-            FortuneResponse fortuneResponse = JsonUtil.json2obj(data, FortuneResponse.class);
-            msgContentBuilder.append("\uD83C\uDF13您的今日运势为：").append(fortuneResponse.getFortuneSummary());
+        FortuneResponse responseData = robotBaseResponse.getData();
+        int dataStatus = responseData.getStatus();
+        if (dataStatus == 201) {
+            return null; // already get fortune
+        }
+        if (dataStatus == 200) {
+            FortuneResponse.DataResponse dataResponse = responseData.getDataResponse();
+            msgContentBuilder.append("\uD83C\uDF13您的今日运势为：").append(dataResponse.getFortuneSummary());
             if ("1".equals(FortuneConfig.fortune_star_num))
-                msgContentBuilder.append("\n\uD83C\uDF1F星指数：").append(fortuneResponse.getLuckyStar());
+                msgContentBuilder.append("\n\uD83C\uDF1F星指数：").append(dataResponse.getLuckyStar());
             if ("1".equals(FortuneConfig.fortune_sign_text))
-                msgContentBuilder.append("\n\uD83D\uDCD7签文：").append(fortuneResponse.getSignText());
+                msgContentBuilder.append("\n\uD83D\uDCD7签文：").append(dataResponse.getSignText());
             if ("1".equals(FortuneConfig.fortune_un_sign))
-                msgContentBuilder.append("\n\uD83D\uDCDD解签：").append(fortuneResponse.getUnSignText());
+                msgContentBuilder.append("\n\uD83D\uDCDD解签：").append(dataResponse.getUnSignText());
 
         }
         return msgContentBuilder.toString();
