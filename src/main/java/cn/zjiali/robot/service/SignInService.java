@@ -2,11 +2,14 @@ package cn.zjiali.robot.service;
 
 import cn.zjiali.robot.annotation.Service;
 import cn.zjiali.robot.constant.ServerUrl;
+import cn.zjiali.robot.entity.response.RobotBaseResponse;
 import cn.zjiali.robot.entity.response.SignInDataResponse;
 import cn.zjiali.robot.util.HttpUtil;
 import cn.zjiali.robot.util.JsonUtil;
 import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.util.Random;
 
 /**
@@ -27,21 +30,16 @@ public class SignInService {
         int point = new Random(20).nextInt(60);
         jsonObject.addProperty("points", (point));
         String signInDataJson = HttpUtil.httpPost(ServerUrl.SIGN_IN_URL, jsonObject);
-        JsonObject jsonObj = JsonUtil.json2obj(signInDataJson, JsonObject.class);
-        int status = jsonObj.get("status").getAsInt();
-        if (status == 500) {
+        Type type = new TypeToken<RobotBaseResponse<SignInDataResponse>>() {
+        }.getType();
+        RobotBaseResponse<SignInDataResponse> robotBaseResponse = JsonUtil.toObjByType(signInDataJson, type);
+        if (robotBaseResponse.getStatus() == 500) {
             return null;
         }
-        JsonObject dataJsonObject = jsonObj.get("data").getAsJsonObject();
-        int signInStatus = dataJsonObject.get("status").getAsInt();
-        if (signInStatus == 203) {
-            SignInDataResponse signInDataResponse = new SignInDataResponse();
-            signInDataResponse.setStatus("203");
+        SignInDataResponse signInDataResponse = robotBaseResponse.getData();
+        if (signInDataResponse.getStatus() == 203) {
             return signInDataResponse;
         }
-        String data = dataJsonObject.get("getSignInDataResponse").toString();
-        SignInDataResponse signInDataResponse = JsonUtil.json2obj(data, SignInDataResponse.class);
-        signInDataResponse.setStatus(String.valueOf(status));
         signInDataResponse.setGetPoints(point);
         return signInDataResponse;
     }
@@ -53,14 +51,11 @@ public class SignInService {
         // 1好友消息 2群组消息
         jsonObject.addProperty("msgType", msgType);
         String signInDataJson = HttpUtil.httpPost(ServerUrl.SIGN_IN_DATA_URL, jsonObject);
-        JsonObject jsonObj = JsonUtil.json2obj(signInDataJson, JsonObject.class);
-        int status = jsonObj.get("status").getAsInt();
-        if (status == 200) {
-            JsonObject dataJsonObject = jsonObj.get("data").getAsJsonObject();
-            String data = dataJsonObject.get("getSignInDataResponse").getAsString();
-            SignInDataResponse signInDataResponse = JsonUtil.json2obj(data, SignInDataResponse.class);
-            signInDataResponse.setStatus(String.valueOf(status));
-            return signInDataResponse;
+        Type type = new TypeToken<RobotBaseResponse<SignInDataResponse>>() {
+        }.getType();
+        RobotBaseResponse<SignInDataResponse> robotBaseResponse = JsonUtil.toObjByType(signInDataJson, type);
+        if (robotBaseResponse.getStatus() == 200) {
+            return robotBaseResponse.getData();
         }
         return null;
     }
