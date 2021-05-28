@@ -1,7 +1,7 @@
 package cn.zjiali.robot.handler;
 
+import cn.zjiali.robot.annotation.Autowired;
 import cn.zjiali.robot.config.plugin.MoLiConfig;
-import cn.zjiali.robot.factory.ServiceFactory;
 import cn.zjiali.robot.service.MoLiService;
 import net.mamoe.mirai.event.events.FriendMessageEvent;
 import net.mamoe.mirai.event.events.GroupMessageEvent;
@@ -18,7 +18,8 @@ import java.util.Map;
  */
 public class MoLiHandler extends AbstractHandler {
 
-    private static final MoLiService moLiService = (MoLiService) ServiceFactory.get(MoLiService.class.getSimpleName());
+    @Autowired
+    private MoLiService moLiService;
 
     @Override
     public void handleGroupMessage(GroupMessageEvent event) {

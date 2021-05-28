@@ -1,5 +1,6 @@
 package cn.zjiali.robot.handler;
 
+import cn.zjiali.robot.annotation.Autowired;
 import cn.zjiali.robot.config.plugin.SignInConfig;
 import cn.zjiali.robot.entity.response.SignInDataResponse;
 import cn.zjiali.robot.factory.ServiceFactory;
@@ -15,7 +16,8 @@ import net.mamoe.mirai.message.data.At;
  */
 public class SignInHandler implements Handler {
 
-    private static final SignInService signInService = (SignInService) ServiceFactory.get(SignInService.class.getSimpleName());
+    @Autowired
+    private SignInService signInService;
 
     @Override
     public void handleGroupMessage(GroupMessageEvent event) {

@@ -69,7 +69,7 @@ public class ApplicationBootStrap {
                     if (service != null) {
                         Object instance = aClass.newInstance();
                         String serviceName = "".equals(service.name()) ? instance.getClass().getSimpleName() : service.name();
-                        ServiceFactory.put(serviceName, instance);
+                        ServiceFactory.getInstance().put(serviceName, instance);
                     }
                 }
             }
@@ -111,7 +111,7 @@ public class ApplicationBootStrap {
                 String pluginHandler = plugin.getHandler();
                 int pluginEnable = plugin.getEnable();
                 if (pluginEnable == 1) {
-                    Handler handler = HandlerFactory.put(pluginName, pluginHandler);
+                    Handler handler = HandlerFactory.getInstance().put(pluginName, pluginHandler);
                     AppConfig.msgHandlers.add(handler);
                     miraiLogger.info("[loadAppConfig]====加载 " + pluginName + " 成功！");
                 }

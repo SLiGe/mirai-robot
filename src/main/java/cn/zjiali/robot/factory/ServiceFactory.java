@@ -1,24 +1,29 @@
 package cn.zjiali.robot.factory;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
 /**
  * 业务类工厂
  *
  * @author zJiaLi
  * @since 2021-04-07 21:19
  */
-public class ServiceFactory {
+public class ServiceFactory extends AbstractBeanFactory {
 
-    private static final Map<String, Object> SERVICE_MAP = new ConcurrentHashMap<>();
+    private final static ServiceFactory serviceFactory = new ServiceFactory();
 
-    public static synchronized void put(String name, Object o) {
-        SERVICE_MAP.put(name, o);
+    public static ServiceFactory getInstance() {
+        return serviceFactory;
     }
 
-    public static synchronized Object get(String serviceName) {
-        return SERVICE_MAP.get(serviceName);
+    public void put(String name, Object o) {
+        putBean(name, o);
     }
 
+    public <T> T get(String serviceName, Class<T> requireType) {
+        return getBean(serviceName, requireType);
+    }
+
+    @Override
+    public String beanPrefix() {
+        return "Service-";
+    }
 }

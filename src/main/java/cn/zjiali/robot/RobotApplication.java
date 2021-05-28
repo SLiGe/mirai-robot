@@ -22,7 +22,7 @@ import java.util.Objects;
  * @author zJiaLi
  * @since 2020-10-29 11:09
  */
-@Application(basePackages = {"cn.zjiali.robot"})
+@Application(basePackages = {"cn.zjiali.robot.service"})
 public class RobotApplication {
 
     private static final MiraiLogger miraiLogger = new PlatformLogger(RobotApplication.class.getName());
@@ -47,7 +47,7 @@ public class RobotApplication {
                 //加载设备信息
                 loadDeviceInfoJson(Objects.requireNonNull(DeviceUtil.getDeviceInfoJson(AppConfig.applicationConfig.getQq())));
                 //设置登录解决器
-                setLoginSolver((LoginSolver) ServiceFactory.get(SysLoginSolver.class.getSimpleName()));
+                setLoginSolver(ServiceFactory.getInstance().get(SysLoginSolver.class.getSimpleName(), SysLoginSolver.class));
                 // 选择协议
                 setProtocol(switchProtocol());
             }

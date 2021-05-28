@@ -30,7 +30,7 @@ public class MessageHandler {
         List<ApplicationConfig.Plugin> plugins = AppConfig.getApplicationConfig().getPlugins();
         plugins.stream().filter(plugin -> "茉莉聊天".equals(plugin.getName()) && plugin.getEnable() == 1)
                 .findFirst().ifPresent((plugin) -> {
-            Handler handler = HandlerFactory.get(plugin.getName());
+            Handler handler = HandlerFactory.getInstance().get(plugin.getName());
             if (isGroup) {
                 handler.handleGroupMessage(groupMessageEvent);
             } else {
@@ -47,7 +47,7 @@ public class MessageHandler {
             String command = pluginProperties.get("command");
             List<String> commandArray = Arrays.asList(command.split(","));
             if (enable == 1 && containCommand(msg, commandArray)) {
-                Handler handler = HandlerFactory.get(pluginName);
+                Handler handler = HandlerFactory.getInstance().get(pluginName);
                 if (isGroup) {
                     handler.handleGroupMessage(groupMessageEvent);
                 } else {
