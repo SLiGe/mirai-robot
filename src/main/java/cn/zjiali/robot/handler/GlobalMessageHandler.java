@@ -14,7 +14,7 @@ import java.util.*;
  * @author zJiaLi
  * @since 2020-10-29 21:20
  */
-public class MessageHandler {
+public class GlobalMessageHandler {
 
     public static void handleGroupMessage(GroupMessageEvent event) {
         handleMessage(true, event, null);

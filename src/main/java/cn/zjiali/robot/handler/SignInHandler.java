@@ -3,7 +3,6 @@ package cn.zjiali.robot.handler;
 import cn.zjiali.robot.annotation.Autowired;
 import cn.zjiali.robot.config.plugin.SignInConfig;
 import cn.zjiali.robot.entity.response.SignInDataResponse;
-import cn.zjiali.robot.factory.ServiceFactory;
 import cn.zjiali.robot.service.SignInService;
 import net.mamoe.mirai.event.events.FriendMessageEvent;
 import net.mamoe.mirai.event.events.GroupMessageEvent;

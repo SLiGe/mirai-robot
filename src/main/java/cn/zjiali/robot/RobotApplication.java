@@ -3,7 +3,7 @@ package cn.zjiali.robot;
 import cn.zjiali.robot.annotation.Application;
 import cn.zjiali.robot.config.AppConfig;
 import cn.zjiali.robot.factory.ServiceFactory;
-import cn.zjiali.robot.handler.MessageHandler;
+import cn.zjiali.robot.handler.GlobalMessageHandler;
 import cn.zjiali.robot.main.ApplicationBootStrap;
 import cn.zjiali.robot.system.SysLoginSolver;
 import cn.zjiali.robot.util.DeviceUtil;
@@ -60,8 +60,8 @@ public class RobotApplication {
             e.printStackTrace();
             return Unit.INSTANCE;
         });
-        eventChannel.subscribeAlways(GroupMessageEvent.class, MessageHandler::handleGroupMessage);
-        eventChannel.subscribeAlways(FriendMessageEvent.class, MessageHandler::handleFriendMessage);
+        eventChannel.subscribeAlways(GroupMessageEvent.class, GlobalMessageHandler::handleGroupMessage);
+        eventChannel.subscribeAlways(FriendMessageEvent.class, GlobalMessageHandler::handleFriendMessage);
         eventChannel.subscribeAlways(NewFriendRequestEvent.class, NewFriendRequestEvent::accept);
         bot.join(); // 阻塞当前线程直到 bot 离线
     }
