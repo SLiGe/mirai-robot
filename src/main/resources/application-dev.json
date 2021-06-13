@@ -84,7 +84,10 @@
         "api_key": "",
         "api_secret": "",
         "type": "",
-        "url": "http://i.itpk.cn/api.php"
+        "url": "http://i.itpk.cn/api.php",
+        "zUrlLq":"https://robot.zjiali.cn/api/moLi/queryLq",
+        "zUrlChat":"https://robot.zjiali.cn/api/moLi/getChatReply",
+        "isMoLiServer":"0"
       }
     }
   ]

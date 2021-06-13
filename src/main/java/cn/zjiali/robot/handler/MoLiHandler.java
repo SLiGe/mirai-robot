@@ -24,7 +24,7 @@ public class MoLiHandler extends AbstractHandler {
     @Override
     public void handleGroupMessage(GroupMessageEvent event) {
         String msg = getMsg(event);
-        Map<String, String> interceptMessage = interceptMessage(msg);
+        Map<String, String> interceptMessage = interceptMessage(event.getSender().getId(), true, event.getGroup().getId(), msg);
         if ("1".equals(interceptMessage.get("flag"))) {
             event.getGroup().sendMessage(new At(event.getSender().getId()).plus(interceptMessage.get("message")));
             return;
@@ -45,7 +45,7 @@ public class MoLiHandler extends AbstractHandler {
     @Override
     public void handleFriendMessage(FriendMessageEvent event) {
         String msg = getMsg(event);
-        Map<String, String> interceptMessage = interceptMessage(msg);
+        Map<String, String> interceptMessage = interceptMessage(event.getSender().getId(), false, 0L, msg);
         if ("1".equals(interceptMessage.get("flag"))) {
             event.getSender().sendMessage(interceptMessage.get("message"));
             return;
@@ -54,28 +54,28 @@ public class MoLiHandler extends AbstractHandler {
         event.getSender().sendMessage(sendMsg);
     }
 
-    private Map<String, String> interceptMessage(String msg) {
+    private Map<String, String> interceptMessage(long qq, boolean isGroup, long groupNum, String msg) {
         Map<String, String> retMap = new HashMap<>();
         if ("1".equals(MoLiConfig.jokeEnable) && msg.contains(MoLiConfig.jokeCommand)) {
-            String jokeMessage = moLiService.getJokeMessage();
+            String jokeMessage = moLiService.getJokeMessage(qq, isGroup, groupNum);
             retMap.put("flag", "1");
             retMap.put("message", jokeMessage);
             return retMap;
         }
         if ("1".equals(MoLiConfig.gylqEnable) && msg.contains(MoLiConfig.gylqCommand)) {
-            String gylqMessage = moLiService.getGylqMessage();
+            String gylqMessage = moLiService.getGylqMessage(qq, isGroup, groupNum);
             retMap.put("flag", "1");
             retMap.put("message", gylqMessage);
             return retMap;
         }
         if ("1".equals(MoLiConfig.csylqEnable) && msg.contains(MoLiConfig.csylqCommand)) {
-            String csylqMessage = moLiService.getCsylqMessage();
+            String csylqMessage = moLiService.getCsylqMessage(qq, isGroup, groupNum);
             retMap.put("flag", "1");
             retMap.put("message", csylqMessage);
             return retMap;
         }
         if ("1".equals(MoLiConfig.yllqEnable) && msg.contains(MoLiConfig.yllqCommand)) {
-            String yllqMessage = moLiService.getYllqMessage();
+            String yllqMessage = moLiService.getYllqMessage(qq, isGroup, groupNum);
             retMap.put("flag", "1");
             retMap.put("message", yllqMessage);
             return retMap;

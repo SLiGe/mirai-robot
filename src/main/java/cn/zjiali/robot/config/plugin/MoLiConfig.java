@@ -51,4 +51,12 @@ public class MoLiConfig {
     @Property(name = "url")
     public static String url;
 
+    @Property(name = "isMoLiServer")
+    public static String isMoLiServer;
+    @Property(name = "zUrlLq")
+    public static String zUrlLq;
+    @Property(name = "zUrlChat")
+    public static String zUrlChat;
+
+
 }

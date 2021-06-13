@@ -12,6 +12,7 @@ import cn.zjiali.robot.util.HttpUtil;
 import cn.zjiali.robot.util.JsonUtil;
 import cn.zjiali.robot.util.MessageUtil;
 import cn.zjiali.robot.util.PropertiesUtil;
+import com.google.gson.JsonObject;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -35,29 +36,38 @@ public class MoLiService {
     }
 
     public String getCommonChatMessage(String msg) {
-        Map<String, String> paramMap = new HashMap<>();
-        paramMap.put("question", msg);
-        if ("".equals(MoLiConfig.limit)) {
-            paramMap.put("limit", "5");
+        Map<String, Object> paramMap = new HashMap<>();
+
+        if ("1".equals(MoLiConfig.isMoLiServer)) {
+            paramMap.put("question", msg);
+            if ("".equals(MoLiConfig.limit)) {
+                paramMap.put("limit", "5");
+            } else {
+                paramMap.put("limit", MoLiConfig.limit);
+            }
+            if (!"".equals(MoLiConfig.apiKey)) {
+                paramMap.put("api_key", MoLiConfig.apiKey);
+            }
+            if (!"".equals(MoLiConfig.apiSecret)) {
+                paramMap.put("api_secret", MoLiConfig.apiSecret);
+            }
+            return HttpUtil.httpGet(MoLiConfig.url, paramMap);
         } else {
-            paramMap.put("limit", MoLiConfig.limit);
+            paramMap.put("message", msg);
         }
-        if (!"".equals(MoLiConfig.apiKey)) {
-            paramMap.put("api_key", MoLiConfig.apiKey);
-        }
-        if (!"".equals(MoLiConfig.apiSecret)) {
-            paramMap.put("api_secret", MoLiConfig.apiSecret);
-        }
-        return HttpUtil.httpGet(MoLiConfig.url, paramMap);
+        return HttpUtil.httpPost(MoLiConfig.zUrlChat, paramMap);
 
     }
 
     /**
      * 获取笑话
      *
+     * @param qq
+     * @param isGroup
+     * @param groupNum
      * @return
      */
-    public String getJokeMessage() {
+    public String getJokeMessage(long qq, boolean isGroup, long groupNum) {
         String jokeJson = getCommonChatMessage("笑话");
         JokeResponse jokeResponse = JsonUtil.json2obj(jokeJson, JokeResponse.class);
         AsyncManager.me().execute(sendResponseFlag, AsyncFactory.sendResponse("joke", jokeJson));
@@ -71,10 +81,13 @@ public class MoLiService {
     /**
      * 获取观音灵签
      *
+     * @param qq
+     * @param isGroup
+     * @param groupNum
      * @return
      */
-    public String getGylqMessage() {
-        String gylqJson = getCommonChatMessage("观音灵签");
+    public String getGylqMessage(long qq, boolean isGroup, long groupNum) {
+        String gylqJson = queryLqData(1, qq, isGroup, groupNum);
         AsyncManager.me().execute(sendResponseFlag, AsyncFactory.sendResponse("gylq", gylqJson));
         GylqResponse gylqResponse = JsonUtil.json2obj(gylqJson, GylqResponse.class);
         return MessageUtil.replaceMessage(MoLiConfig.gylqTemplate, gylqResponse);
@@ -83,10 +96,13 @@ public class MoLiService {
     /**
      * 获取月老灵签
      *
+     * @param qq
+     * @param isGroup
+     * @param groupNum
      * @return
      */
-    public String getYllqMessage() {
-        String yllqJson = getCommonChatMessage("月老灵签");
+    public String getYllqMessage(long qq, boolean isGroup, long groupNum) {
+        String yllqJson = queryLqData(2, qq, isGroup, groupNum);
         AsyncManager.me().execute(sendResponseFlag, AsyncFactory.sendResponse("yllq", yllqJson));
         YllqResponse yllqResponse = JsonUtil.json2obj(yllqJson, YllqResponse.class);
         return MessageUtil.replaceMessage(MoLiConfig.yllqTemplate, yllqResponse);
@@ -95,12 +111,24 @@ public class MoLiService {
     /**
      * 获取月老灵签
      *
+     * @param qq
+     * @param isGroup
+     * @param groupNum
      * @return
      */
-    public String getCsylqMessage() {
-        String csylqJson = getCommonChatMessage("财神爷灵签");
+    public String getCsylqMessage(long qq, boolean isGroup, long groupNum) {
+        String csylqJson = queryLqData(3, qq, isGroup, groupNum);
         AsyncManager.me().execute(sendResponseFlag, AsyncFactory.sendResponse("csylq", csylqJson));
         CsylqResponse csylqResponse = JsonUtil.json2obj(csylqJson, CsylqResponse.class);
         return MessageUtil.replaceMessage(MoLiConfig.csylqTemplate, csylqResponse);
+    }
+
+    public String queryLqData(int type, long qq, boolean isGroup, long groupNum) {
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("type", type);
+        paramMap.put("qq", qq);
+        paramMap.put("groupNum", groupNum);
+        paramMap.put("isGroup", isGroup ? 1 : 0);
+        return HttpUtil.httpPost(MoLiConfig.zUrlLq, paramMap);
     }
 }

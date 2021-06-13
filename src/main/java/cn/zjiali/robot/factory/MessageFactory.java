@@ -39,7 +39,7 @@ public class MessageFactory {
     public static String getYellowCalendarMessage(String message) {
         if (YellowCalendarConfig.yellow_calendar_command.equals(message)) {
             String date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-            HashMap<String, String> params = new HashMap<>();
+            HashMap<String, Object> params = new HashMap<>();
             params.put("key", CalendarConfig.calendar_key);
             params.put("date", date);
             String response = HttpUtil.httpGet(YellowCalendarConfig.url, params);
@@ -68,7 +68,7 @@ public class MessageFactory {
             int month = calendar.get(Calendar.MONTH);
             int day = calendar.get(Calendar.DAY_OF_MONTH);
             String dateStr = month + "/" + day;
-            HashMap<String, String> paramMap = new HashMap<>(2);
+            HashMap<String, Object> paramMap = new HashMap<>(2);
             paramMap.put("key", TodayOfHistoryConfig.key);
             paramMap.put("date", dateStr);
             String response = HttpUtil.httpGet(ServerUrl.TODAY_ON_HISTORY_URL, paramMap);
@@ -104,7 +104,7 @@ public class MessageFactory {
             int month = calendar.get(Calendar.MONTH);
             int day = calendar.get(Calendar.DAY_OF_MONTH);
             String dateStr = year + "-" + month + "-" + day;
-            HashMap<String, String> params = new HashMap<>();
+            HashMap<String, Object> params = new HashMap<>();
             params.put("key", CalendarConfig.calendar_key);
             params.put("date", dateStr);
             String response = HttpUtil.httpGet(ServerUrl.CALENDAR_DAY_URL, params);

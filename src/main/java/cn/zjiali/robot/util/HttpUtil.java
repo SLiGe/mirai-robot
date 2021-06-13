@@ -28,7 +28,7 @@ public class HttpUtil {
      * @param params 参数
      * @return
      */
-    public static String httpGet(String url, Map<String, String> params) {
+    public static String httpGet(String url, Map<String, Object> params) {
         if (params != null && !params.isEmpty()) {
             StringBuilder sb = new StringBuilder();
             Set<String> keySet = params.keySet();
@@ -36,7 +36,7 @@ public class HttpUtil {
             int index = 0;
             for (String key : keySet) {
                 sb.append(key).append("=").append(params.get(key));
-                if (index < params.size() - 1) {
+                if (index < (params.size() - 1)) {
                     sb.append("&");
                 }
                 index++;
@@ -68,8 +68,16 @@ public class HttpUtil {
     }
 
     public static String httpPost(String url, JsonObject data) {
+        return httpPost(url, JsonUtil.obj2str(data));
+    }
+
+    public static String httpPost(String url, Map<String, Object> params) {
+        return httpPost(url, JsonUtil.obj2str(params));
+    }
+
+    public static String httpPost(String url, String data) {
         miraiLogger.debug("[httpPost]====请求URL: " + url);
-        RequestBody requestBody = RequestBody.create(JsonUtil.obj2str(data), JSON);
+        RequestBody requestBody = RequestBody.create(data, JSON);
         Request request = new Request.Builder().url(url)
                 .header("token", "294a4fd5929bf405060d14566a72b18a")
                 .post(requestBody).build();
@@ -84,5 +92,7 @@ public class HttpUtil {
         }
         return result;
     }
+
+
 
 }
