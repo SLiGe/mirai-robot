@@ -1,7 +1,7 @@
 {
   "appEnable": 1,
-  "qq": "2364051402",
-  "password": "xx1230..",
+  "qq": "xxx",
+  "password": "xxx",
   "plugins": [
     {
       "name": "一言",
@@ -78,15 +78,16 @@
         "yllqTemplate": "签号:{number1}\n好坏:{haohua}\n诗意解签:{shiyi}\n解签:{jieqian}\n注释:{zhushi}\n白话浅释:{baihua}",
         "yllqEnable": "1",
         "csylqCommand": "财神爷灵签",
-        "csylqTemplate": "签号:{number1}\n签语:{qianyu}\n注释:{zhushi}\n解签:{jieqian}\n解说:{jieshuo}\n结果:{jieguo}\n婚姻:{hunyin}\n交易:{jiaoyi}\n白话浅释:{baihua}",
+        "csylqTemplate": "签号:{number1}\n签语:{qianyu}\n注释:{zhushi}\n解签:{jieqian}\n解说:{jieshuo}\n结果:{jieguo}\n婚姻:{hunyin}\n交易:{jiaoyi}\n事业:{shiye}",
         "csylqEnable": "1",
         "limit": "5",
         "api_key": "",
         "api_secret": "",
         "type": "",
         "url": "http://i.itpk.cn/api.php",
-        "zUrlLq":"https://robot.zjiali.cn/api/moLi/queryLq",
-        "zUrlChat":"https://robot.zjiali.cn/api/moLi/getChatReply",
+        "zUrlLq":"https://robot.zjiali.cn/api/moli/queryLq",
+        "zUrlChat":"https://robot.zjiali.cn/api/moli/getChatReply",
+        "zUrlJoke":"https://robot.zjiali.cn/api/moli/queryJoke",
         "isMoLiServer":"0"
       }
     }

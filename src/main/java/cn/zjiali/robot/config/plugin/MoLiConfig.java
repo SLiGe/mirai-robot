@@ -57,6 +57,8 @@ public class MoLiConfig {
     public static String zUrlLq;
     @Property(name = "zUrlChat")
     public static String zUrlChat;
+    @Property(name = "zUrlJoke")
+    public static String zUrlJoke;
 
 
 }
