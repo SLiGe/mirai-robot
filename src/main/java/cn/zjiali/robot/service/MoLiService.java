@@ -68,9 +68,12 @@ public class MoLiService {
      * @return
      */
     public String getJokeMessage(long qq, boolean isGroup, long groupNum) {
-        String jokeJson = getCommonChatMessage("笑话");
-        JokeResponse jokeResponse = JsonUtil.json2obj(jokeJson, JokeResponse.class);
-        AsyncManager.me().execute(sendResponseFlag, AsyncFactory.sendResponse("joke", jokeJson));
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("qq", qq);
+        paramMap.put("groupNum", groupNum);
+        paramMap.put("isGroup", isGroup ? 1 : 0);
+        String jokeContent = HttpUtil.httpGet(MoLiConfig.zUrlJoke, paramMap);
+        JokeResponse jokeResponse = JsonUtil.json2obj(jokeContent, JokeResponse.class);
         if ("".equals(MoLiConfig.jokeTemplate)) {
             return jokeResponse.getContent();
         }
@@ -88,7 +91,6 @@ public class MoLiService {
      */
     public String getGylqMessage(long qq, boolean isGroup, long groupNum) {
         String gylqJson = queryLqData(1, qq, isGroup, groupNum);
-        AsyncManager.me().execute(sendResponseFlag, AsyncFactory.sendResponse("gylq", gylqJson));
         GylqResponse gylqResponse = JsonUtil.json2obj(gylqJson, GylqResponse.class);
         return MessageUtil.replaceMessage(MoLiConfig.gylqTemplate, gylqResponse);
     }
@@ -103,7 +105,6 @@ public class MoLiService {
      */
     public String getYllqMessage(long qq, boolean isGroup, long groupNum) {
         String yllqJson = queryLqData(2, qq, isGroup, groupNum);
-        AsyncManager.me().execute(sendResponseFlag, AsyncFactory.sendResponse("yllq", yllqJson));
         YllqResponse yllqResponse = JsonUtil.json2obj(yllqJson, YllqResponse.class);
         return MessageUtil.replaceMessage(MoLiConfig.yllqTemplate, yllqResponse);
     }
@@ -118,7 +119,6 @@ public class MoLiService {
      */
     public String getCsylqMessage(long qq, boolean isGroup, long groupNum) {
         String csylqJson = queryLqData(3, qq, isGroup, groupNum);
-        AsyncManager.me().execute(sendResponseFlag, AsyncFactory.sendResponse("csylq", csylqJson));
         CsylqResponse csylqResponse = JsonUtil.json2obj(csylqJson, CsylqResponse.class);
         return MessageUtil.replaceMessage(MoLiConfig.csylqTemplate, csylqResponse);
     }
