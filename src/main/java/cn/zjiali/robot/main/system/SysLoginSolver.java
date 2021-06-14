@@ -1,4 +1,4 @@
-package cn.zjiali.robot.system;
+package cn.zjiali.robot.main.system;
 
 import cn.hutool.core.codec.Base64;
 import cn.zjiali.robot.annotation.Service;
