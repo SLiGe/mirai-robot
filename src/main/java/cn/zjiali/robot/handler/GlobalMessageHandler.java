@@ -3,6 +3,8 @@ package cn.zjiali.robot.handler;
 import cn.zjiali.robot.config.AppConfig;
 import cn.zjiali.robot.entity.ApplicationConfig;
 import cn.zjiali.robot.factory.HandlerFactory;
+import cn.zjiali.robot.factory.ServiceFactory;
+import cn.zjiali.robot.main.interceptor.ReplyBlacklistInterceptor;
 import net.mamoe.mirai.event.events.FriendMessageEvent;
 import net.mamoe.mirai.event.events.GroupMessageEvent;
 
@@ -25,23 +27,32 @@ public class GlobalMessageHandler {
     }
 
     private static void handleMessage(boolean isGroup, GroupMessageEvent groupMessageEvent, FriendMessageEvent friendMessageEvent) {
+        ReplyBlacklistInterceptor replyBlacklistInterceptor = ServiceFactory.getInstance().get(ReplyBlacklistInterceptor.class.getSimpleName(), ReplyBlacklistInterceptor.class);
+        try {
+            if (!isGroup) {
+                boolean preHandle = replyBlacklistInterceptor.preHandle(friendMessageEvent);
+                if (!preHandle) return;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         // 茉莉插件需要单独拦截
         String msg = isGroup ? groupMessageEvent.getMessage().contentToString() : friendMessageEvent.getMessage().contentToString();
         List<ApplicationConfig.Plugin> plugins = AppConfig.getApplicationConfig().getPlugins();
         plugins.stream().filter(plugin -> "茉莉聊天".equals(plugin.getName()) && plugin.getEnable() == 1)
                 .findFirst().ifPresent((plugin) -> {
-            Handler handler = HandlerFactory.getInstance().get(plugin.getName());
-            if (isGroup) {
-                handler.handleGroupMessage(groupMessageEvent);
-            } else {
-                handler.handleFriendMessage(friendMessageEvent);
-            }
-        });
+                    Handler handler = HandlerFactory.getInstance().get(plugin.getName());
+                    if (isGroup) {
+                        handler.handleGroupMessage(groupMessageEvent);
+                    } else {
+                        handler.handleFriendMessage(friendMessageEvent);
+                    }
+                });
         for (ApplicationConfig.Plugin plugin : plugins) {
             HashMap<String, String> pluginProperties = plugin.getProperties();
             int enable = plugin.getEnable();
             String pluginName = plugin.getName();
-            if ("茉莉聊天".equals(pluginName) ) {
+            if ("茉莉聊天".equals(pluginName)) {
                 continue;
             }
             String command = pluginProperties.get("command");
