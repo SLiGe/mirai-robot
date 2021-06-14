@@ -38,7 +38,7 @@ public class GlobalMessageHandler {
         }
         // 茉莉插件需要单独拦截
         String msg = isGroup ? groupMessageEvent.getMessage().contentToString() : friendMessageEvent.getMessage().contentToString();
-        List<ApplicationConfig.Plugin> plugins = AppConfig.getApplicationConfig().getPlugins();
+         List<ApplicationConfig.Plugin> plugins = AppConfig.getApplicationConfig().getPlugins();
         plugins.stream().filter(plugin -> "茉莉聊天".equals(plugin.getName()) && plugin.getEnable() == 1)
                 .findFirst().ifPresent((plugin) -> {
                     Handler handler = HandlerFactory.getInstance().get(plugin.getName());
