@@ -5,7 +5,7 @@ import cn.zjiali.robot.config.AppConfig;
 import cn.zjiali.robot.factory.ServiceFactory;
 import cn.zjiali.robot.handler.GlobalMessageHandler;
 import cn.zjiali.robot.main.ApplicationBootStrap;
-import cn.zjiali.robot.system.SysLoginSolver;
+import cn.zjiali.robot.main.system.SysLoginSolver;
 import cn.zjiali.robot.util.DeviceUtil;
 import cn.zjiali.robot.util.ObjectUtil;
 import kotlin.Unit;
@@ -22,7 +22,7 @@ import java.util.Objects;
  * @author zJiaLi
  * @since 2020-10-29 11:09
  */
-@Application(basePackages = {"cn.zjiali.robot.service","cn.zjiali.robot.system"})
+@Application(basePackages = {"cn.zjiali.robot.service","cn.zjiali.robot.main"})
 public class RobotApplication {
 
     private static final MiraiLogger miraiLogger = new PlatformLogger(RobotApplication.class.getName());
