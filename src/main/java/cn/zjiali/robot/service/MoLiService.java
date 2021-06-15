@@ -35,11 +35,11 @@ public class MoLiService {
             if (!"".equals(MoLiConfig.apiSecret)) {
                 paramMap.put("api_secret", MoLiConfig.apiSecret);
             }
-            return HttpUtil.httpGet(MoLiConfig.url, paramMap);
+            return HttpUtil.get(MoLiConfig.url, paramMap);
         } else {
             paramMap.put("message", msg);
         }
-        String reply = HttpUtil.httpPost(MoLiConfig.zUrlChat, paramMap);
+        String reply = HttpUtil.post(MoLiConfig.zUrlChat, paramMap);
         return getChatResponse(reply, String.class);
 
     }
@@ -57,7 +57,7 @@ public class MoLiService {
         paramMap.put("qq", qq);
         paramMap.put("groupNum", groupNum);
         paramMap.put("isGroup", isGroup ? 1 : 0);
-        String jokeContent = HttpUtil.httpGet(MoLiConfig.zUrlJoke, paramMap);
+        String jokeContent = HttpUtil.get(MoLiConfig.zUrlJoke, paramMap);
         JokeResponse jokeResponse = getChatResponse(jokeContent, JokeResponse.class);
         if ("".equals(MoLiConfig.jokeTemplate)) {
             return jokeResponse.getContent();
@@ -114,7 +114,7 @@ public class MoLiService {
         paramMap.put("qq", qq);
         paramMap.put("groupNum", groupNum);
         paramMap.put("isGroup", isGroup ? 1 : 0);
-        return HttpUtil.httpPost(MoLiConfig.zUrlLq, paramMap);
+        return HttpUtil.post(MoLiConfig.zUrlLq, paramMap);
     }
 
     public <T> T getChatResponse(String json, Class<T> tClass) {

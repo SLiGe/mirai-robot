@@ -21,7 +21,7 @@ public class AsyncFactory {
                 JsonObject jsonObject = new JsonObject();
                 jsonObject.addProperty("response", response);
                 jsonObject.addProperty("type", type);
-                HttpUtil.httpPost(ServerUrl.SAVE_DATA_URL, jsonObject);
+                HttpUtil.post(ServerUrl.SAVE_DATA_URL, jsonObject);
             }
         };
     }

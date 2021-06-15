@@ -34,7 +34,7 @@ public class SysLoginSolver extends LoginSolver {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("qq", String.valueOf(bot.getId()));
         jsonObject.addProperty("base64", Base64.encode(bytes));
-        String responseJson = HttpUtil.httpPost(ServerUrl.VERIFY_CODE_VIEW_URL, jsonObject);
+        String responseJson = HttpUtil.post(ServerUrl.VERIFY_CODE_VIEW_URL, jsonObject);
         JsonObject response = JsonUtil.json2obj(responseJson, JsonObject.class);
         String verifyCodeUrl = response.get("data").getAsString();
         miraiLogger.warning("请打开以下网址后,在控制台输入验证码!");

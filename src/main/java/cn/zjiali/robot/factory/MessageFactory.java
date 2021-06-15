@@ -42,7 +42,7 @@ public class MessageFactory {
             HashMap<String, Object> params = new HashMap<>();
             params.put("key", CalendarConfig.calendar_key);
             params.put("date", date);
-            String response = HttpUtil.httpGet(YellowCalendarConfig.url, params);
+            String response = HttpUtil.get(YellowCalendarConfig.url, params);
             Type type = new TypeToken<JuHeBaseResponse<YellowCalendarResponse>>() {
             }.getType();
             JuHeBaseResponse<YellowCalendarResponse> baseResponse = JsonUtil.toObjByType(response, type);
@@ -71,7 +71,7 @@ public class MessageFactory {
             HashMap<String, Object> paramMap = new HashMap<>(2);
             paramMap.put("key", TodayOfHistoryConfig.key);
             paramMap.put("date", dateStr);
-            String response = HttpUtil.httpGet(ServerUrl.TODAY_ON_HISTORY_URL, paramMap);
+            String response = HttpUtil.get(ServerUrl.TODAY_ON_HISTORY_URL, paramMap);
             JuHeBaseResponse<List<TodayOnHistoryResponse>> todayOnHistoryResponse = JsonUtil.toObjByType(response, new TypeToken<JuHeBaseResponse<List<TodayOnHistoryResponse>>>() {
             }.getType());
             if (todayOnHistoryResponse != null) {
@@ -107,7 +107,7 @@ public class MessageFactory {
             HashMap<String, Object> params = new HashMap<>();
             params.put("key", CalendarConfig.calendar_key);
             params.put("date", dateStr);
-            String response = HttpUtil.httpGet(ServerUrl.CALENDAR_DAY_URL, params);
+            String response = HttpUtil.get(ServerUrl.CALENDAR_DAY_URL, params);
             Type type = new TypeToken<JuHeBaseResponse<CalendarResponse>>() {
             }.getType();
             JuHeBaseResponse<CalendarResponse> baseResponse = JsonUtil.toObjByType(response, type);
@@ -136,7 +136,7 @@ public class MessageFactory {
         jsonObject.addProperty("isGroup", msgType == 1 ? 0 : 1);
         jsonObject.addProperty("isIntegral", FortuneConfig.fortune_point);
         jsonObject.addProperty("groupNum", Long.toString(groupNum));
-        String response = HttpUtil.httpPost(ServerUrl.FORTUNE_URL, jsonObject);
+        String response = HttpUtil.post(ServerUrl.FORTUNE_URL, jsonObject);
         if (response == null) {
             return "运势服务故障,请联系管理员!";
         }
@@ -172,7 +172,7 @@ public class MessageFactory {
      * @return
      */
     public static String getSen() {
-        String sen = HttpUtil.httpGet(ServerUrl.SEN_URL);
+        String sen = HttpUtil.get(ServerUrl.SEN_URL);
         JsonObject jsonObject = new Gson().fromJson(sen, JsonObject.class);
         return jsonObject.get("data").getAsString();
     }
