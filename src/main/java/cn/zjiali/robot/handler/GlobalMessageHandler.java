@@ -28,17 +28,16 @@ public class GlobalMessageHandler {
 
     private static void handleMessage(boolean isGroup, GroupMessageEvent groupMessageEvent, FriendMessageEvent friendMessageEvent) {
         ReplyBlacklistInterceptor replyBlacklistInterceptor = ServiceFactory.getInstance().get(ReplyBlacklistInterceptor.class.getSimpleName(), ReplyBlacklistInterceptor.class);
+        boolean preHandle = false;
         try {
-            if (!isGroup) {
-                boolean preHandle = replyBlacklistInterceptor.preHandle(friendMessageEvent);
-                if (!preHandle) return;
-            }
+            preHandle = replyBlacklistInterceptor.preHandle(isGroup ? groupMessageEvent : friendMessageEvent);
         } catch (Exception e) {
             e.printStackTrace();
         }
+        if (!preHandle) return;
         // 茉莉插件需要单独拦截
         String msg = isGroup ? groupMessageEvent.getMessage().contentToString() : friendMessageEvent.getMessage().contentToString();
-         List<ApplicationConfig.Plugin> plugins = AppConfig.getApplicationConfig().getPlugins();
+        List<ApplicationConfig.Plugin> plugins = AppConfig.getApplicationConfig().getPlugins();
         plugins.stream().filter(plugin -> "茉莉聊天".equals(plugin.getName()) && plugin.getEnable() == 1)
                 .findFirst().ifPresent((plugin) -> {
                     Handler handler = HandlerFactory.getInstance().get(plugin.getName());
