@@ -1,9 +1,11 @@
 package cn.zjiali.robot.handler;
 
+import cn.hutool.core.collection.CollectionUtil;
 import cn.zjiali.robot.config.AppConfig;
 import cn.zjiali.robot.entity.ApplicationConfig;
 import cn.zjiali.robot.factory.HandlerFactory;
 import cn.zjiali.robot.factory.ServiceFactory;
+import cn.zjiali.robot.main.interceptor.HandlerInterceptor;
 import cn.zjiali.robot.main.interceptor.ReplyBlacklistInterceptor;
 import net.mamoe.mirai.event.events.FriendMessageEvent;
 import net.mamoe.mirai.event.events.GroupMessageEvent;
@@ -27,12 +29,17 @@ public class GlobalMessageHandler {
     }
 
     private static void handleMessage(boolean isGroup, GroupMessageEvent groupMessageEvent, FriendMessageEvent friendMessageEvent) {
-        ReplyBlacklistInterceptor replyBlacklistInterceptor = ServiceFactory.getInstance().get(ReplyBlacklistInterceptor.class.getSimpleName(), ReplyBlacklistInterceptor.class);
+        List<HandlerInterceptor> handlerInterceptors = ServiceFactory.getInstance().getBeanList(HandlerInterceptor.class);
         boolean preHandle = false;
-        try {
-            preHandle = replyBlacklistInterceptor.preHandle(isGroup ? groupMessageEvent : friendMessageEvent);
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (CollectionUtil.isNotEmpty(handlerInterceptors)) {
+            for (HandlerInterceptor handlerInterceptor : handlerInterceptors) {
+                try {
+                    preHandle = handlerInterceptor.preHandle(isGroup ? groupMessageEvent : friendMessageEvent);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                if (!preHandle) break;
+            }
         }
         if (!preHandle) return;
         // 茉莉插件需要单独拦截
