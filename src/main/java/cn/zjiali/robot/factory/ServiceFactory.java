@@ -1,5 +1,7 @@
 package cn.zjiali.robot.factory;
 
+import java.util.List;
+
 /**
  * 业务类工厂
  *
@@ -21,6 +23,11 @@ public class ServiceFactory extends AbstractBeanFactory {
     public <T> T get(String serviceName, Class<T> requireType) {
         return getBean(serviceName, requireType);
     }
+
+    public <T> List<T> getList(Class<T> requireType) {
+        return getBeanList(requireType);
+    }
+
 
     @Override
     public String beanPrefix() {

@@ -4,6 +4,7 @@ import cn.zjiali.robot.annotation.Autowired;
 import cn.zjiali.robot.handler.Handler;
 
 import java.lang.reflect.Field;
+import java.util.List;
 
 /**
  * @author zJiaLi
@@ -21,6 +22,10 @@ public abstract class AbstractBeanFactory implements BeanFactory {
         DefaultBeanFactory.getInstance().putBean(beanName, bean);
     }
 
+    @Override
+    public <T> List<T> getBeanList(Class<T> requireType) {
+        return DefaultBeanFactory.getInstance().getBeanList(requireType);
+    }
 
     public Object initialBean(Class<?> clazz) throws InstantiationException, IllegalAccessException {
         Object instance = clazz.newInstance();
