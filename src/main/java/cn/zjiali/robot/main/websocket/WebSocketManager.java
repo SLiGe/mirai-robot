@@ -2,11 +2,18 @@ package cn.zjiali.robot.main.websocket;
 
 import cn.zjiali.robot.annotation.Component;
 import cn.zjiali.robot.config.AppConfig;
-import cn.zjiali.robot.entity.ApplicationConfig;
+import cn.zjiali.robot.factory.ServiceFactory;
+import cn.zjiali.robot.manager.WsSecurityManager;
+import cn.zjiali.robot.model.response.ws.WsResult;
+import cn.zjiali.robot.service.WebSocketService;
+import cn.zjiali.robot.util.CommonLogger;
+import cn.zjiali.robot.util.JsonUtil;
+import cn.zjiali.robot.util.PropertiesUtil;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.WebSocket;
 
+import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
@@ -19,20 +26,33 @@ import java.util.concurrent.TimeUnit;
 public class WebSocketManager {
 
     private final Map<String, WebSocketClient> webSocketClientMap = new ConcurrentHashMap<>();
+    private final WebSocketService webSocketService = ServiceFactory.getInstance().getBean(WebSocketService.class.getSimpleName(), WebSocketService.class);
+    private final WsSecurityManager wsSecurityManager = ServiceFactory.getInstance().getBean("DefaultWsSecurityManager", WsSecurityManager.class);
+    private final CommonLogger commonLogger = new CommonLogger(WebSocketManager.class.getSimpleName());
 
-    public void connect() {
+    public void connect() throws IOException {
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
                 .pingInterval(20, TimeUnit.SECONDS)
                 .build();
-        Request request = new Request.Builder().url("").build();
+        String webSocketUrl = PropertiesUtil.getApplicationProperty("robot.websocket.url");
+        Request request = new Request.Builder().url(webSocketUrl)
+                .header("robotQQ", AppConfig.getQQ())
+                .header("ws-token", wsSecurityManager.genWsToken(AppConfig.getQQ()))
+                .build();
 
-        WebSocket webSocket = okHttpClient.newWebSocket(request, new RobotWebSocketListener());
+         okHttpClient.newWebSocket(request, new RobotWebSocketListener());
 
     }
 
+    public void handleMessage(WebSocket webSocket, String text) {
+        String decryptMsgData = wsSecurityManager.decryptMsgData(text);
+        commonLogger.info("[WebSocket]====收到消息: {}", text);
+        WsResult wsResult = JsonUtil.json2obj(decryptMsgData, WsResult.class);
+        webSocketService.handleWsResult(wsResult);
+    }
+
     public void putSession(WebSocket webSocket) {
-        ApplicationConfig applicationConfig = AppConfig.getApplicationConfig();
-        webSocketClientMap.put(applicationConfig.getQq(), WebSocketClient.builder().webSocket(webSocket).robotQQ(applicationConfig.getQq()).build());
+        webSocketClientMap.put(AppConfig.getQQ(), WebSocketClient.builder().webSocket(webSocket).robotQQ(AppConfig.getQQ()).build());
     }
 
     public void removeSession(String robotQQ) {

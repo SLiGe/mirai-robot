@@ -39,6 +39,7 @@ public class RobotWebSocketListener extends WebSocketListener {
 
     @Override
     public void onMessage(@NotNull WebSocket webSocket, @NotNull String text) {
+        webSocketManager.handleMessage(webSocket, text);
         super.onMessage(webSocket, text);
     }
 
