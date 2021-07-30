@@ -16,6 +16,8 @@ public class PropertiesUtil {
     private PropertiesUtil() {
     }
 
+    private final static String application_properties = "application.properties";
+
     private static final Map<String, Properties> propertiesMap = new ConcurrentHashMap<>();
 
     /**
@@ -35,5 +37,9 @@ public class PropertiesUtil {
         properties.load(propertiesFileStream);
         propertiesMap.put(propertiesFileName, properties);
         return properties.getProperty(propertyName);
+    }
+
+    public static String getApplicationProperty(String propertyName) throws IOException {
+        return getProperty(application_properties, propertyName);
     }
 }
