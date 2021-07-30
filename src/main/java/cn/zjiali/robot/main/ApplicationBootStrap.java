@@ -2,20 +2,18 @@ package cn.zjiali.robot.main;
 
 import cn.zjiali.robot.RobotApplication;
 import cn.zjiali.robot.annotation.Application;
+import cn.zjiali.robot.annotation.Component;
 import cn.zjiali.robot.annotation.Property;
 import cn.zjiali.robot.annotation.Service;
 import cn.zjiali.robot.config.AppConfig;
 import cn.zjiali.robot.constant.ServerUrl;
-import cn.zjiali.robot.model.ApplicationConfig;
+import cn.zjiali.robot.factory.DefaultBeanFactory;
 import cn.zjiali.robot.factory.HandlerFactory;
 import cn.zjiali.robot.factory.ServiceFactory;
 import cn.zjiali.robot.handler.Handler;
-import cn.zjiali.robot.util.JsonUtil;
-import cn.zjiali.robot.util.ObjectUtil;
-import cn.zjiali.robot.util.PackageUtil;
-import cn.zjiali.robot.util.PropertiesUtil;
-import net.mamoe.mirai.utils.MiraiLogger;
-import net.mamoe.mirai.utils.PlatformLogger;
+import cn.zjiali.robot.main.websocket.WebSocketManager;
+import cn.zjiali.robot.model.ApplicationConfig;
+import cn.zjiali.robot.util.*;
 
 import java.io.*;
 import java.lang.reflect.Field;
@@ -32,7 +30,7 @@ import java.util.stream.Collectors;
  */
 public class ApplicationBootStrap {
 
-    private static final MiraiLogger miraiLogger = new PlatformLogger(ApplicationBootStrap.class.getName());
+    private final CommonLogger commonLogger = new CommonLogger(ApplicationBootStrap.class.getName());
 
     private ApplicationBootStrap() {
     }
@@ -48,6 +46,26 @@ public class ApplicationBootStrap {
         loadAppConfig();
         loadServerUrl();
         loadPluginConfig();
+        fillBeanDefinition();
+        loadWebSocket();
+    }
+
+    private void fillBeanDefinition() {
+        DefaultBeanFactory.getInstance().fillBeanDefinitionFields();
+    }
+
+    /**
+     * 加载WebSocket
+     */
+    private void loadWebSocket() throws IOException {
+        String webSocketFlag = PropertiesUtil.getApplicationProperty("robot.websocket.flag");
+        if ("1".equals(webSocketFlag)) {
+            commonLogger.info("[WebSocket]====加载中");
+            WebSocketManager webSocketManager = ServiceFactory.getInstance().getBean(WebSocketManager.class.getSimpleName(), WebSocketManager.class);
+            webSocketManager.connect();
+            commonLogger.info("[WebSocket]====加载完成");
+        }
+
     }
 
     /**
@@ -66,9 +84,14 @@ public class ApplicationBootStrap {
                 for (String clz : className) {
                     Class<?> aClass = Class.forName(clz, false, this.getClass().getClassLoader());
                     Service service = aClass.getAnnotation(Service.class);
+                    Component component = aClass.getAnnotation(Component.class);
                     if (service != null) {
                         Object instance = aClass.newInstance();
                         String serviceName = "".equals(service.name()) ? instance.getClass().getSimpleName() : service.name();
+                        ServiceFactory.getInstance().put(serviceName, instance);
+                    }else if (component != null){
+                        Object instance = aClass.newInstance();
+                        String serviceName = "".equals(component.name()) ? instance.getClass().getSimpleName() : component.name();
                         ServiceFactory.getInstance().put(serviceName, instance);
                     }
                 }
@@ -97,7 +120,7 @@ public class ApplicationBootStrap {
             configStream = ApplicationBootStrap.class.getResourceAsStream("/application-" + appProfile + ".json");
         }
         if (configStream == null) {
-            miraiLogger.error("[loadAppConfig]====加载配置文件失败,自动退出!");
+            commonLogger.error("[loadAppConfig]====加载配置文件失败,自动退出!");
             System.exit(0);
         }
         String appConfigJson = new BufferedReader(new InputStreamReader(configStream, StandardCharsets.UTF_8))
@@ -113,7 +136,7 @@ public class ApplicationBootStrap {
                 if (pluginEnable == 1) {
                     Handler handler = HandlerFactory.getInstance().put(pluginName, pluginHandler);
                     AppConfig.msgHandlers.add(handler);
-                    miraiLogger.info("[loadAppConfig]====加载 " + pluginName + " 成功！");
+                    commonLogger.info("[loadAppConfig]====加载 [{}] 成功！", pluginName);
                 }
             }
         }
@@ -141,7 +164,7 @@ public class ApplicationBootStrap {
                 } else {
                     declaredField.set(null, value);
                 }
-                miraiLogger.info("[loadServerUrl]====name: " + name + " value: " + ("".equals(value) ? apiValue : value));
+                commonLogger.info("[loadServerUrl]====name: {} value: {}", name, ("".equals(value) ? apiValue : value));
             }
         }
 
@@ -172,7 +195,7 @@ public class ApplicationBootStrap {
                             declaredField.setAccessible(true);
                             if ("enable".equals(propertyName)) {
                                 declaredField.set(null, plugin.getEnable());
-                                miraiLogger.info("[loadPluginConfig]====插件:" + pluginName + " configName: " + propertyName + " configValue: " + plugin.getEnable());
+                                commonLogger.info("[loadPluginConfig]====插件: {},configName:{},configValue:{}", pluginName, propertyName, plugin.getEnable());
                                 continue;
                             }
                             String configValue = pluginProperties.get(propertyName);
@@ -182,7 +205,7 @@ public class ApplicationBootStrap {
                             } else {
                                 declaredField.set(null, propertyValue);
                             }
-                            miraiLogger.info("[loadPluginConfig]====插件:" + pluginName + " configName: " + propertyName + " configValue: " + ("".equals(propertyValue) ? configValue : propertyValue));
+                            commonLogger.info("[loadPluginConfig]====插件: {},configName:{},configValue:{}", pluginName, propertyName, ("".equals(propertyValue) ? configValue : propertyValue));
                         }
                     }
                 }
@@ -200,6 +223,11 @@ public class ApplicationBootStrap {
         } catch (InstantiationException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        try {
+            Thread.currentThread().join();
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
