@@ -2,8 +2,8 @@ package cn.zjiali.robot.service;
 
 import cn.zjiali.robot.annotation.Service;
 import cn.zjiali.robot.constant.ServerUrl;
-import cn.zjiali.robot.entity.response.RobotBaseResponse;
-import cn.zjiali.robot.entity.response.SignInDataResponse;
+import cn.zjiali.robot.model.response.RobotBaseResponse;
+import cn.zjiali.robot.model.response.SignInDataResponse;
 import cn.zjiali.robot.util.HttpUtil;
 import cn.zjiali.robot.util.JsonUtil;
 import com.google.gson.JsonObject;

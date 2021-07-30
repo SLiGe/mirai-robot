@@ -1,6 +1,6 @@
 package cn.zjiali.robot.test.net;
 
-import cn.zjiali.robot.entity.response.SignInDataResponse;
+import cn.zjiali.robot.model.response.SignInDataResponse;
 import cn.zjiali.robot.factory.MessageFactory;
 import cn.zjiali.robot.factory.ServiceFactory;
 import cn.zjiali.robot.main.ApplicationBootStrap;
@@ -8,19 +8,7 @@ import cn.zjiali.robot.main.interceptor.ReplyBlacklistInterceptor;
 import cn.zjiali.robot.service.MoLiService;
 import cn.zjiali.robot.service.SignInService;
 import cn.zjiali.robot.util.PropertiesUtil;
-import kotlin.Unit;
-import kotlin.coroutines.Continuation;
-import kotlin.coroutines.CoroutineContext;
-import net.mamoe.mirai.Bot;
-import net.mamoe.mirai.contact.Contact;
-import net.mamoe.mirai.contact.Friend;
 import net.mamoe.mirai.event.events.FriendMessageEvent;
-import net.mamoe.mirai.message.MessageReceipt;
-import net.mamoe.mirai.message.data.Image;
-import net.mamoe.mirai.message.data.Message;
-import net.mamoe.mirai.utils.ExternalResource;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.junit.Test;
 
 import java.io.IOException;
