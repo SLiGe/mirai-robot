@@ -23,6 +23,10 @@ class CommonLogger(identity: String?) {
         miraiLogger.warning(StrFormatter.format(message, *args))
     }
 
+    fun error(message: String?, vararg args: Any?) {
+        miraiLogger.error(StrFormatter.format(message, *args))
+    }
+
     init {
         miraiLogger = MiraiLogger.create(identity)
     }
