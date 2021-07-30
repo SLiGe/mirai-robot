@@ -25,6 +25,6 @@ public class DictService {
         Type type = new TypeToken<RobotBaseResponse<JsonObject>>() {
         }.getType();
         RobotBaseResponse<JsonObject> dictResponse = JsonUtil.toObjByType(serverJson, type);
-        return dictResponse.getData().getAsJsonObject("data").get("val").getAsString();
+        return dictResponse.getData().get("val").getAsString();
     }
 }

@@ -1,6 +1,7 @@
 package cn.zjiali.robot.service;
 
 import cn.hutool.core.util.StrUtil;
+import cn.zjiali.robot.annotation.Autowired;
 import cn.zjiali.robot.annotation.Service;
 import cn.zjiali.robot.config.AppConfig;
 import cn.zjiali.robot.constant.MsgType;
@@ -18,8 +19,9 @@ import cn.zjiali.robot.util.JsonUtil;
 @Service
 public class WebSocketService {
 
-    private final RobotManager robotManager = ServiceFactory.getInstance().getBean(RobotManager.class.getSimpleName(), RobotManager.class);
     private final CommonLogger commonLogger = new CommonLogger(WebSocketService.class.getSimpleName());
+    @Autowired
+    private RobotManager robotManager;
 
     public void handleWsResult(WsResult wsResult) {
         String robotQQ = wsResult.getRobotQQ();

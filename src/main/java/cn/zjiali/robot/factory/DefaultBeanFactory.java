@@ -1,10 +1,13 @@
 package cn.zjiali.robot.factory;
 
 
+import cn.zjiali.robot.annotation.Autowired;
 import cn.zjiali.robot.model.bean.BeanDefinition;
 
+import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
@@ -22,7 +25,11 @@ public class DefaultBeanFactory implements BeanFactory {
     @Override
     public <T> T getBean(String beanName, Class<T> requireType) {
         BeanDefinition beanDefinition = (BeanDefinition) beanMap.get(beanPrefix() + beanName);
-        return (T) beanDefinition.getInstance();
+        Optional<Object> beanByInterface = beanMap.values().stream().filter(bean -> ((BeanDefinition) bean).getBeanInterfaces().contains(requireType)).findFirst();
+        if (beanByInterface.isPresent()) {
+            return (T) ((BeanDefinition) beanByInterface.get()).getInstance();
+        }
+        return beanDefinition == null ? null : (T) beanDefinition.getInstance();
     }
 
     @Override
@@ -48,6 +55,53 @@ public class DefaultBeanFactory implements BeanFactory {
     @Override
     public String beanPrefix() {
         return "";
+    }
+
+    public void fillBeanDefinitionFields() {
+        beanMap.values().forEach(
+                bean -> {
+                    try {
+                        fillBeanFields(((BeanDefinition) bean).getTypeClass(), ((BeanDefinition) bean).getInstance());
+                    } catch (IllegalAccessException | ClassNotFoundException | InstantiationException e) {
+                        e.printStackTrace();
+                    }
+                }
+        );
+    }
+
+    private void fillBeanFields(Class<?> handlerClass, Object instance) throws IllegalAccessException, ClassNotFoundException, InstantiationException {
+        Field[] declaredFields = handlerClass.getDeclaredFields();
+        for (Field declaredField : declaredFields) {
+            Autowired autowired = declaredField.getAnnotation(Autowired.class);
+            if (autowired == null) continue;
+            String beanName = "";
+            if ("".equals(autowired.value())) {
+                beanName = declaredField.getType().getName();
+            } else {
+                beanName = autowired.value();
+            }
+            Object bean = getBean(beanName, Class.forName(declaredField.getType().getName()));
+            if (bean == null) {
+                bean = initialBean(beanName);
+            }
+            declaredField.setAccessible(true);
+            declaredField.set(instance, bean);
+        }
+    }
+
+
+    public Object initialBean(Class<?> clazz) throws InstantiationException, IllegalAccessException {
+        Object instance = clazz.newInstance();
+        putBean(clazz.getSimpleName(), instance);
+        return getBeanDefinition(clazz.getSimpleName()).getInstance();
+    }
+
+    public BeanDefinition getBeanDefinition(String beanName) {
+        return (BeanDefinition) beanMap.get(beanName);
+    }
+
+    public Object initialBean(String clazzName) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
+        return initialBean(Class.forName(clazzName));
     }
 
     public static BeanFactory getInstance() {

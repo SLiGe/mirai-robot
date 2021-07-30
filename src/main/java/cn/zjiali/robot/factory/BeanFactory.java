@@ -15,4 +15,7 @@ public interface BeanFactory {
     <T> void putBean(String beanName, T bean);
 
     String beanPrefix();
+
+    default void fillBeanDefinitionFields() {
+    }
 }

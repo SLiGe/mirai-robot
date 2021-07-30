@@ -22,7 +22,7 @@ import java.util.Objects;
  * @author zJiaLi
  * @since 2020-10-29 11:09
  */
-@Application(basePackages = {"cn.zjiali.robot.service","cn.zjiali.robot.main"})
+@Application(basePackages = {"cn.zjiali.robot.service","cn.zjiali.robot.main","cn.zjiali.robot.manager"})
 public class RobotApplication {
 
     private static final MiraiLogger miraiLogger = new PlatformLogger(RobotApplication.class.getName());

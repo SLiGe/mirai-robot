@@ -1,8 +1,8 @@
 package cn.zjiali.robot.main.websocket;
 
+import cn.zjiali.robot.annotation.Autowired;
 import cn.zjiali.robot.annotation.Component;
 import cn.zjiali.robot.config.AppConfig;
-import cn.zjiali.robot.factory.ServiceFactory;
 import cn.zjiali.robot.manager.WsSecurityManager;
 import cn.zjiali.robot.model.response.ws.WsResult;
 import cn.zjiali.robot.service.WebSocketService;
@@ -26,8 +26,10 @@ import java.util.concurrent.TimeUnit;
 public class WebSocketManager {
 
     private final Map<String, WebSocketClient> webSocketClientMap = new ConcurrentHashMap<>();
-    private final WebSocketService webSocketService = ServiceFactory.getInstance().getBean(WebSocketService.class.getSimpleName(), WebSocketService.class);
-    private final WsSecurityManager wsSecurityManager = ServiceFactory.getInstance().getBean("DefaultWsSecurityManager", WsSecurityManager.class);
+    @Autowired
+    private WebSocketService webSocketService;
+    @Autowired
+    private WsSecurityManager wsSecurityManager;
     private final CommonLogger commonLogger = new CommonLogger(WebSocketManager.class.getSimpleName());
 
     public void connect() throws IOException {
@@ -40,7 +42,7 @@ public class WebSocketManager {
                 .header("ws-token", wsSecurityManager.genWsToken(AppConfig.getQQ()))
                 .build();
 
-         okHttpClient.newWebSocket(request, new RobotWebSocketListener());
+        okHttpClient.newWebSocket(request, new RobotWebSocketListener());
 
     }
 
