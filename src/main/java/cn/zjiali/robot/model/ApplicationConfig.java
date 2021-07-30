@@ -1,4 +1,4 @@
-package cn.zjiali.robot.entity;
+package cn.zjiali.robot.model;
 
 import java.util.HashMap;
 import java.util.List;

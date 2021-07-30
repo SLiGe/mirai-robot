@@ -1,4 +1,4 @@
-package cn.zjiali.robot.entity.response;
+package cn.zjiali.robot.model.response;
 
 
 /**
@@ -32,7 +32,7 @@ public class GetSignInDataResponse {
     /**
      * 当前等级
      *
-     * @note 2020/10/31 修改
+     *  2020/10/31 修改
      */
     private String currentLevel;
 

@@ -1,4 +1,4 @@
-package cn.zjiali.robot.entity.response;
+package cn.zjiali.robot.model.response;
 
 /**
  * 聚合数据响应基类

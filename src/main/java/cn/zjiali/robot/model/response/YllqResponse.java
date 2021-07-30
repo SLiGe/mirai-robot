@@ -1,29 +1,29 @@
-package cn.zjiali.robot.entity.response;
-
+package cn.zjiali.robot.model.response;
 
 import com.google.gson.annotations.SerializedName;
 
 /**
  * @author zJiaLi
- * @since 2021-04-08 18:38
+ * @since 2021-04-08 18:44
  */
-public class GylqResponse {
+public class YllqResponse {
 
-    @SerializedName(value = "number1")
+    @SerializedName("number1")
     private String number1;
-    @SerializedName(value = "number2")
+    @SerializedName("number2")
     private String number2;
-    @SerializedName(value = "haohua")
+    @SerializedName("haohua")
     private String haohua;
-    @SerializedName(value = "qianyu")
-    private String qianyu;
-    @SerializedName(value = "shiyi")
+    @SerializedName("shiyi")
     private String shiyi;
-    @SerializedName(value = "jieqian")
+    @SerializedName("jieqian")
     private String jieqian;
-    @SerializedName(value = "type")
+    @SerializedName("zhushi")
+    private String zhushi;
+    @SerializedName("baihua")
+    private String baihua;
+    @SerializedName("type")
     private String type;
-
 
     public String getNumber1() {
         return number1;
@@ -49,14 +49,6 @@ public class GylqResponse {
         this.haohua = haohua;
     }
 
-    public String getQianyu() {
-        return qianyu;
-    }
-
-    public void setQianyu(String qianyu) {
-        this.qianyu = qianyu;
-    }
-
     public String getShiyi() {
         return shiyi;
     }
@@ -71,6 +63,22 @@ public class GylqResponse {
 
     public void setJieqian(String jieqian) {
         this.jieqian = jieqian;
+    }
+
+    public String getZhushi() {
+        return zhushi;
+    }
+
+    public void setZhushi(String zhushi) {
+        this.zhushi = zhushi;
+    }
+
+    public String getBaihua() {
+        return baihua;
+    }
+
+    public void setBaihua(String baihua) {
+        this.baihua = baihua;
     }
 
     public String getType() {

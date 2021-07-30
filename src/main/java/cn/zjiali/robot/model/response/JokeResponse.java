@@ -1,4 +1,4 @@
-package cn.zjiali.robot.entity.response;
+package cn.zjiali.robot.model.response;
 
 /**
  * 笑话大全返回实体

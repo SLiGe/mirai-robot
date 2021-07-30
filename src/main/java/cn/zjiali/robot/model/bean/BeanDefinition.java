@@ -1,4 +1,4 @@
-package cn.zjiali.robot.entity.bean;
+package cn.zjiali.robot.model.bean;
 
 import lombok.Data;
 
