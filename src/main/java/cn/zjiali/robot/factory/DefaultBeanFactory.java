@@ -1,7 +1,7 @@
 package cn.zjiali.robot.factory;
 
 
-import cn.zjiali.robot.entity.bean.BeanDefinition;
+import cn.zjiali.robot.model.bean.BeanDefinition;
 
 import java.util.List;
 import java.util.Map;

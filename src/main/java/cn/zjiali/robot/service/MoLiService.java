@@ -2,7 +2,7 @@ package cn.zjiali.robot.service;
 
 import cn.zjiali.robot.annotation.Service;
 import cn.zjiali.robot.config.plugin.MoLiConfig;
-import cn.zjiali.robot.entity.response.*;
+import cn.zjiali.robot.model.response.*;
 import cn.zjiali.robot.util.HttpUtil;
 import cn.zjiali.robot.util.JsonUtil;
 import cn.zjiali.robot.util.MessageUtil;

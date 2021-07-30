@@ -5,7 +5,7 @@ import cn.zjiali.robot.config.plugin.FortuneConfig;
 import cn.zjiali.robot.config.plugin.TodayOfHistoryConfig;
 import cn.zjiali.robot.config.plugin.YellowCalendarConfig;
 import cn.zjiali.robot.constant.ServerUrl;
-import cn.zjiali.robot.entity.response.*;
+import cn.zjiali.robot.model.response.*;
 import cn.zjiali.robot.util.HttpUtil;
 import cn.zjiali.robot.util.JsonUtil;
 import cn.zjiali.robot.util.MessageUtil;

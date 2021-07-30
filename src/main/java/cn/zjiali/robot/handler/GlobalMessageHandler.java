@@ -2,11 +2,10 @@ package cn.zjiali.robot.handler;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.zjiali.robot.config.AppConfig;
-import cn.zjiali.robot.entity.ApplicationConfig;
+import cn.zjiali.robot.model.ApplicationConfig;
 import cn.zjiali.robot.factory.HandlerFactory;
 import cn.zjiali.robot.factory.ServiceFactory;
 import cn.zjiali.robot.main.interceptor.HandlerInterceptor;
-import cn.zjiali.robot.main.interceptor.ReplyBlacklistInterceptor;
 import net.mamoe.mirai.event.events.FriendMessageEvent;
 import net.mamoe.mirai.event.events.GroupMessageEvent;
 

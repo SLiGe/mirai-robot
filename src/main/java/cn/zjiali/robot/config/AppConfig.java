@@ -1,6 +1,6 @@
 package cn.zjiali.robot.config;
 
-import cn.zjiali.robot.entity.ApplicationConfig;
+import cn.zjiali.robot.model.ApplicationConfig;
 import cn.zjiali.robot.handler.Handler;
 
 import java.util.ArrayList;
@@ -25,6 +25,10 @@ public class AppConfig {
 
     public static ApplicationConfig getApplicationConfig() {
         return applicationConfig;
+    }
+
+    public static String getQQ() {
+        return getApplicationConfig().getQq();
     }
 
     public static List<Handler> getMsgHandlers() {

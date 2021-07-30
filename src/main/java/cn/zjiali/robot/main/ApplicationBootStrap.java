@@ -6,7 +6,7 @@ import cn.zjiali.robot.annotation.Property;
 import cn.zjiali.robot.annotation.Service;
 import cn.zjiali.robot.config.AppConfig;
 import cn.zjiali.robot.constant.ServerUrl;
-import cn.zjiali.robot.entity.ApplicationConfig;
+import cn.zjiali.robot.model.ApplicationConfig;
 import cn.zjiali.robot.factory.HandlerFactory;
 import cn.zjiali.robot.factory.ServiceFactory;
 import cn.zjiali.robot.handler.Handler;
