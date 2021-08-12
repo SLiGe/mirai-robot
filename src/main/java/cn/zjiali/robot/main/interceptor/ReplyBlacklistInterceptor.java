@@ -1,7 +1,7 @@
 package cn.zjiali.robot.main.interceptor;
 
+import cn.zjiali.robot.annotation.Autowired;
 import cn.zjiali.robot.annotation.Service;
-import cn.zjiali.robot.factory.ServiceFactory;
 import cn.zjiali.robot.service.DictService;
 import cn.zjiali.robot.util.PropertiesUtil;
 import com.google.common.collect.Maps;
@@ -22,7 +22,8 @@ import java.util.Map;
 public class ReplyBlacklistInterceptor implements HandlerInterceptor {
 
     private static final MiraiLogger miraiLogger = new PlatformLogger(ReplyBlacklistInterceptor.class.getSimpleName());
-    private final DictService dictService = ServiceFactory.getInstance().getBean(DictService.class.getSimpleName(), DictService.class);
+    @Autowired
+    private DictService dictService;
 
     private String replyBlacklist;
     private final Map<String, Object> queryReplyBlacklistParamMap = Maps.newHashMap();

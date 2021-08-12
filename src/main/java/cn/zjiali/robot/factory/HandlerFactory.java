@@ -22,7 +22,7 @@ public class HandlerFactory extends AbstractBeanFactory {
         try {
             Class<?> handlerClass = Class.forName(handler);
             Handler instance = (Handler) handlerClass.getConstructor().newInstance();
-            fillHandlerFields(handlerClass, instance);
+          //  fillHandlerFields(handlerClass, instance);
             putBean(pluginName, instance);
             return instance;
         } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
@@ -58,4 +58,5 @@ public class HandlerFactory extends AbstractBeanFactory {
     public String beanPrefix() {
         return "Handler-";
     }
+
 }
