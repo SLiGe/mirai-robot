@@ -6,6 +6,7 @@ import cn.zjiali.robot.model.ApplicationConfig;
 import cn.zjiali.robot.factory.HandlerFactory;
 import cn.zjiali.robot.factory.ServiceFactory;
 import cn.zjiali.robot.main.interceptor.HandlerInterceptor;
+import net.mamoe.mirai.event.events.AbstractMessageEvent;
 import net.mamoe.mirai.event.events.FriendMessageEvent;
 import net.mamoe.mirai.event.events.GroupMessageEvent;
 
@@ -28,18 +29,7 @@ public class GlobalMessageHandler {
     }
 
     private static void handleMessage(boolean isGroup, GroupMessageEvent groupMessageEvent, FriendMessageEvent friendMessageEvent) {
-        List<HandlerInterceptor> handlerInterceptors = ServiceFactory.getInstance().getBeanList(HandlerInterceptor.class);
-        boolean preHandle = false;
-        if (CollectionUtil.isNotEmpty(handlerInterceptors)) {
-            for (HandlerInterceptor handlerInterceptor : handlerInterceptors) {
-                try {
-                    preHandle = handlerInterceptor.preHandle(isGroup ? groupMessageEvent : friendMessageEvent);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                if (!preHandle) break;
-            }
-        }
+        boolean preHandle = doPreHandle(isGroup ? groupMessageEvent : friendMessageEvent);
         if (!preHandle) return;
         // 茉莉插件需要单独拦截
         String msg = isGroup ? groupMessageEvent.getMessage().contentToString() : friendMessageEvent.getMessage().contentToString();
@@ -53,25 +43,67 @@ public class GlobalMessageHandler {
                         handler.handleFriendMessage(friendMessageEvent);
                     }
                 });
-        for (ApplicationConfig.Plugin plugin : plugins) {
-            HashMap<String, String> pluginProperties = plugin.getProperties();
-            int enable = plugin.getEnable();
-            String pluginName = plugin.getName();
-            if ("茉莉聊天".equals(pluginName)) {
-                continue;
+        plugins.stream().filter(plugin -> !"茉莉聊天".equals(plugin.getName())).forEach(
+                plugin -> {
+                    HashMap<String, String> pluginProperties = plugin.getProperties();
+                    int enable = plugin.getEnable();
+                    String pluginName = plugin.getName();
+                    String command = pluginProperties.get("command");
+                    List<String> commandArray = Arrays.asList(command.split(","));
+                    if (enable == 1 && containCommand(msg, commandArray)) {
+                        Handler handler = HandlerFactory.getInstance().get(pluginName);
+                        if (isGroup) {
+                            handler.handleGroupMessage(groupMessageEvent);
+                        } else {
+                            handler.handleFriendMessage(friendMessageEvent);
+                        }
+                    }
+                }
+        );
+        triggerAfterCompletion(isGroup ? groupMessageEvent : friendMessageEvent);
+    }
+
+    /**
+     * 调用前执行
+     *
+     * @param abstractMessageEvent 消息
+     * @return 执行结果
+     */
+    private static boolean doPreHandle(AbstractMessageEvent abstractMessageEvent) {
+        boolean preHandle = false;
+        List<HandlerInterceptor> handlerInterceptors = ServiceFactory.getInstance().getBeanList(HandlerInterceptor.class);
+        if (CollectionUtil.isNotEmpty(handlerInterceptors)) {
+            for (HandlerInterceptor handlerInterceptor : handlerInterceptors) {
+                try {
+                    preHandle = handlerInterceptor.preHandle(abstractMessageEvent);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                if (!preHandle) break;
             }
-            String command = pluginProperties.get("command");
-            List<String> commandArray = Arrays.asList(command.split(","));
-            if (enable == 1 && containCommand(msg, commandArray)) {
-                Handler handler = HandlerFactory.getInstance().get(pluginName);
-                if (isGroup) {
-                    handler.handleGroupMessage(groupMessageEvent);
-                } else {
-                    handler.handleFriendMessage(friendMessageEvent);
+        }
+        return preHandle;
+    }
+
+
+    /**
+     * 完成后调用
+     *
+     * @param abstractMessageEvent 消息
+     */
+    private static void triggerAfterCompletion(AbstractMessageEvent abstractMessageEvent) {
+        List<HandlerInterceptor> handlerInterceptors = ServiceFactory.getInstance().getBeanList(HandlerInterceptor.class);
+        if (CollectionUtil.isNotEmpty(handlerInterceptors)) {
+            for (HandlerInterceptor handlerInterceptor : handlerInterceptors) {
+                try {
+                    handlerInterceptor.afterCompletion(abstractMessageEvent);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         }
     }
+
 
     private static boolean containCommand(String msg, List<String> commandArray) {
         for (String command : commandArray) {
