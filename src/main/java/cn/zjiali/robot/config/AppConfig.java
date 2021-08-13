@@ -1,9 +1,12 @@
 package cn.zjiali.robot.config;
 
+import cn.zjiali.robot.config.plugin.Plugin;
+import cn.zjiali.robot.constant.PluginProperty;
 import cn.zjiali.robot.model.ApplicationConfig;
 import cn.zjiali.robot.handler.Handler;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -26,6 +29,8 @@ public class AppConfig {
     public static ApplicationConfig getApplicationConfig() {
         return applicationConfig;
     }
+
+
 
     public static String getQQ() {
         return getApplicationConfig().getQq();

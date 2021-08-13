@@ -1,5 +1,7 @@
 package cn.zjiali.robot.model;
 
+import cn.zjiali.robot.config.plugin.Plugin;
+
 import java.util.HashMap;
 import java.util.List;
 
@@ -21,26 +23,26 @@ public class ApplicationConfig {
     private String password;
 
 
-    public static class Plugin {
+    /*public static class Plugin {
 
-        /**
+        *//**
          * 插件名称
-         */
+         *//*
         private String name;
 
-        /**
+        *//**
          * 是否启用 0 未启用 1 启用
-         */
+         *//*
         private int enable;
 
-        /**
+        *//**
          * 消息处理器
-         */
+         *//*
         private String handler;
 
-        /**
+        *//**
          * 配置类
-         */
+         *//*
         private String configClass;
 
         public String getConfigClass() {
@@ -51,9 +53,9 @@ public class ApplicationConfig {
             this.configClass = configClass;
         }
 
-        /**
+        *//**
          * 插件配置
-         */
+         *//*
         private HashMap<String, String> properties;
 
         public String getName() {
@@ -88,7 +90,7 @@ public class ApplicationConfig {
             this.handler = handler;
         }
     }
-
+*/
     public int getAppEnable() {
         return appEnable;
     }
