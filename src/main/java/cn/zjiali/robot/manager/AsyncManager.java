@@ -1,4 +1,4 @@
-package cn.zjiali.robot.main;
+package cn.zjiali.robot.manager;
 
 import cn.zjiali.robot.util.Threads;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
