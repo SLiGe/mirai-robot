@@ -3,10 +3,9 @@ package cn.zjiali.robot.main;
 import cn.zjiali.robot.RobotApplication;
 import cn.zjiali.robot.annotation.Application;
 import cn.zjiali.robot.annotation.Component;
-import cn.zjiali.robot.annotation.Property;
 import cn.zjiali.robot.annotation.Service;
 import cn.zjiali.robot.config.AppConfig;
-import cn.zjiali.robot.constant.ServerUrl;
+import cn.zjiali.robot.config.plugin.Plugin;
 import cn.zjiali.robot.factory.DefaultBeanFactory;
 import cn.zjiali.robot.factory.HandlerFactory;
 import cn.zjiali.robot.factory.ServiceFactory;
@@ -16,9 +15,7 @@ import cn.zjiali.robot.model.ApplicationConfig;
 import cn.zjiali.robot.util.*;
 
 import java.io.*;
-import java.lang.reflect.Field;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -44,8 +41,6 @@ public class ApplicationBootStrap {
     public void init() throws IOException, IllegalAccessException, InstantiationException, ClassNotFoundException {
         loadService();
         loadAppConfig();
-        loadServerUrl();
-        loadPluginConfig();
         fillBeanDefinition();
         loadWebSocket();
     }
@@ -89,7 +84,7 @@ public class ApplicationBootStrap {
                         Object instance = aClass.newInstance();
                         String serviceName = "".equals(service.name()) ? instance.getClass().getSimpleName() : service.name();
                         ServiceFactory.getInstance().put(serviceName, instance);
-                    }else if (component != null){
+                    } else if (component != null) {
                         Object instance = aClass.newInstance();
                         String serviceName = "".equals(component.name()) ? instance.getClass().getSimpleName() : component.name();
                         ServiceFactory.getInstance().put(serviceName, instance);
@@ -127,9 +122,9 @@ public class ApplicationBootStrap {
                 .lines().collect(Collectors.joining(System.lineSeparator()));
         final ApplicationConfig applicationConfig = JsonUtil.json2obj(appConfigJson, ApplicationConfig.class);
         AppConfig.applicationConfig = applicationConfig;
-        final List<ApplicationConfig.Plugin> plugins = applicationConfig.getPlugins();
+        final List<Plugin> plugins = applicationConfig.getPlugins();
         if (plugins != null) {
-            for (ApplicationConfig.Plugin plugin : plugins) {
+            for (Plugin plugin : plugins) {
                 String pluginName = plugin.getName();
                 String pluginHandler = plugin.getHandler();
                 int pluginEnable = plugin.getEnable();
@@ -141,76 +136,6 @@ public class ApplicationBootStrap {
             }
         }
         configStream.close();
-    }
-
-    /**
-     * 加载接口地址
-     *
-     * @throws IOException
-     * @throws IllegalAccessException
-     */
-    private void loadServerUrl() throws IOException, IllegalAccessException {
-        Class<ServerUrl> serverUrlClass = ServerUrl.class;
-        Field[] declaredFields = serverUrlClass.getDeclaredFields();
-        for (Field declaredField : declaredFields) {
-            Property property = declaredField.getAnnotation(Property.class);
-            if (property != null) {
-                String name = property.name();
-                String value = property.value();
-                declaredField.setAccessible(true);
-                String apiValue = PropertiesUtil.getProperty("api.properties", name);
-                if ("".equals(value)) {
-                    declaredField.set(null, apiValue);
-                } else {
-                    declaredField.set(null, value);
-                }
-                commonLogger.info("[loadServerUrl]====name: {} value: {}", name, ("".equals(value) ? apiValue : value));
-            }
-        }
-
-    }
-
-    /**
-     * 加载插件配置
-     *
-     * @throws ClassNotFoundException
-     * @throws IllegalAccessException
-     */
-    private void loadPluginConfig() throws ClassNotFoundException, IllegalAccessException {
-        ApplicationConfig applicationConfig = AppConfig.getApplicationConfig();
-        int appEnable = applicationConfig.getAppEnable();
-        if (appEnable == 1) {
-            List<ApplicationConfig.Plugin> plugins = applicationConfig.getPlugins();
-            for (ApplicationConfig.Plugin plugin : plugins) {
-                String pluginName = plugin.getName();
-                String configClass = plugin.getConfigClass();
-                HashMap<String, String> pluginProperties = plugin.getProperties();
-                if (!"".equals(configClass)) {
-                    Class<?> pluginConfigClass = Class.forName(configClass);
-                    Field[] declaredFields = pluginConfigClass.getDeclaredFields();
-                    for (Field declaredField : declaredFields) {
-                        Property property = declaredField.getAnnotation(Property.class);
-                        if (property != null) {
-                            String propertyName = property.name();
-                            declaredField.setAccessible(true);
-                            if ("enable".equals(propertyName)) {
-                                declaredField.set(null, plugin.getEnable());
-                                commonLogger.info("[loadPluginConfig]====插件: {},configName:{},configValue:{}", pluginName, propertyName, plugin.getEnable());
-                                continue;
-                            }
-                            String configValue = pluginProperties.get(propertyName);
-                            String propertyValue = property.value();
-                            if ("".equals(propertyValue)) {
-                                declaredField.set(null, configValue);
-                            } else {
-                                declaredField.set(null, propertyValue);
-                            }
-                            commonLogger.info("[loadPluginConfig]====插件: {},configName:{},configValue:{}", pluginName, propertyName, ("".equals(propertyValue) ? configValue : propertyValue));
-                        }
-                    }
-                }
-            }
-        }
     }
 
     public static void main(String[] args) {
