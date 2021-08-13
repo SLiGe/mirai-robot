@@ -1,7 +1,9 @@
 package cn.zjiali.robot.service;
 
 import cn.zjiali.robot.annotation.Service;
-import cn.zjiali.robot.constant.ServerUrl;
+import cn.zjiali.robot.config.plugin.PluginConfig;
+import cn.zjiali.robot.constant.PluginCode;
+import cn.zjiali.robot.constant.PluginProperty;
 import cn.zjiali.robot.model.response.RobotBaseResponse;
 import cn.zjiali.robot.model.response.SignInDataResponse;
 import cn.zjiali.robot.util.HttpUtil;
@@ -29,7 +31,7 @@ public class SignInService {
         jsonObject.addProperty("msgType", msgType);
         int point = new Random(20).nextInt(60);
         jsonObject.addProperty("points", (point));
-        String signInDataJson = HttpUtil.post(ServerUrl.SIGN_IN_URL, jsonObject);
+        String signInDataJson = HttpUtil.post(PluginConfig.getConfigVal(PluginCode.SIGN, PluginProperty.SIGN_URL), jsonObject);
         Type type = new TypeToken<RobotBaseResponse<SignInDataResponse>>() {
         }.getType();
         RobotBaseResponse<SignInDataResponse> robotBaseResponse = JsonUtil.toObjByType(signInDataJson, type);
@@ -50,7 +52,7 @@ public class SignInService {
         jsonObject.addProperty("group", group);
         // 1好友消息 2群组消息
         jsonObject.addProperty("msgType", msgType);
-        String signInDataJson = HttpUtil.post(ServerUrl.SIGN_IN_DATA_URL, jsonObject);
+        String signInDataJson = HttpUtil.post(PluginConfig.getConfigVal(PluginCode.SIGN, PluginProperty.QUERY_SIGN_URL), jsonObject);
         Type type = new TypeToken<RobotBaseResponse<SignInDataResponse>>() {
         }.getType();
         RobotBaseResponse<SignInDataResponse> robotBaseResponse = JsonUtil.toObjByType(signInDataJson, type);

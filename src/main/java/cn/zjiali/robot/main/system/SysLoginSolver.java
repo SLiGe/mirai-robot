@@ -2,10 +2,10 @@ package cn.zjiali.robot.main.system;
 
 import cn.hutool.core.codec.Base64;
 import cn.zjiali.robot.annotation.Service;
-import cn.zjiali.robot.constant.ServerUrl;
 import cn.zjiali.robot.util.HttpUtil;
 import cn.zjiali.robot.util.JsonUtil;
 import cn.zjiali.robot.util.ObjectUtil;
+import cn.zjiali.robot.util.PropertiesUtil;
 import com.google.gson.JsonObject;
 import kotlin.coroutines.Continuation;
 import net.mamoe.mirai.Bot;
@@ -28,13 +28,15 @@ public class SysLoginSolver extends LoginSolver {
 
     private static final MiraiLogger miraiLogger = MiraiLogger.create(SysLoginSolver.class.getName());
 
+    private static final String VERIFY_CODE_VIEW_URL = "verifyCode.view.url";
+
     @Nullable
     @Override
     public Object onSolvePicCaptcha(@NotNull Bot bot, byte[] bytes, @NotNull Continuation<? super String> continuation) {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("qq", String.valueOf(bot.getId()));
         jsonObject.addProperty("base64", Base64.encode(bytes));
-        String responseJson = HttpUtil.post(ServerUrl.VERIFY_CODE_VIEW_URL, jsonObject);
+        String responseJson = HttpUtil.post(PropertiesUtil.getApiProperty(VERIFY_CODE_VIEW_URL), jsonObject);
         JsonObject response = JsonUtil.json2obj(responseJson, JsonObject.class);
         String verifyCodeUrl = response.get("data").getAsString();
         miraiLogger.warning("请打开以下网址后,在控制台输入验证码!");

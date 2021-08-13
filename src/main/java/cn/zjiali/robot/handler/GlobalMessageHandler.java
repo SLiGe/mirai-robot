@@ -2,6 +2,7 @@ package cn.zjiali.robot.handler;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.zjiali.robot.config.AppConfig;
+import cn.zjiali.robot.config.plugin.Plugin;
 import cn.zjiali.robot.model.ApplicationConfig;
 import cn.zjiali.robot.factory.HandlerFactory;
 import cn.zjiali.robot.factory.ServiceFactory;
@@ -33,7 +34,7 @@ public class GlobalMessageHandler {
         if (!preHandle) return;
         // 茉莉插件需要单独拦截
         String msg = isGroup ? groupMessageEvent.getMessage().contentToString() : friendMessageEvent.getMessage().contentToString();
-        List<ApplicationConfig.Plugin> plugins = AppConfig.getApplicationConfig().getPlugins();
+        List<Plugin> plugins = AppConfig.getApplicationConfig().getPlugins();
         plugins.stream().filter(plugin -> "茉莉聊天".equals(plugin.getName()) && plugin.getEnable() == 1)
                 .findFirst().ifPresent((plugin) -> {
                     Handler handler = HandlerFactory.getInstance().get(plugin.getName());

@@ -1,10 +1,8 @@
 package cn.zjiali.robot.factory;
 
-import cn.zjiali.robot.config.plugin.CalendarConfig;
-import cn.zjiali.robot.config.plugin.FortuneConfig;
-import cn.zjiali.robot.config.plugin.TodayOfHistoryConfig;
-import cn.zjiali.robot.config.plugin.YellowCalendarConfig;
-import cn.zjiali.robot.constant.ServerUrl;
+import cn.zjiali.robot.config.plugin.PluginConfig;
+import cn.zjiali.robot.constant.PluginCode;
+import cn.zjiali.robot.constant.PluginProperty;
 import cn.zjiali.robot.model.response.*;
 import cn.zjiali.robot.util.HttpUtil;
 import cn.zjiali.robot.util.JsonUtil;
@@ -37,18 +35,18 @@ public class MessageFactory {
      * @return
      */
     public static String getYellowCalendarMessage(String message) {
-        if (YellowCalendarConfig.yellow_calendar_command.equals(message)) {
+        if (PluginConfig.getCommand(PluginCode.YELLOW_CALENDAR).equals(message)) {
             String date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
             HashMap<String, Object> params = new HashMap<>();
-            params.put("key", CalendarConfig.calendar_key);
+            params.put("key", PluginConfig.getApiKey(PluginCode.YELLOW_CALENDAR));
             params.put("date", date);
-            String response = HttpUtil.get(YellowCalendarConfig.url, params);
+            String response = HttpUtil.get(PluginConfig.getApiURL(PluginCode.YELLOW_CALENDAR), params);
             Type type = new TypeToken<JuHeBaseResponse<YellowCalendarResponse>>() {
             }.getType();
             JuHeBaseResponse<YellowCalendarResponse> baseResponse = JsonUtil.toObjByType(response, type);
             if (baseResponse.getError_code() == 0) {
                 YellowCalendarResponse yellowCalendarResponse = baseResponse.getResult();
-                return MessageUtil.replaceMessage(YellowCalendarConfig.template, yellowCalendarResponse);
+                return MessageUtil.replaceMessage(PluginConfig.getTemplate(PluginCode.YELLOW_CALENDAR), yellowCalendarResponse);
             }
         }
         return null;
@@ -61,7 +59,7 @@ public class MessageFactory {
      * @return
      */
     public static String getTodayOnHistoryMessage(String message) {
-        if (TodayOfHistoryConfig.today_of_history_command.equals(message)) {
+        if (PluginConfig.getCommand(PluginCode.TODAY_HISTORY).equals(message)) {
             //日期,格式:月/日 如:1/1,/10/1,12/12 如月或者日小于10,前面无需加0
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(new Date());
@@ -69,9 +67,9 @@ public class MessageFactory {
             int day = calendar.get(Calendar.DAY_OF_MONTH);
             String dateStr = month + "/" + day;
             HashMap<String, Object> paramMap = new HashMap<>(2);
-            paramMap.put("key", TodayOfHistoryConfig.key);
+            paramMap.put("key", PluginConfig.getApiKey(PluginCode.TODAY_HISTORY));
             paramMap.put("date", dateStr);
-            String response = HttpUtil.get(ServerUrl.TODAY_ON_HISTORY_URL, paramMap);
+            String response = HttpUtil.get(PluginConfig.getApiURL(PluginCode.TODAY_HISTORY), paramMap);
             JuHeBaseResponse<List<TodayOnHistoryResponse>> todayOnHistoryResponse = JsonUtil.toObjByType(response, new TypeToken<JuHeBaseResponse<List<TodayOnHistoryResponse>>>() {
             }.getType());
             if (todayOnHistoryResponse != null) {
@@ -97,7 +95,7 @@ public class MessageFactory {
      * @return
      */
     public static String getCalendarMessage(String message) {
-        if (CalendarConfig.calendar_command.equals(message)) {
+        if (PluginConfig.getCommand(PluginCode.CALENDAR).equals(message)) {
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(new Date());
             int year = calendar.get(Calendar.YEAR);
@@ -105,15 +103,15 @@ public class MessageFactory {
             int day = calendar.get(Calendar.DAY_OF_MONTH);
             String dateStr = year + "-" + month + "-" + day;
             HashMap<String, Object> params = new HashMap<>();
-            params.put("key", CalendarConfig.calendar_key);
+            params.put("key", PluginConfig.getApiKey(PluginCode.CALENDAR));
             params.put("date", dateStr);
-            String response = HttpUtil.get(ServerUrl.CALENDAR_DAY_URL, params);
+            String response = HttpUtil.get(PluginConfig.getApiURL(PluginCode.CALENDAR), params);
             Type type = new TypeToken<JuHeBaseResponse<CalendarResponse>>() {
             }.getType();
             JuHeBaseResponse<CalendarResponse> baseResponse = JsonUtil.toObjByType(response, type);
             if (baseResponse.getError_code() == 0) {
                 CalendarResponse calendarResponse = baseResponse.getResult();
-                return MessageUtil.replaceMessage(CalendarConfig.template, calendarResponse);
+                return MessageUtil.replaceMessage(PluginConfig.getTemplate(PluginCode.CALENDAR), calendarResponse);
             }
         }
         return null;
@@ -129,14 +127,14 @@ public class MessageFactory {
      * @return
      */
     public static String getFortuneMsg(long senderQQ, long groupNum, int msgType) {
-        StringBuilder msgContentBuilder = new StringBuilder();
+        String msgContentBuilder = "";
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("qq", Long.toString(senderQQ));
-        jsonObject.addProperty("isOne", FortuneConfig.fortune_day_one);
+        jsonObject.addProperty("isOne", PluginConfig.getConfigVal(PluginCode.FORTUNE, PluginProperty.FORTUNE_DAY_ONE));
         jsonObject.addProperty("isGroup", msgType == 1 ? 0 : 1);
-        jsonObject.addProperty("isIntegral", FortuneConfig.fortune_point);
+        jsonObject.addProperty("isIntegral", PluginConfig.getConfigVal(PluginCode.FORTUNE, PluginProperty.FORTUNE_POINT));
         jsonObject.addProperty("groupNum", Long.toString(groupNum));
-        String response = HttpUtil.post(ServerUrl.FORTUNE_URL, jsonObject);
+        String response = HttpUtil.post(PluginConfig.getApiURL(PluginCode.FORTUNE), jsonObject);
         if (response == null) {
             return "运势服务故障,请联系管理员!";
         }
@@ -153,16 +151,10 @@ public class MessageFactory {
         }
         if (dataStatus == 200) {
             FortuneResponse.DataResponse dataResponse = responseData.getDataResponse();
-            msgContentBuilder.append("\uD83C\uDF13您的今日运势为：").append(dataResponse.getFortuneSummary());
-            if ("1".equals(FortuneConfig.fortune_star_num))
-                msgContentBuilder.append("\n\uD83C\uDF1F星指数：").append(dataResponse.getLuckyStar());
-            if ("1".equals(FortuneConfig.fortune_sign_text))
-                msgContentBuilder.append("\n\uD83D\uDCD7签文：").append(dataResponse.getSignText());
-            if ("1".equals(FortuneConfig.fortune_un_sign))
-                msgContentBuilder.append("\n\uD83D\uDCDD解签：").append(dataResponse.getUnSignText());
+            return MessageUtil.replaceMessage(PluginConfig.getTemplate(PluginCode.FORTUNE), dataResponse);
 
         }
-        return msgContentBuilder.toString();
+        return msgContentBuilder;
     }
 
 
@@ -172,7 +164,7 @@ public class MessageFactory {
      * @return
      */
     public static String getSen() {
-        String sen = HttpUtil.get(ServerUrl.SEN_URL);
+        String sen = HttpUtil.get(PluginConfig.getApiURL(PluginCode.ONE_SEN));
         JsonObject jsonObject = new Gson().fromJson(sen, JsonObject.class);
         return jsonObject.get("data").getAsString();
     }
