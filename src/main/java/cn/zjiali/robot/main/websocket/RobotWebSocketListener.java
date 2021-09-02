@@ -22,18 +22,20 @@ public class RobotWebSocketListener extends WebSocketListener {
 
     @Override
     public void onClosed(@NotNull WebSocket webSocket, int code, @NotNull String reason) {
-        webSocketManager.removeSession("");
+        webSocketManager.removeSession();
         super.onClosed(webSocket, code, reason);
 
     }
 
     @Override
     public void onClosing(@NotNull WebSocket webSocket, int code, @NotNull String reason) {
+        webSocketManager.removeSession();
         super.onClosing(webSocket, code, reason);
     }
 
     @Override
     public void onFailure(@NotNull WebSocket webSocket, @NotNull Throwable t, @Nullable Response response) {
+        webSocketManager.removeSession();
         super.onFailure(webSocket, t, response);
     }
 
@@ -45,6 +47,7 @@ public class RobotWebSocketListener extends WebSocketListener {
 
     @Override
     public void onMessage(@NotNull WebSocket webSocket, @NotNull ByteString bytes) {
+        webSocketManager.handleMessage(webSocket, bytes.toString());
         super.onMessage(webSocket, bytes);
     }
 

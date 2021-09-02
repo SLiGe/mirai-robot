@@ -2,10 +2,12 @@ package cn.zjiali.robot;
 
 import cn.zjiali.robot.annotation.Application;
 import cn.zjiali.robot.config.AppConfig;
+import cn.zjiali.robot.factory.DefaultBeanFactory;
 import cn.zjiali.robot.factory.ServiceFactory;
 import cn.zjiali.robot.handler.GlobalMessageHandler;
 import cn.zjiali.robot.main.ApplicationBootStrap;
 import cn.zjiali.robot.main.system.SysLoginSolver;
+import cn.zjiali.robot.manager.RobotManager;
 import cn.zjiali.robot.util.DeviceUtil;
 import cn.zjiali.robot.util.ObjectUtil;
 import kotlin.Unit;
@@ -22,7 +24,7 @@ import java.util.Objects;
  * @author zJiaLi
  * @since 2020-10-29 11:09
  */
-@Application(basePackages = {"cn.zjiali.robot.service","cn.zjiali.robot.main","cn.zjiali.robot.manager"})
+@Application(basePackages = {"cn.zjiali.robot.service", "cn.zjiali.robot.main", "cn.zjiali.robot.manager"})
 public class RobotApplication {
 
     private static final MiraiLogger miraiLogger = new PlatformLogger(RobotApplication.class.getName());
@@ -60,6 +62,9 @@ public class RobotApplication {
             e.printStackTrace();
             return Unit.INSTANCE;
         });
+        final RobotManager robotManager = new RobotManager();
+        robotManager.init(bot);
+        DefaultBeanFactory.getInstance().putBean(RobotManager.class.getSimpleName(), robotManager);
         eventChannel.subscribeAlways(GroupMessageEvent.class, GlobalMessageHandler::handleGroupMessage);
         eventChannel.subscribeAlways(FriendMessageEvent.class, GlobalMessageHandler::handleFriendMessage);
         eventChannel.subscribeAlways(NewFriendRequestEvent.class, NewFriendRequestEvent::accept);

@@ -1,7 +1,6 @@
 package cn.zjiali.robot.manager;
 
 import cn.zjiali.robot.factory.MessageFactory;
-import cn.zjiali.robot.util.MessageUtil;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -15,7 +14,6 @@ import java.util.Map;
 public class DefaultMessageManager implements MessageManager {
 
     private final Map<String, Method> doMethodMap = new HashMap<>();
-    private final MessageFactory messageFactory = new MessageFactory();
 
     {
         Class<MessageFactory> messageFactoryClass = MessageFactory.class;
@@ -29,7 +27,7 @@ public class DefaultMessageManager implements MessageManager {
     public String produce(String doName, Object... params) {
         Method method = doMethodMap.get(doName);
         try {
-            Object message = method.invoke(messageFactory, params);
+            Object message = method.invoke(MessageFactory.class, params);
             return preProduce() + message + afterProduce();
         } catch (IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();

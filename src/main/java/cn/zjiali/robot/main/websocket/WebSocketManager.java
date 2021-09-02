@@ -57,6 +57,10 @@ public class WebSocketManager {
         webSocketClientMap.put(AppConfig.getQQ(), WebSocketClient.builder().webSocket(webSocket).robotQQ(AppConfig.getQQ()).build());
     }
 
+    public void removeSession(){
+        webSocketClientMap.remove(AppConfig.getQQ());
+    }
+
     public void removeSession(String robotQQ) {
         webSocketClientMap.remove(robotQQ);
     }
