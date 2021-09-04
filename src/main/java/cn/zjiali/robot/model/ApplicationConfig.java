@@ -1,8 +1,7 @@
 package cn.zjiali.robot.model;
 
-import cn.zjiali.robot.config.plugin.Plugin;
+import cn.zjiali.robot.config.Plugin;
 
-import java.util.HashMap;
 import java.util.List;
 
 /**

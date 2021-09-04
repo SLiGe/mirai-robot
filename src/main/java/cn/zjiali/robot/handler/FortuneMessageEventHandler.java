@@ -1,6 +1,6 @@
 package cn.zjiali.robot.handler;
 
-import cn.zjiali.robot.config.plugin.PluginConfig;
+import cn.zjiali.robot.util.PluginConfigUtil;
 import cn.zjiali.robot.constant.PluginCode;
 import cn.zjiali.robot.constant.PluginProperty;
 import cn.zjiali.robot.factory.MessageFactory;
@@ -57,11 +57,11 @@ public class FortuneMessageEventHandler extends AbstractMessageEventHandler {
     private OutMessage getFortuneMsg(long senderQQ, long groupNum, int msgType) {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("qq", Long.toString(senderQQ));
-        jsonObject.addProperty("isOne", PluginConfig.getConfigVal(PluginCode.FORTUNE, PluginProperty.FORTUNE_DAY_ONE));
+        jsonObject.addProperty("isOne", PluginConfigUtil.getConfigVal(PluginCode.FORTUNE, PluginProperty.FORTUNE_DAY_ONE));
         jsonObject.addProperty("isGroup", msgType == 1 ? 0 : 1);
-        jsonObject.addProperty("isIntegral", PluginConfig.getConfigVal(PluginCode.FORTUNE, PluginProperty.FORTUNE_POINT));
+        jsonObject.addProperty("isIntegral", PluginConfigUtil.getConfigVal(PluginCode.FORTUNE, PluginProperty.FORTUNE_POINT));
         jsonObject.addProperty("groupNum", Long.toString(groupNum));
-        String response = HttpUtil.post(PluginConfig.getApiURL(PluginCode.FORTUNE), jsonObject);
+        String response = HttpUtil.post(PluginConfigUtil.getApiURL(PluginCode.FORTUNE), jsonObject);
         if (response == null) {
             return OutMessage.builder().convertFlag(false).content("运势服务故障,请联系管理员!").build();
         }

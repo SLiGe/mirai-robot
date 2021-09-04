@@ -14,5 +14,5 @@ import java.util.Map;
 @Data
 public class SystemConfig {
 
-    private Map<String, List<String>> messageTemplateList;
+    private Map<String, List<String>> messageTemplates;
 }

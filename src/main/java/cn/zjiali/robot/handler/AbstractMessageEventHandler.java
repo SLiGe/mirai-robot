@@ -1,6 +1,6 @@
 package cn.zjiali.robot.handler;
 
-import cn.zjiali.robot.config.plugin.PluginConfig;
+import cn.zjiali.robot.util.PluginConfigUtil;
 import net.mamoe.mirai.event.events.MessageEvent;
 
 import java.util.Arrays;
@@ -28,7 +28,7 @@ public abstract class AbstractMessageEventHandler implements MessageEventHandler
     }
 
     public boolean containCommand(String pluginCode,String msg) {
-        String command = PluginConfig.getCommand(pluginCode);
+        String command = PluginConfigUtil.getCommand(pluginCode);
         List<String> commandArray = Arrays.asList(command.split(","));
         return containCommand(msg,commandArray);
     }

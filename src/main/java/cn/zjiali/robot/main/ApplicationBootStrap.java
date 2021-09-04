@@ -6,9 +6,9 @@ import cn.zjiali.robot.annotation.Component;
 import cn.zjiali.robot.annotation.Service;
 import cn.zjiali.robot.config.AppConfig;
 import cn.zjiali.robot.config.PluginTemplate;
-import cn.zjiali.robot.config.plugin.Plugin;
+import cn.zjiali.robot.config.Plugin;
 import cn.zjiali.robot.factory.DefaultBeanFactory;
-import cn.zjiali.robot.factory.HandlerFactory;
+import cn.zjiali.robot.factory.MessageEventHandlerFactory;
 import cn.zjiali.robot.factory.ServiceFactory;
 import cn.zjiali.robot.handler.MessageEventHandler;
 import cn.zjiali.robot.main.websocket.WebSocketManager;
@@ -58,7 +58,7 @@ public class ApplicationBootStrap {
         String systemConfigJson = new BufferedReader(new InputStreamReader(configStream, StandardCharsets.UTF_8))
                 .lines().collect(Collectors.joining(System.lineSeparator()));
         SystemConfig systemConfig = JsonUtil.json2obj(systemConfigJson, SystemConfig.class);
-        Map<String, List<String>> messageTemplateMap = systemConfig.getMessageTemplateList();
+        Map<String, List<String>> messageTemplateMap = systemConfig.getMessageTemplates();
         PluginTemplate pluginTemplate = PluginTemplate.getInstance();
         List<Plugin> plugins = AppConfig.getApplicationConfig().getPlugins();
         plugins.stream().filter(plugin -> !"0".equals(plugin.getTemplateFlag()))
@@ -160,7 +160,7 @@ public class ApplicationBootStrap {
                 String pluginHandler = plugin.getHandler();
                 int pluginEnable = plugin.getEnable();
                 if (pluginEnable == 1) {
-                    MessageEventHandler messageEventHandler = HandlerFactory.getInstance().put(pluginName, pluginHandler);
+                    MessageEventHandler messageEventHandler = MessageEventHandlerFactory.getInstance().put(pluginName, pluginHandler);
                     AppConfig.msgMessageEventHandlers.add(messageEventHandler);
                     commonLogger.info("[loadAppConfig]====加载 [{}] 成功！", pluginName);
                 }
@@ -172,15 +172,10 @@ public class ApplicationBootStrap {
     public static void main(String[] args) {
         try {
             getInstance().init();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
+        } catch (IOException | IllegalAccessException | InstantiationException | ClassNotFoundException e) {
             e.printStackTrace();
         }
+        List<MessageEventHandler> messageEventHandlerList = MessageEventHandlerFactory.getInstance().getBeanList(MessageEventHandler.class);
         try {
             Thread.currentThread().join();
         } catch (InterruptedException e) {

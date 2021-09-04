@@ -1,6 +1,6 @@
 package cn.zjiali.robot.handler;
 
-import cn.zjiali.robot.config.plugin.PluginConfig;
+import cn.zjiali.robot.util.PluginConfigUtil;
 import cn.zjiali.robot.constant.PluginCode;
 import cn.zjiali.robot.factory.MessageFactory;
 import cn.zjiali.robot.model.message.OutMessage;
@@ -8,7 +8,6 @@ import cn.zjiali.robot.model.response.JuHeBaseResponse;
 import cn.zjiali.robot.model.response.YellowCalendarResponse;
 import cn.zjiali.robot.util.HttpUtil;
 import cn.zjiali.robot.util.JsonUtil;
-import cn.zjiali.robot.util.MessageUtil;
 import cn.zjiali.robot.util.ObjectUtil;
 import com.google.gson.reflect.TypeToken;
 import net.mamoe.mirai.event.events.FriendMessageEvent;
@@ -19,8 +18,6 @@ import java.lang.reflect.Type;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
-
-import static cn.zjiali.robot.factory.MessageFactory.getYellowCalendarMessage;
 
 /**
  * 老黄历消息处理器
@@ -75,9 +72,9 @@ public class YellowCalendarMessageEventHandler extends AbstractMessageEventHandl
     public OutMessage getYellowCalendarMessage() {
         String date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         HashMap<String, Object> params = new HashMap<>();
-        params.put("key", PluginConfig.getApiKey(PluginCode.YELLOW_CALENDAR));
+        params.put("key", PluginConfigUtil.getApiKey(PluginCode.YELLOW_CALENDAR));
         params.put("date", date);
-        String response = HttpUtil.get(PluginConfig.getApiURL(PluginCode.YELLOW_CALENDAR), params);
+        String response = HttpUtil.get(PluginConfigUtil.getApiURL(PluginCode.YELLOW_CALENDAR), params);
         Type type = new TypeToken<JuHeBaseResponse<YellowCalendarResponse>>() {
         }.getType();
         JuHeBaseResponse<YellowCalendarResponse> baseResponse = JsonUtil.toObjByType(response, type);

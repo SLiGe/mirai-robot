@@ -1,8 +1,11 @@
 package cn.zjiali.robot.handler;
 
 import cn.zjiali.robot.annotation.Autowired;
-import cn.zjiali.robot.config.plugin.MoLiConfig;
+import cn.zjiali.robot.constant.PluginCode;
+import cn.zjiali.robot.constant.PluginProperty;
+import cn.zjiali.robot.model.message.OutMessage;
 import cn.zjiali.robot.service.MoLiService;
+import cn.zjiali.robot.util.PluginConfigUtil;
 import net.mamoe.mirai.event.events.FriendMessageEvent;
 import net.mamoe.mirai.event.events.GroupMessageEvent;
 import net.mamoe.mirai.message.data.At;
@@ -29,7 +32,7 @@ public class MoLiMessageEventHandler extends AbstractMessageEventHandler {
             event.getGroup().sendMessage(new At(event.getSender().getId()).plus(interceptMessage.get("message")));
             return;
         }
-        if ("1".equals(MoLiConfig.chatGroupAt)) {
+        if ("1".equals(PluginConfigUtil.getConfigVal(PluginCode.MOLI, PluginProperty.CHAT_GROUP_AT))) {
             String atNick = "@" + event.getBot().getNick();
             if (msg.contains(atNick)) {
                 msg = msg.replace(atNick, "");
@@ -54,27 +57,55 @@ public class MoLiMessageEventHandler extends AbstractMessageEventHandler {
         event.getSender().sendMessage(sendMsg);
     }
 
+    @Override
+    public OutMessage handleGroupMessageEvent(GroupMessageEvent event) {
+        String chatGroupAt = PluginConfigUtil.getConfigVal(PluginCode.MOLI, PluginProperty.CHAT_GROUP_AT);
+        String msg = getMsg(event);
+        if ("1".equals(chatGroupAt)) {
+            String atNick = "@" + event.getBot().getNick();
+            if (msg.contains(atNick)) {
+                msg = msg.replace(atNick, "");
+                String sendMsg = moLiService.getCommonChatMessage(msg);
+                return OutMessage.builder().content(sendMsg).convertFlag(false).build();
+            }
+        } else {
+            String sendMsg = moLiService.getCommonChatMessage(msg);
+            return OutMessage.builder().content(sendMsg).convertFlag(false).build();
+        }
+        return super.handleGroupMessageEvent(event);
+    }
+
+    @Override
+    public OutMessage handleFriendMessageEvent(FriendMessageEvent event) {
+        String sendMsg = moLiService.getCommonChatMessage(getMsg(event));
+        return OutMessage.builder().content(sendMsg).convertFlag(false).build();
+    }
+
     private Map<String, String> interceptMessage(long qq, boolean isGroup, long groupNum, String msg) {
         Map<String, String> retMap = new HashMap<>();
-        if ("1".equals(MoLiConfig.jokeEnable) && msg.contains(MoLiConfig.jokeCommand)) {
+        if (PluginConfigUtil.getEnable(PluginCode.JOKE) == 1
+                && msg.contains(PluginConfigUtil.getCommand(PluginCode.JOKE))) {
             String jokeMessage = moLiService.getJokeMessage(qq, isGroup, groupNum);
             retMap.put("flag", "1");
             retMap.put("message", jokeMessage);
             return retMap;
         }
-        if ("1".equals(MoLiConfig.gylqEnable) && msg.contains(MoLiConfig.gylqCommand)) {
+        if (PluginConfigUtil.getEnable(PluginCode.GY_LQ) == 1
+                && msg.contains(PluginConfigUtil.getCommand(PluginCode.GY_LQ))) {
             String gylqMessage = moLiService.getGylqMessage(qq, isGroup, groupNum);
             retMap.put("flag", "1");
             retMap.put("message", gylqMessage);
             return retMap;
         }
-        if ("1".equals(MoLiConfig.csylqEnable) && msg.contains(MoLiConfig.csylqCommand)) {
+        if (PluginConfigUtil.getEnable(PluginCode.CSY_LQ) == 1
+                && msg.contains(PluginConfigUtil.getCommand(PluginCode.CSY_LQ))) {
             String csylqMessage = moLiService.getCsylqMessage(qq, isGroup, groupNum);
             retMap.put("flag", "1");
             retMap.put("message", csylqMessage);
             return retMap;
         }
-        if ("1".equals(MoLiConfig.yllqEnable) && msg.contains(MoLiConfig.yllqCommand)) {
+        if (PluginConfigUtil.getEnable(PluginCode.YL_LQ) == 1
+                && msg.contains(PluginConfigUtil.getCommand(PluginCode.YL_LQ))) {
             String yllqMessage = moLiService.getYllqMessage(qq, isGroup, groupNum);
             retMap.put("flag", "1");
             retMap.put("message", yllqMessage);
