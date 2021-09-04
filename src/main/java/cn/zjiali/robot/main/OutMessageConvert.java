@@ -1,6 +1,6 @@
 package cn.zjiali.robot.main;
 
-import cn.zjiali.robot.config.plugin.PluginConfig;
+import cn.zjiali.robot.util.PluginConfigUtil;
 import cn.zjiali.robot.model.message.OutMessage;
 import cn.zjiali.robot.util.MessageUtil;
 
@@ -19,12 +19,15 @@ public class OutMessageConvert {
     }
 
     public String convert(OutMessage outMessage) {
+        if (outMessage == null) return null;
         String content = outMessage.getContent();
         if (!outMessage.isConvertFlag()) return content;
         String templateCode = outMessage.getTemplateCode();
-        String template = PluginConfig.getTemplate(templateCode);
+        String template = PluginConfigUtil.getTemplate(templateCode);
         int fillFlag = outMessage.getFillFlag();
-        return MessageUtil.replaceMessage(template, fillFlag == 1 ? outMessage.getFillMap() : outMessage.getFillObj());
+        String finalMessage = MessageUtil.replaceMessage(template, fillFlag == 1 ? outMessage.getFillMap() : outMessage.getFillObj());
+        outMessage.setFinalMessage(finalMessage);
+        return finalMessage;
     }
 
 }
