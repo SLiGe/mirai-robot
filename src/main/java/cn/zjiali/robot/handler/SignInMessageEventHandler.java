@@ -14,6 +14,8 @@ import net.mamoe.mirai.message.data.At;
 
 
 /**
+ * 签到处理器
+ *
  * @author zJiaLi
  * @since 2020-10-29 20:57
  */
@@ -94,7 +96,7 @@ public class SignInMessageEventHandler extends AbstractMessageEventHandler {
             //签到成功200  已经签到203
             if (status == 200) {
                 SignInDataResponse.DataResponse dataResponse = response.getDataResponse();
-                return MessageUtil.replaceMessage(PluginTemplate.getInstance().getTemplate( MsgTemplate.SIGN_TEMPLATE), dataResponse);
+                return MessageUtil.replaceMessage(PluginTemplate.getInstance().getTemplate(MsgTemplate.SIGN_TEMPLATE), dataResponse);
             } else if (status == 203) {
                 return "你今天已经签到过了！";
             }
@@ -116,6 +118,6 @@ public class SignInMessageEventHandler extends AbstractMessageEventHandler {
 
     @Override
     public boolean matchCommand(String msg) {
-        return containCommand(PluginCode.SIGN,msg);
+        return containCommand(PluginCode.SIGN, msg);
     }
 }

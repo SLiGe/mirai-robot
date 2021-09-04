@@ -1,6 +1,6 @@
 package cn.zjiali.robot.handler;
 
-import cn.zjiali.robot.config.plugin.PluginConfig;
+import cn.zjiali.robot.util.PluginConfigUtil;
 import cn.zjiali.robot.constant.PluginCode;
 import cn.zjiali.robot.factory.MessageFactory;
 import cn.zjiali.robot.model.message.OutMessage;
@@ -74,9 +74,9 @@ public class CalendarMessageEventHandler extends AbstractMessageEventHandler {
         int day = calendar.get(Calendar.DAY_OF_MONTH);
         String dateStr = year + "-" + month + "-" + day;
         HashMap<String, Object> params = new HashMap<>();
-        params.put("key", PluginConfig.getApiKey(PluginCode.CALENDAR));
+        params.put("key", PluginConfigUtil.getApiKey(PluginCode.CALENDAR));
         params.put("date", dateStr);
-        String response = HttpUtil.get(PluginConfig.getApiURL(PluginCode.CALENDAR), params);
+        String response = HttpUtil.get(PluginConfigUtil.getApiURL(PluginCode.CALENDAR), params);
         Type type = new TypeToken<JuHeBaseResponse<CalendarResponse>>() {
         }.getType();
         JuHeBaseResponse<CalendarResponse> baseResponse = JsonUtil.toObjByType(response, type);

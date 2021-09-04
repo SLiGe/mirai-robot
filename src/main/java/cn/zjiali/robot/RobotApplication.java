@@ -22,6 +22,8 @@ import java.util.Objects;
 
 
 /**
+ * 应用启动类
+ *
  * @author zJiaLi
  * @since 2020-10-29 11:09
  */
@@ -63,6 +65,7 @@ public class RobotApplication {
             e.printStackTrace();
             return Unit.INSTANCE;
         });
+        //保存robot实例
         final RobotManager robotManager = new RobotManager();
         robotManager.init(bot);
         DefaultBeanFactory.getInstance().putBean(RobotManager.class.getSimpleName(), robotManager);
