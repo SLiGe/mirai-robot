@@ -4,6 +4,7 @@ import cn.zjiali.robot.annotation.Application;
 import cn.zjiali.robot.config.AppConfig;
 import cn.zjiali.robot.factory.DefaultBeanFactory;
 import cn.zjiali.robot.factory.ServiceFactory;
+import cn.zjiali.robot.handler.DefaultGlobalMessageHandler;
 import cn.zjiali.robot.handler.GlobalMessageHandler;
 import cn.zjiali.robot.main.ApplicationBootStrap;
 import cn.zjiali.robot.main.system.SysLoginSolver;
@@ -65,8 +66,9 @@ public class RobotApplication {
         final RobotManager robotManager = new RobotManager();
         robotManager.init(bot);
         DefaultBeanFactory.getInstance().putBean(RobotManager.class.getSimpleName(), robotManager);
-        eventChannel.subscribeAlways(GroupMessageEvent.class, GlobalMessageHandler::handleGroupMessage);
-        eventChannel.subscribeAlways(FriendMessageEvent.class, GlobalMessageHandler::handleFriendMessage);
+        final GlobalMessageHandler globalMessageHandler = new DefaultGlobalMessageHandler();
+        eventChannel.subscribeAlways(GroupMessageEvent.class, globalMessageHandler::handleGroupMessage);
+        eventChannel.subscribeAlways(FriendMessageEvent.class, globalMessageHandler::handleFriendMessage);
         eventChannel.subscribeAlways(NewFriendRequestEvent.class, NewFriendRequestEvent::accept);
         bot.join(); // 阻塞当前线程直到 bot 离线
     }

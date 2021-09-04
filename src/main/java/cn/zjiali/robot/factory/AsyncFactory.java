@@ -1,6 +1,5 @@
 package cn.zjiali.robot.factory;
 
-import cn.zjiali.robot.constant.ServerUrl;
 import cn.zjiali.robot.util.HttpUtil;
 import cn.zjiali.robot.util.PropertiesUtil;
 import com.google.gson.JsonObject;
