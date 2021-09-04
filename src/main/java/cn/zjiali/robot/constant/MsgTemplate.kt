@@ -1,4 +1,4 @@
-package cn.zjiali.robot.constant;
+package cn.zjiali.robot.constant
 
 /**
  * 消息模板常量
@@ -6,10 +6,14 @@ package cn.zjiali.robot.constant;
  * @author zJiaLi
  * @since 2021-09-04 12:10
  */
-public class MsgTemplate {
+object MsgTemplate {
+    /**
+     * 签到消息模板
+     */
+    const val SIGN_TEMPLATE = "signTemplate"
 
-    public static final String SIGN_TEMPLATE = "signTemplate";
-
-    public static final String QUERY_SIGN_TEMPLATE = "querySignTemplate";
-
+    /**
+     * 签到查询消息模板
+     */
+    const val QUERY_SIGN_TEMPLATE = "querySignTemplate"
 }

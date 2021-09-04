@@ -1,45 +1,32 @@
-package cn.zjiali.robot.config.plugin;
+package cn.zjiali.robot.config
 
-import lombok.Data;
-
-import java.util.HashMap;
+import java.util.HashMap
 
 /**
  * @author zJiaLi
  * @since 2021-08-12 16:53
  */
-@Data
-public class Plugin {
-
-    private String name;
-
-    private String code;
-
-    private String command;
-
-    private int enable;
-
-    private String template;
+class Plugin {
+    var name: String? = null
+    var code: String? = null
+    var command: String? = null
+    var enable = 0
+    var template: String? = null
 
     /**
      * 消息模板标识  0=无模板 1=单一模板 2=多个模板
      */
-    private String templateFlag;
-
-    /**
-     * 是否前置处理
-     */
-    private int preHandle;
+    var templateFlag: String? = null
 
     /**
      * 消息处理器
      */
-    private String handler;
+    var handler: String? = null
 
     /**
      * 插件配置
      */
-    private HashMap<String, String> properties;
+    var properties: HashMap<String, String>? = null
 
 
 }

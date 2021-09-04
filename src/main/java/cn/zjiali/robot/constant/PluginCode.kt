@@ -1,22 +1,62 @@
-package cn.zjiali.robot.constant;
+package cn.zjiali.robot.constant
 
 /**
  * @author zJiaLi
  * @since 2021-08-13 11:29
  */
-public class PluginCode {
+object PluginCode {
+    /**
+     * 签到
+     */
+    const val SIGN = "sign"
 
-    public static final String SIGN = "sign";
+    /**
+     * 一言
+     */
+    const val ONE_SEN = "oneSen"
 
-    public static final String ONE_SEN = "oneSen";
+    /**
+     * 运势
+     */
+    const val FORTUNE = "fortune"
 
-    public static final String FORTUNE = "fortune";
+    /**
+     * 老黄历
+     */
+    const val YELLOW_CALENDAR = "yellowCalendar"
 
-    public static final String YELLOW_CALENDAR = "yellowCalendar";
+    /**
+     * 万年历
+     */
+    const val CALENDAR = "calendar"
 
-    public static final String CALENDAR = "calendar";
+    /**
+     * 历史上的今天
+     */
+    const val TODAY_HISTORY = "todayHistory"
 
-    public static final String TODAY_HISTORY = "todayHistory";
+    /**
+     * 笑话
+     */
+    const val JOKE = "joke"
 
+    /**
+     * 观音灵签
+     */
+    const val GY_LQ = "gylq"
 
+    /**
+     * 月老灵签
+     */
+    const val YL_LQ = "yllq"
+
+    /**
+     * 财神爷灵签
+     */
+    const val CSY_LQ = "csylq"
+
+    /**
+     * 茉莉聊天
+     */
+    const val MOLI = "MOLI"
 }
