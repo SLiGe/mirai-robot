@@ -1,9 +1,5 @@
 package cn.zjiali.robot.factory;
 
-import cn.zjiali.robot.annotation.Autowired;
-import cn.zjiali.robot.handler.Handler;
-
-import java.lang.reflect.Field;
 import java.util.List;
 
 /**

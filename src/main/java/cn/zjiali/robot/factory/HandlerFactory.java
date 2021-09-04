@@ -1,7 +1,7 @@
 package cn.zjiali.robot.factory;
 
 import cn.zjiali.robot.annotation.Autowired;
-import cn.zjiali.robot.handler.Handler;
+import cn.zjiali.robot.handler.MessageEventHandler;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -18,10 +18,10 @@ public class HandlerFactory extends AbstractBeanFactory {
         return handlerFactory;
     }
 
-    public Handler put(String pluginName, String handler) {
+    public MessageEventHandler put(String pluginName, String handler) {
         try {
             Class<?> handlerClass = Class.forName(handler);
-            Handler instance = (Handler) handlerClass.getConstructor().newInstance();
+            MessageEventHandler instance = (MessageEventHandler) handlerClass.getConstructor().newInstance();
           //  fillHandlerFields(handlerClass, instance);
             putBean(pluginName, instance);
             return instance;
@@ -31,11 +31,11 @@ public class HandlerFactory extends AbstractBeanFactory {
         return null;
     }
 
-    public Handler get(String pluginName) {
-        return getBean(pluginName, Handler.class);
+    public MessageEventHandler get(String pluginName) {
+        return getBean(pluginName, MessageEventHandler.class);
     }
 
-    private void fillHandlerFields(Class<?> handlerClass, Handler instance) throws IllegalAccessException {
+    private void fillHandlerFields(Class<?> handlerClass, MessageEventHandler instance) throws IllegalAccessException {
         Field[] declaredFields = handlerClass.getDeclaredFields();
         for (Field declaredField : declaredFields) {
             Autowired autowired = declaredField.getAnnotation(Autowired.class);
@@ -56,7 +56,7 @@ public class HandlerFactory extends AbstractBeanFactory {
 
     @Override
     public String beanPrefix() {
-        return "Handler-";
+        return "MessageEventHandler-";
     }
 
 }
