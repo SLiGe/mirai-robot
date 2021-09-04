@@ -3,6 +3,7 @@ package cn.zjiali.robot.util;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Map;
 
 /**
  * 消息工具类
@@ -44,6 +45,19 @@ public class MessageUtil {
                 }
             } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
                 e.printStackTrace();
+            }
+        }
+        return message;
+    }
+
+    public static String replaceMessage(String message, Map<String, String> fillMap) {
+        if (ObjectUtil.isNullOrEmpty(message) || ObjectUtil.isNullOrEmpty(fillMap)) {
+            return null;
+        }
+        for (Map.Entry<String, String> entry : fillMap.entrySet()) {
+            String fieldName = "{" + entry.getKey() + "}";
+            if (message.contains(fieldName)) {
+                message = message.replace(fieldName, entry.getValue());
             }
         }
         return message;
