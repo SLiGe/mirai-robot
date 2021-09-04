@@ -2,7 +2,6 @@ package cn.zjiali.robot.model.bean;
 
 import lombok.Data;
 
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -25,7 +24,7 @@ public class BeanDefinition {
     /**
      * bean所继承接口
      */
-    private Class<?>[] interfaces;
+    private List<Class<?>> interfaces;
 
     /**
      * bean类型
@@ -37,8 +36,5 @@ public class BeanDefinition {
      */
     private Object instance;
 
-    public List<?> getBeanInterfaces() {
-        return Arrays.asList(getInterfaces());
-    }
 
 }

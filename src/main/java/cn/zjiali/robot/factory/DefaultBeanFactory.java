@@ -3,6 +3,7 @@ package cn.zjiali.robot.factory;
 
 import cn.zjiali.robot.annotation.Autowired;
 import cn.zjiali.robot.model.bean.BeanDefinition;
+import cn.zjiali.robot.util.ClassUtil;
 
 import java.lang.reflect.Field;
 import java.util.List;
@@ -25,7 +26,7 @@ public class DefaultBeanFactory implements BeanFactory {
     @Override
     public <T> T getBean(String beanName, Class<T> requireType) {
         BeanDefinition beanDefinition = (BeanDefinition) beanMap.get(beanPrefix() + beanName);
-        Optional<Object> beanByInterface = beanMap.values().stream().filter(bean -> ((BeanDefinition) bean).getBeanInterfaces().contains(requireType)).findFirst();
+        Optional<Object> beanByInterface = beanMap.values().stream().filter(bean -> ((BeanDefinition) bean).getInterfaces().contains(requireType)).findFirst();
         if (beanByInterface.isPresent()) {
             return (T) ((BeanDefinition) beanByInterface.get()).getInstance();
         }
@@ -37,7 +38,8 @@ public class DefaultBeanFactory implements BeanFactory {
         BeanDefinition beanDefinition = new BeanDefinition();
         beanDefinition.setBeanAlias(beanName);
         Class<?> beanClass = bean.getClass();
-        beanDefinition.setInterfaces(beanClass.getInterfaces());
+        List<Class<?>> beanInterfaces = ClassUtil.getAllInterfaces(beanClass);
+        beanDefinition.setInterfaces(beanInterfaces);
         beanDefinition.setTypeClass(beanClass);
         beanDefinition.setInstance(bean);
         beanDefinition.setBeanName(beanClass.getSimpleName());
@@ -47,7 +49,7 @@ public class DefaultBeanFactory implements BeanFactory {
     @SuppressWarnings("unchecked")
     public <T> List<T> getBeanList(Class<T> requireType) {
         return (List<T>) beanMap.values().stream().filter(bean -> {
-            List<?> beanInterfaces = ((BeanDefinition) bean).getBeanInterfaces();
+            List<Class<?>> beanInterfaces = ((BeanDefinition) bean).getInterfaces();
             return beanInterfaces.contains(requireType);
         }).map(bean -> ((BeanDefinition) bean).getInstance()).collect(Collectors.toList());
     }
@@ -95,6 +97,8 @@ public class DefaultBeanFactory implements BeanFactory {
         putBean(clazz.getSimpleName(), instance);
         return getBeanDefinition(clazz.getSimpleName()).getInstance();
     }
+
+
 
     public BeanDefinition getBeanDefinition(String beanName) {
         return (BeanDefinition) beanMap.get(beanName);
