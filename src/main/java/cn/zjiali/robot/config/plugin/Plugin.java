@@ -22,6 +22,11 @@ public class Plugin {
     private String template;
 
     /**
+     * 消息模板标识  0=无模板 1=单一模板 2=多个模板
+     */
+    private String templateFlag;
+
+    /**
      * 是否前置处理
      */
     private int preHandle;

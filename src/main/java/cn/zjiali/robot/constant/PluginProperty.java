@@ -24,12 +24,10 @@ public class PluginProperty {
     /**
      * 签到模板
      */
-    public static final String SIGN_TEMPLATE = "signTemplate";
     public static final String SIGN_URL = "";
     /**
      * 签到查询模板
      */
-    public static final String QUERY_SIGN_TEMPLATE = "querySignTemplate";
     public static final String QUERY_SIGN_URL = "";
 
     /**

@@ -5,18 +5,21 @@ import cn.zjiali.robot.annotation.Application;
 import cn.zjiali.robot.annotation.Component;
 import cn.zjiali.robot.annotation.Service;
 import cn.zjiali.robot.config.AppConfig;
+import cn.zjiali.robot.config.PluginTemplate;
 import cn.zjiali.robot.config.plugin.Plugin;
 import cn.zjiali.robot.factory.DefaultBeanFactory;
 import cn.zjiali.robot.factory.HandlerFactory;
 import cn.zjiali.robot.factory.ServiceFactory;
-import cn.zjiali.robot.handler.Handler;
+import cn.zjiali.robot.handler.MessageEventHandler;
 import cn.zjiali.robot.main.websocket.WebSocketManager;
 import cn.zjiali.robot.model.ApplicationConfig;
+import cn.zjiali.robot.model.SystemConfig;
 import cn.zjiali.robot.util.*;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -41,8 +44,36 @@ public class ApplicationBootStrap {
     public void init() throws IOException, IllegalAccessException, InstantiationException, ClassNotFoundException {
         loadService();
         loadAppConfig();
+        loadMessageTemplate();
         fillBeanDefinition();
         loadWebSocket();
+    }
+
+    /**
+     * 加载消息模板
+     */
+    private void loadMessageTemplate() {
+        InputStream configStream = ApplicationBootStrap.class.getResourceAsStream("/system-config.json");
+        if (configStream == null) throw new RuntimeException("加载消息模板出错,请检查配置文件system-config.json是否存在!");
+        String systemConfigJson = new BufferedReader(new InputStreamReader(configStream, StandardCharsets.UTF_8))
+                .lines().collect(Collectors.joining(System.lineSeparator()));
+        SystemConfig systemConfig = JsonUtil.json2obj(systemConfigJson, SystemConfig.class);
+        Map<String, List<String>> messageTemplateMap = systemConfig.getMessageTemplateList();
+        PluginTemplate pluginTemplate = PluginTemplate.getInstance();
+        List<Plugin> plugins = AppConfig.getApplicationConfig().getPlugins();
+        plugins.stream().filter(plugin -> !"0".equals(plugin.getTemplateFlag()))
+                .forEach(plugin -> {
+                    if ("1".equals(plugin.getTemplateFlag())) {
+                        String template = plugin.getTemplate();
+                        pluginTemplate.putTemplate(plugin.getCode(), template);
+                    } else if ("2".equals(plugin.getTemplateFlag())) {
+                        List<String> templates = messageTemplateMap.get(plugin.getCode());
+                        templates.forEach(messageTemplateCode -> {
+                            String templateText = plugin.getProperties().get(messageTemplateCode);
+                            pluginTemplate.putTemplate(messageTemplateCode, templateText);
+                        });
+                    }
+                });
     }
 
     private void fillBeanDefinition() {
@@ -129,8 +160,8 @@ public class ApplicationBootStrap {
                 String pluginHandler = plugin.getHandler();
                 int pluginEnable = plugin.getEnable();
                 if (pluginEnable == 1) {
-                    Handler handler = HandlerFactory.getInstance().put(pluginName, pluginHandler);
-                    AppConfig.msgHandlers.add(handler);
+                    MessageEventHandler messageEventHandler = HandlerFactory.getInstance().put(pluginName, pluginHandler);
+                    AppConfig.msgMessageEventHandlers.add(messageEventHandler);
                     commonLogger.info("[loadAppConfig]====加载 [{}] 成功！", pluginName);
                 }
             }
