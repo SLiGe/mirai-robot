@@ -16,7 +16,7 @@ import java.util.Map;
  * @author zJiaLi
  * @since 2021-04-08 11:49
  */
-public class MoLiHandler extends AbstractHandler {
+public class MoLiMessageEventHandler extends AbstractMessageEventHandler {
 
     @Autowired
     private MoLiService moLiService;
@@ -82,5 +82,15 @@ public class MoLiHandler extends AbstractHandler {
         }
         retMap.put("flag", "0");
         return retMap;
+    }
+
+    @Override
+    public boolean next() {
+        return true;
+    }
+
+    @Override
+    public boolean matchCommand(String command) {
+        return true;
     }
 }

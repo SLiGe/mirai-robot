@@ -55,11 +55,10 @@ public class MessageFactory {
     /**
      * 获取历史上的今天消息
      *
-     * @param message
+     * @param
      * @return
      */
-    public static String getTodayOnHistoryMessage(String message) {
-        if (PluginConfig.getCommand(PluginCode.TODAY_HISTORY).equals(message)) {
+    public static String getTodayOnHistoryMessage() {
             //日期,格式:月/日 如:1/1,/10/1,12/12 如月或者日小于10,前面无需加0
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(new Date());
@@ -84,7 +83,6 @@ public class MessageFactory {
                     }
                 }
             }
-        }
         return null;
     }
 
