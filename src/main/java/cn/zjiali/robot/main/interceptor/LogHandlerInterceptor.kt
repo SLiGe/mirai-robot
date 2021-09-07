@@ -14,7 +14,7 @@ import net.mamoe.mirai.event.events.MessageEvent
 @Service
 class LogHandlerInterceptor : HandlerInterceptor {
 
-   private val logger: CommonLogger = CommonLogger(javaClass.simpleName)
+    private val logger: CommonLogger = CommonLogger(javaClass.simpleName)
 
     override fun preHandle(messageEvent: MessageEvent?): Boolean {
         logger.debug("处理消息内容: {}", messageEvent?.message?.contentToString())
@@ -24,7 +24,8 @@ class LogHandlerInterceptor : HandlerInterceptor {
     override fun afterCompletion(messageEvent: MessageEvent?, outMessageList: List<OutMessage?>?) {
         if (outMessageList != null && outMessageList.isNotEmpty()) {
             for (outMessage in outMessageList) {
-                logger.debug("输出消息内容:{}", outMessage?.finalMessage)
+                if (outMessage != null)
+                    logger.debug("输出消息内容:{}", outMessage.finalMessage)
             }
         }
         super.afterCompletion(messageEvent, outMessageList)
