@@ -1,8 +1,9 @@
-package cn.zjiali.robot.main;
+package cn.zjiali.robot.main
 
-import cn.zjiali.robot.util.PluginConfigUtil;
-import cn.zjiali.robot.model.message.OutMessage;
-import cn.zjiali.robot.util.MessageUtil;
+import cn.zjiali.robot.constant.AppConstants
+import cn.zjiali.robot.util.PluginConfigUtil.getTemplate
+import cn.zjiali.robot.model.message.OutMessage
+import cn.zjiali.robot.util.MessageUtil
 
 /**
  * 发送消息转换类
@@ -10,24 +11,26 @@ import cn.zjiali.robot.util.MessageUtil;
  * @author zJiaLi
  * @since 2021-09-04 11:26
  */
-public class OutMessageConvert {
+class OutMessageConvert {
 
-    private static final OutMessageConvert instance = new OutMessageConvert();
-
-    public static OutMessageConvert getInstance() {
-        return instance;
+    fun convert(outMessage: OutMessage?): String? {
+        if (outMessage == null) return null
+        val content = outMessage.content
+        if (!outMessage.isConvertFlag) {
+            outMessage.finalMessage = content
+            return content
+        }
+        val templateCode = outMessage.templateCode
+        val template = getTemplate(templateCode)
+        val fillFlag = outMessage.fillFlag
+        val finalMessage =
+            MessageUtil.replaceMessage(template, if (fillFlag == AppConstants.FILL_OUT_MESSAGE_MAP_FLAG) outMessage.fillMap else outMessage.fillObj)
+        outMessage.finalMessage = finalMessage
+        return finalMessage
     }
 
-    public String convert(OutMessage outMessage) {
-        if (outMessage == null) return null;
-        String content = outMessage.getContent();
-        if (!outMessage.isConvertFlag()) return content;
-        String templateCode = outMessage.getTemplateCode();
-        String template = PluginConfigUtil.getTemplate(templateCode);
-        int fillFlag = outMessage.getFillFlag();
-        String finalMessage = MessageUtil.replaceMessage(template, fillFlag == 1 ? outMessage.getFillMap() : outMessage.getFillObj());
-        outMessage.setFinalMessage(finalMessage);
-        return finalMessage;
+    companion object {
+        @JvmStatic
+        val instance = OutMessageConvert()
     }
-
 }

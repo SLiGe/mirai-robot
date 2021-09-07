@@ -1,5 +1,6 @@
 package cn.zjiali.robot.handler;
 
+import cn.zjiali.robot.constant.AppConstants;
 import cn.zjiali.robot.util.PluginConfigUtil;
 import cn.zjiali.robot.constant.PluginCode;
 import cn.zjiali.robot.factory.MessageFactory;
@@ -80,7 +81,8 @@ public class YellowCalendarMessageEventHandler extends AbstractMessageEventHandl
         JuHeBaseResponse<YellowCalendarResponse> baseResponse = JsonUtil.toObjByType(response, type);
         if (baseResponse.getError_code() == 0) {
             YellowCalendarResponse yellowCalendarResponse = baseResponse.getResult();
-            return OutMessage.builder().convertFlag(true).templateCode(PluginCode.YELLOW_CALENDAR).fillObj(yellowCalendarResponse).fillFlag(2).build();
+            return OutMessage.builder().convertFlag(true).templateCode(PluginCode.YELLOW_CALENDAR)
+                    .fillObj(yellowCalendarResponse).fillFlag(AppConstants.FILL_OUT_MESSAGE_OBJECT_FLAG).build();
         }
         return null;
     }

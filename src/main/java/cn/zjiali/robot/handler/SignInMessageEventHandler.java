@@ -2,6 +2,7 @@ package cn.zjiali.robot.handler;
 
 import cn.zjiali.robot.annotation.Autowired;
 import cn.zjiali.robot.config.PluginTemplate;
+import cn.zjiali.robot.constant.AppConstants;
 import cn.zjiali.robot.constant.MsgTemplate;
 import cn.zjiali.robot.constant.PluginCode;
 import cn.zjiali.robot.model.message.OutMessage;
@@ -69,7 +70,8 @@ public class SignInMessageEventHandler extends AbstractMessageEventHandler {
             if (status == 200) {
                 SignInDataResponse.DataResponse dataResponse = response.getDataResponse();
 
-                return OutMessage.builder().convertFlag(true).fillFlag(2).templateCode(MsgTemplate.SIGN_TEMPLATE).fillObj(dataResponse).build();
+                return OutMessage.builder().convertFlag(true).fillFlag(AppConstants.FILL_OUT_MESSAGE_OBJECT_FLAG)
+                        .templateCode(MsgTemplate.SIGN_TEMPLATE).fillObj(dataResponse).build();
             } else if (status == 203) {
                 return OutMessage.builder().convertFlag(false).content("你今天已经签到过了！").build();
             }
@@ -79,8 +81,9 @@ public class SignInMessageEventHandler extends AbstractMessageEventHandler {
                 return OutMessage.builder().convertFlag(false).content("签到服务异常,请联系管理员!").build();
             }
             SignInDataResponse.DataResponse dataResponse = response.getDataResponse();
-
-            return OutMessage.builder().convertFlag(true).fillFlag(2).templateCode(MsgTemplate.QUERY_SIGN_TEMPLATE).fillObj(dataResponse).build();
+            return OutMessage.builder().convertFlag(true)
+                    .fillFlag(AppConstants.FILL_OUT_MESSAGE_OBJECT_FLAG)
+                    .templateCode(MsgTemplate.QUERY_SIGN_TEMPLATE).fillObj(dataResponse).build();
         }
         return null;
     }

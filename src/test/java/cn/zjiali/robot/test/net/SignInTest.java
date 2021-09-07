@@ -4,7 +4,7 @@ import cn.zjiali.robot.model.response.SignInDataResponse;
 import cn.zjiali.robot.factory.MessageFactory;
 import cn.zjiali.robot.factory.ServiceFactory;
 import cn.zjiali.robot.main.ApplicationBootStrap;
-import cn.zjiali.robot.main.interceptor.ReplyBlacklistInterceptor;
+import cn.zjiali.robot.main.interceptor.ReplyBlacklistHandlerInterceptor;
 import cn.zjiali.robot.service.MoLiService;
 import cn.zjiali.robot.service.SignInService;
 import cn.zjiali.robot.util.PropertiesUtil;
@@ -30,7 +30,7 @@ public class SignInTest {
         String gylqMessage = moLiService.getGylqMessage(357078415L, false, 123456L);
         String jokeMessage = moLiService.getJokeMessage(357078415L, false, 123456L);
         String commonChatMessage = moLiService.getCommonChatMessage("你好呀");
-        ReplyBlacklistInterceptor replyBlacklistInterceptor = ServiceFactory.getInstance().get(ReplyBlacklistInterceptor.class.getSimpleName(), ReplyBlacklistInterceptor.class);
+        ReplyBlacklistHandlerInterceptor replyBlacklistInterceptor = ServiceFactory.getInstance().get(ReplyBlacklistHandlerInterceptor.class.getSimpleName(), ReplyBlacklistHandlerInterceptor.class);
         String replyBlacklist = PropertiesUtil.getProperty("application.properties","robot.reply.blacklist");
         System.out.println(replyBlacklist.contains(Long.toString(357078415L)));
         System.out.println("yllqMessage: " + yllqMessage);

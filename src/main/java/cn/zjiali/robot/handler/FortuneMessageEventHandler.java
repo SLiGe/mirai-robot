@@ -1,5 +1,6 @@
 package cn.zjiali.robot.handler;
 
+import cn.zjiali.robot.constant.AppConstants;
 import cn.zjiali.robot.util.PluginConfigUtil;
 import cn.zjiali.robot.constant.PluginCode;
 import cn.zjiali.robot.constant.PluginProperty;
@@ -78,7 +79,7 @@ public class FortuneMessageEventHandler extends AbstractMessageEventHandler {
         }
         if (dataStatus == 200) {
             FortuneResponse.DataResponse dataResponse = responseData.getDataResponse();
-            return OutMessage.builder().convertFlag(true).templateCode(PluginCode.FORTUNE).fillFlag(2)
+            return OutMessage.builder().convertFlag(true).templateCode(PluginCode.FORTUNE).fillFlag(AppConstants.FILL_OUT_MESSAGE_OBJECT_FLAG)
                     .fillObj(dataResponse).build();
 
         }

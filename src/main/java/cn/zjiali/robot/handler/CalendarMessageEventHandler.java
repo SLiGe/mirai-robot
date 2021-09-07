@@ -1,5 +1,6 @@
 package cn.zjiali.robot.handler;
 
+import cn.zjiali.robot.constant.AppConstants;
 import cn.zjiali.robot.util.PluginConfigUtil;
 import cn.zjiali.robot.constant.PluginCode;
 import cn.zjiali.robot.factory.MessageFactory;
@@ -82,7 +83,7 @@ public class CalendarMessageEventHandler extends AbstractMessageEventHandler {
         JuHeBaseResponse<CalendarResponse> baseResponse = JsonUtil.toObjByType(response, type);
         if (baseResponse.getError_code() == 0) {
             CalendarResponse calendarResponse = baseResponse.getResult();
-            return OutMessage.builder().convertFlag(true).fillFlag(2).fillObj(calendarResponse).templateCode(PluginCode.CALENDAR).build();
+            return OutMessage.builder().convertFlag(true).fillFlag(AppConstants.FILL_OUT_MESSAGE_OBJECT_FLAG).fillObj(calendarResponse).templateCode(PluginCode.CALENDAR).build();
         }
         return null;
     }
