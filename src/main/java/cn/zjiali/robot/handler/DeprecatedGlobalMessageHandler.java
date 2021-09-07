@@ -5,6 +5,8 @@ import cn.zjiali.robot.config.Plugin;
 import cn.zjiali.robot.factory.MessageEventHandlerFactory;
 import net.mamoe.mirai.event.events.FriendMessageEvent;
 import net.mamoe.mirai.event.events.GroupMessageEvent;
+import net.mamoe.mirai.event.events.MessageEvent;
+import net.mamoe.mirai.event.events.StrangerMessageEvent;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -20,13 +22,18 @@ import java.util.List;
 public class DeprecatedGlobalMessageHandler implements GlobalMessageHandler {
 
     @Override
-    public void handleGroupMessage(GroupMessageEvent event) {
+    public void handleGroupMessageEvent(GroupMessageEvent event) {
         handleMessage(true, event, null);
     }
 
     @Override
-    public void handleFriendMessage(FriendMessageEvent event) {
+    public void handleFriendMessageEvent(FriendMessageEvent event) {
         handleMessage(false, null, event);
+    }
+
+    @Override
+    public void handleOtherMessageEvent(MessageEvent event) {
+
     }
 
     private void handleMessage(boolean isGroup, GroupMessageEvent groupMessageEvent, FriendMessageEvent friendMessageEvent) {

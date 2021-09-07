@@ -5,8 +5,7 @@ import cn.zjiali.robot.main.OutMessageConvert;
 import cn.zjiali.robot.model.message.OutMessage;
 import cn.zjiali.robot.util.ObjectUtil;
 import com.google.common.collect.Lists;
-import net.mamoe.mirai.event.events.FriendMessageEvent;
-import net.mamoe.mirai.event.events.GroupMessageEvent;
+import net.mamoe.mirai.event.events.*;
 import net.mamoe.mirai.message.data.At;
 
 import java.util.List;
@@ -19,15 +18,20 @@ import java.util.List;
  */
 public class DefaultGlobalMessageHandler implements GlobalMessageHandler {
 
-    public void handleGroupMessage(GroupMessageEvent event) {
+    public void handleGroupMessageEvent(GroupMessageEvent event) {
         handleMessage(true, event, null);
     }
 
-    public void handleFriendMessage(FriendMessageEvent event) {
+    public void handleFriendMessageEvent(FriendMessageEvent event) {
         handleMessage(false, null, event);
     }
 
-    private void handleMessage(boolean isGroup, GroupMessageEvent groupMessageEvent, FriendMessageEvent friendMessageEvent) {
+    @Override
+    public void handleOtherMessageEvent(MessageEvent event) {
+        handleMessage(false, null, event);
+    }
+
+    private void handleMessage(boolean isGroup, GroupMessageEvent groupMessageEvent, MessageEvent friendMessageEvent) {
         boolean preHandle = doPreHandle(isGroup ? groupMessageEvent : friendMessageEvent);
         if (!preHandle) return;
         String msg = isGroup ? groupMessageEvent.getMessage().contentToString() : friendMessageEvent.getMessage().contentToString();
@@ -42,7 +46,7 @@ public class DefaultGlobalMessageHandler implements GlobalMessageHandler {
                     if (!ObjectUtil.isNullOrEmpty(message))
                         groupMessageEvent.getGroup().sendMessage(new At(groupMessageEvent.getSender().getId()).plus(message));
                 } else {
-                    outMessage = messageEventHandler.handleFriendMessageEvent(friendMessageEvent);
+                    outMessage = messageEventHandler.handleFriendMessageEvent((FriendMessageEvent) friendMessageEvent);
                     String message = OutMessageConvert.getInstance().convert(outMessage);
                     if (!ObjectUtil.isNullOrEmpty(message)) friendMessageEvent.getSender().sendMessage(message);
                 }
