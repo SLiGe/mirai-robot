@@ -22,7 +22,7 @@ class LogHandlerInterceptor : HandlerInterceptor {
     }
 
     override fun afterCompletion(messageEvent: MessageEvent?, outMessageList: List<OutMessage?>?) {
-        if (outMessageList != null) {
+        if (outMessageList != null && outMessageList.isNotEmpty()) {
             for (outMessage in outMessageList) {
                 logger.debug("输出消息内容:{}", outMessage?.finalMessage)
             }
