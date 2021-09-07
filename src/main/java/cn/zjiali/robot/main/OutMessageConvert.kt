@@ -21,10 +21,13 @@ class OutMessageConvert {
             return content
         }
         val templateCode = outMessage.templateCode
-        val template = getTemplate(templateCode)
+        val template = getTemplate(outMessage.pluginCode, templateCode)
         val fillFlag = outMessage.fillFlag
         val finalMessage =
-            MessageUtil.replaceMessage(template, if (fillFlag == AppConstants.FILL_OUT_MESSAGE_MAP_FLAG) outMessage.fillMap else outMessage.fillObj)
+            MessageUtil.replaceMessage(
+                template,
+                if (fillFlag == AppConstants.FILL_OUT_MESSAGE_MAP_FLAG) outMessage.fillMap else outMessage.fillObj
+            )
         outMessage.finalMessage = finalMessage
         return finalMessage
     }

@@ -50,7 +50,9 @@ public class DefaultGlobalMessageHandler implements GlobalMessageHandler {
                     String message = OutMessageConvert.getInstance().convert(outMessage);
                     if (!ObjectUtil.isNullOrEmpty(message)) friendMessageEvent.getSender().sendMessage(message);
                 }
-                outMessageList.add(outMessage);
+                if (ObjectUtil.isNotNullOrEmpty(outMessage)) {
+                    outMessageList.add(outMessage);
+                }
                 if (!messageEventHandler.next()) break;
             }
         }

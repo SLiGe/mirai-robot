@@ -14,6 +14,11 @@ public class OutMessage {
     private String content;
 
     /**
+     * 插件编码
+     */
+    private String pluginCode;
+
+    /**
      * 转换标志
      */
     private boolean convertFlag;
@@ -40,8 +45,9 @@ public class OutMessage {
 
     private String finalMessage;
 
-    public OutMessage(String content, boolean convertFlag, String templateCode, int fillFlag, Map<String, String> fillMap, Object fillObj, String finalMessage) {
+    OutMessage(String content, String pluginCode, boolean convertFlag, String templateCode, int fillFlag, Map<String, String> fillMap, Object fillObj, String finalMessage) {
         this.content = content;
+        this.pluginCode = pluginCode;
         this.convertFlag = convertFlag;
         this.templateCode = templateCode;
         this.fillFlag = fillFlag;
@@ -54,12 +60,13 @@ public class OutMessage {
         return new OutMessageBuilder();
     }
 
-    public OutMessageBuilder toBuilder() {
-        return new OutMessageBuilder().content(this.content).convertFlag(this.convertFlag).templateCode(this.templateCode).fillFlag(this.fillFlag).fillMap(this.fillMap).fillObj(this.fillObj);
-    }
 
     public String getContent() {
         return this.content;
+    }
+
+    public String getPluginCode() {
+        return this.pluginCode;
     }
 
     public boolean isConvertFlag() {
@@ -88,6 +95,10 @@ public class OutMessage {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public void setPluginCode(String pluginCode) {
+        this.pluginCode = pluginCode;
     }
 
     public void setConvertFlag(boolean convertFlag) {
@@ -122,6 +133,10 @@ public class OutMessage {
         final Object this$content = this.getContent();
         final Object other$content = other.getContent();
         if (this$content == null ? other$content != null : !this$content.equals(other$content)) return false;
+        final Object this$pluginCode = this.getPluginCode();
+        final Object other$pluginCode = other.getPluginCode();
+        if (this$pluginCode == null ? other$pluginCode != null : !this$pluginCode.equals(other$pluginCode))
+            return false;
         if (this.isConvertFlag() != other.isConvertFlag()) return false;
         final Object this$templateCode = this.getTemplateCode();
         final Object other$templateCode = other.getTemplateCode();
@@ -150,6 +165,8 @@ public class OutMessage {
         int result = 1;
         final Object $content = this.getContent();
         result = result * PRIME + ($content == null ? 43 : $content.hashCode());
+        final Object $pluginCode = this.getPluginCode();
+        result = result * PRIME + ($pluginCode == null ? 43 : $pluginCode.hashCode());
         result = result * PRIME + (this.isConvertFlag() ? 79 : 97);
         final Object $templateCode = this.getTemplateCode();
         result = result * PRIME + ($templateCode == null ? 43 : $templateCode.hashCode());
@@ -164,12 +181,12 @@ public class OutMessage {
     }
 
     public String toString() {
-        return "OutMessage(content=" + this.getContent() + ", convertFlag=" + this.isConvertFlag() + ", templateCode=" + this.getTemplateCode() + ", fillFlag=" + this.getFillFlag() + ", fillMap=" + this.getFillMap() + ", fillObj=" + this.getFillObj() + ", finalMessage=" + this.getFinalMessage() + ")";
+        return "OutMessage(content=" + this.getContent() + ", pluginCode=" + this.getPluginCode() + ", convertFlag=" + this.isConvertFlag() + ", templateCode=" + this.getTemplateCode() + ", fillFlag=" + this.getFillFlag() + ", fillMap=" + this.getFillMap() + ", fillObj=" + this.getFillObj() + ", finalMessage=" + this.getFinalMessage() + ")";
     }
-
 
     public static class OutMessageBuilder {
         private String content;
+        private String pluginCode;
         private boolean convertFlag;
         private String templateCode;
         private int fillFlag;
@@ -185,8 +202,8 @@ public class OutMessage {
             return this;
         }
 
-        public OutMessageBuilder finalMessage(String finalMessage) {
-            this.finalMessage = finalMessage;
+        public OutMessageBuilder pluginCode(String pluginCode) {
+            this.pluginCode = pluginCode;
             return this;
         }
 
@@ -215,12 +232,17 @@ public class OutMessage {
             return this;
         }
 
+        public OutMessageBuilder finalMessage(String finalMessage) {
+            this.finalMessage = finalMessage;
+            return this;
+        }
+
         public OutMessage build() {
-            return new OutMessage(content, convertFlag, templateCode, fillFlag, fillMap, fillObj, finalMessage);
+            return new OutMessage(content, pluginCode, convertFlag, templateCode, fillFlag, fillMap, fillObj, finalMessage);
         }
 
         public String toString() {
-            return "OutMessage.OutMessageBuilder(content=" + this.content + ", convertFlag=" + this.convertFlag + ", templateCode=" + this.templateCode + ", fillFlag=" + this.fillFlag + ", fillMap=" + this.fillMap + ", fillObj=" + this.fillObj + ")";
+            return "OutMessage.OutMessageBuilder(content=" + this.content + ", pluginCode=" + this.pluginCode + ", convertFlag=" + this.convertFlag + ", templateCode=" + this.templateCode + ", fillFlag=" + this.fillFlag + ", fillMap=" + this.fillMap + ", fillObj=" + this.fillObj + ", finalMessage=" + this.finalMessage + ")";
         }
     }
 }

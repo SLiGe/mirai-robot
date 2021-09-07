@@ -82,6 +82,7 @@ public class YellowCalendarMessageEventHandler extends AbstractMessageEventHandl
         if (baseResponse.getError_code() == 0) {
             YellowCalendarResponse yellowCalendarResponse = baseResponse.getResult();
             return OutMessage.builder().convertFlag(true).templateCode(PluginCode.YELLOW_CALENDAR)
+                    .pluginCode(PluginCode.YELLOW_CALENDAR)
                     .fillObj(yellowCalendarResponse).fillFlag(AppConstants.FILL_OUT_MESSAGE_OBJECT_FLAG).build();
         }
         return null;

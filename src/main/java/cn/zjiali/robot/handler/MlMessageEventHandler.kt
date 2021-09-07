@@ -20,12 +20,12 @@ class JokeMessageEventHandler : AbstractMessageEventHandler() {
 
     override fun handleGroupMessageEvent(event: GroupMessageEvent?): OutMessage {
         val jokeMessage = moLiService?.getJokeMessage(event!!.sender.id, true, event.group.id)
-        return OutMessage.builder().convertFlag(false).content(jokeMessage).build()
+        return OutMessage.builder().pluginCode(PluginCode.JOKE).convertFlag(false).content(jokeMessage).build()
     }
 
     override fun handleFriendMessageEvent(event: FriendMessageEvent?): OutMessage {
         val jokeMessage = moLiService?.getJokeMessage(event!!.sender.id, true, event.sender.id)
-        return OutMessage.builder().convertFlag(false).content(jokeMessage).build()
+        return OutMessage.builder().pluginCode(PluginCode.JOKE).convertFlag(false).content(jokeMessage).build()
     }
 
     override fun next(): Boolean {
@@ -43,12 +43,12 @@ class YlLqMessageEventHandler : AbstractMessageEventHandler() {
 
     override fun handleGroupMessageEvent(event: GroupMessageEvent?): OutMessage {
         val ylMessage = moLiService?.getYllqMessage(event!!.sender.id, true, event.group.id)
-        return OutMessage.builder().convertFlag(false).content(ylMessage).build()
+        return OutMessage.builder().pluginCode(PluginCode.YL_LQ).convertFlag(false).content(ylMessage).build()
     }
 
     override fun handleFriendMessageEvent(event: FriendMessageEvent?): OutMessage {
         val ylMessage = moLiService?.getYllqMessage(event!!.sender.id, true, event.sender.id)
-        return OutMessage.builder().convertFlag(false).content(ylMessage).build()
+        return OutMessage.builder().pluginCode(PluginCode.YL_LQ).convertFlag(false).content(ylMessage).build()
     }
 
     override fun next(): Boolean {
@@ -66,12 +66,12 @@ class GyLqMessageEventHandler : AbstractMessageEventHandler() {
 
     override fun handleGroupMessageEvent(event: GroupMessageEvent?): OutMessage {
         val gyMessage = moLiService?.getGylqMessage(event!!.sender.id, true, event.group.id)
-        return OutMessage.builder().convertFlag(false).content(gyMessage).build()
+        return OutMessage.builder().pluginCode(PluginCode.GY_LQ).convertFlag(false).content(gyMessage).build()
     }
 
     override fun handleFriendMessageEvent(event: FriendMessageEvent?): OutMessage {
         val gyMessage = moLiService?.getGylqMessage(event!!.sender.id, true, event.sender.id)
-        return OutMessage.builder().convertFlag(false).content(gyMessage).build()
+        return OutMessage.builder().pluginCode(PluginCode.GY_LQ).convertFlag(false).content(gyMessage).build()
     }
 
     override fun next(): Boolean {
@@ -91,12 +91,12 @@ class CsyLqMessageEventHandler : AbstractMessageEventHandler() {
 
     override fun handleGroupMessageEvent(event: GroupMessageEvent?): OutMessage {
         val csyMessage = moLiService?.getCsylqMessage(event!!.sender.id, true, event.group.id)
-        return OutMessage.builder().convertFlag(false).content(csyMessage).build()
+        return OutMessage.builder().pluginCode(PluginCode.CSY_LQ).convertFlag(false).content(csyMessage).build()
     }
 
     override fun handleFriendMessageEvent(event: FriendMessageEvent?): OutMessage {
         val csyMessage = moLiService?.getCsylqMessage(event!!.sender.id, true, event.sender.id)
-        return OutMessage.builder().convertFlag(false).content(csyMessage).build()
+        return OutMessage.builder().pluginCode(PluginCode.CSY_LQ).convertFlag(false).content(csyMessage).build()
     }
 
     override fun next(): Boolean {

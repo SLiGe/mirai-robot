@@ -59,7 +59,7 @@ public class CalendarMessageEventHandler extends AbstractMessageEventHandler {
 
     @Override
     public boolean matchCommand(String msg) {
-        return containCommand(PluginCode.CALENDAR,msg);
+        return containCommand(PluginCode.CALENDAR, msg);
     }
 
     /**
@@ -83,7 +83,9 @@ public class CalendarMessageEventHandler extends AbstractMessageEventHandler {
         JuHeBaseResponse<CalendarResponse> baseResponse = JsonUtil.toObjByType(response, type);
         if (baseResponse.getError_code() == 0) {
             CalendarResponse calendarResponse = baseResponse.getResult();
-            return OutMessage.builder().convertFlag(true).fillFlag(AppConstants.FILL_OUT_MESSAGE_OBJECT_FLAG).fillObj(calendarResponse).templateCode(PluginCode.CALENDAR).build();
+            return OutMessage.builder().convertFlag(true).fillFlag(AppConstants.FILL_OUT_MESSAGE_OBJECT_FLAG)
+                    .pluginCode(PluginCode.CALENDAR)
+                    .fillObj(calendarResponse).templateCode(PluginCode.CALENDAR).build();
         }
         return null;
     }

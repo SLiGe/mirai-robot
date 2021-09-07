@@ -79,7 +79,9 @@ public class FortuneMessageEventHandler extends AbstractMessageEventHandler {
         }
         if (dataStatus == 200) {
             FortuneResponse.DataResponse dataResponse = responseData.getDataResponse();
-            return OutMessage.builder().convertFlag(true).templateCode(PluginCode.FORTUNE).fillFlag(AppConstants.FILL_OUT_MESSAGE_OBJECT_FLAG)
+            return OutMessage.builder().convertFlag(true).templateCode(PluginCode.FORTUNE)
+                    .pluginCode(PluginCode.FORTUNE)
+                    .fillFlag(AppConstants.FILL_OUT_MESSAGE_OBJECT_FLAG)
                     .fillObj(dataResponse).build();
 
         }

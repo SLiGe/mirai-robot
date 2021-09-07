@@ -63,25 +63,27 @@ public class SignInMessageEventHandler extends AbstractMessageEventHandler {
         if (message.contains("签到")) {
             SignInDataResponse response = signInService.doSignIn(Long.toString(senderQQ), Long.toString(groupNum), msgType);
             if (response == null) {
-                return OutMessage.builder().convertFlag(false).content("签到服务异常,请联系管理员!").build();
+                return OutMessage.builder().pluginCode(PluginCode.SIGN).convertFlag(false).content("签到服务异常,请联系管理员!").build();
             }
             int status = response.getStatus();
             //签到成功200  已经签到203
             if (status == 200) {
                 SignInDataResponse.DataResponse dataResponse = response.getDataResponse();
-
-                return OutMessage.builder().convertFlag(true).fillFlag(AppConstants.FILL_OUT_MESSAGE_OBJECT_FLAG)
+                return OutMessage.builder().pluginCode(PluginCode.SIGN).convertFlag(true)
+                        .fillFlag(AppConstants.FILL_OUT_MESSAGE_OBJECT_FLAG)
                         .templateCode(MsgTemplate.SIGN_TEMPLATE).fillObj(dataResponse).build();
             } else if (status == 203) {
-                return OutMessage.builder().convertFlag(false).content("你今天已经签到过了！").build();
+                return OutMessage.builder().pluginCode(PluginCode.SIGN)
+                        .convertFlag(false).content("你今天已经签到过了！").build();
             }
         } else if (message.contains("积分查询")) {
             SignInDataResponse response = signInService.getSignInData(Long.toString(senderQQ), Long.toString(groupNum), 2);
             if (response == null) {
-                return OutMessage.builder().convertFlag(false).content("签到服务异常,请联系管理员!").build();
+                return OutMessage.builder().pluginCode(PluginCode.SIGN).convertFlag(false).content("签到服务异常,请联系管理员!").build();
             }
             SignInDataResponse.DataResponse dataResponse = response.getDataResponse();
             return OutMessage.builder().convertFlag(true)
+                    .pluginCode(PluginCode.SIGN)
                     .fillFlag(AppConstants.FILL_OUT_MESSAGE_OBJECT_FLAG)
                     .templateCode(MsgTemplate.QUERY_SIGN_TEMPLATE).fillObj(dataResponse).build();
         }

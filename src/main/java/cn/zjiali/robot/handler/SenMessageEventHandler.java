@@ -28,12 +28,12 @@ public class SenMessageEventHandler extends AbstractMessageEventHandler {
 
     @Override
     public OutMessage handleGroupMessageEvent(GroupMessageEvent event) {
-        return OutMessage.builder().convertFlag(false).content(getSen()).build();
+        return OutMessage.builder().pluginCode(PluginCode.ONE_SEN).convertFlag(false).content(getSen()).build();
     }
 
     @Override
     public OutMessage handleFriendMessageEvent(FriendMessageEvent event) {
-        return OutMessage.builder().convertFlag(false).content(getSen()).build();
+        return OutMessage.builder().pluginCode(PluginCode.ONE_SEN).convertFlag(false).content(getSen()).build();
     }
 
     @Override

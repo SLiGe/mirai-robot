@@ -38,12 +38,12 @@ public class TodayOfHistoryMessageEventHandler extends AbstractMessageEventHandl
 
     @Override
     public OutMessage handleGroupMessageEvent(GroupMessageEvent event) {
-        return OutMessage.builder().convertFlag(false).content(getTodayOnHistoryMessage()).build();
+        return OutMessage.builder().pluginCode(PluginCode.TODAY_HISTORY).convertFlag(false).content(getTodayOnHistoryMessage()).build();
     }
 
     @Override
     public OutMessage handleFriendMessageEvent(FriendMessageEvent event) {
-        return OutMessage.builder().convertFlag(false).content(getTodayOnHistoryMessage()).build();
+        return OutMessage.builder().pluginCode(PluginCode.TODAY_HISTORY).convertFlag(false).content(getTodayOnHistoryMessage()).build();
     }
 
     @Override

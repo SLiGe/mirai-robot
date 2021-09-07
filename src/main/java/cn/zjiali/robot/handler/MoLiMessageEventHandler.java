@@ -66,11 +66,11 @@ public class MoLiMessageEventHandler extends AbstractMessageEventHandler {
             if (msg.contains(atNick)) {
                 msg = msg.replace(atNick, "");
                 String sendMsg = moLiService.getCommonChatMessage(msg);
-                return OutMessage.builder().content(sendMsg).convertFlag(false).build();
+                return OutMessage.builder().pluginCode(PluginCode.MOLI).content(sendMsg).convertFlag(false).build();
             }
         } else {
             String sendMsg = moLiService.getCommonChatMessage(msg);
-            return OutMessage.builder().content(sendMsg).convertFlag(false).build();
+            return OutMessage.builder().pluginCode(PluginCode.MOLI).content(sendMsg).convertFlag(false).build();
         }
         return super.handleGroupMessageEvent(event);
     }
@@ -78,7 +78,7 @@ public class MoLiMessageEventHandler extends AbstractMessageEventHandler {
     @Override
     public OutMessage handleFriendMessageEvent(FriendMessageEvent event) {
         String sendMsg = moLiService.getCommonChatMessage(getMsg(event));
-        return OutMessage.builder().content(sendMsg).convertFlag(false).build();
+        return OutMessage.builder().pluginCode(PluginCode.MOLI).content(sendMsg).convertFlag(false).build();
     }
 
     private Map<String, String> interceptMessage(long qq, boolean isGroup, long groupNum, String msg) {
