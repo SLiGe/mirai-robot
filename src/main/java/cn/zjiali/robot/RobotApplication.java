@@ -18,6 +18,7 @@ import net.mamoe.mirai.event.*;
 import net.mamoe.mirai.event.events.*;
 import net.mamoe.mirai.utils.*;
 
+import java.io.File;
 import java.util.Objects;
 
 
@@ -55,6 +56,7 @@ public class RobotApplication {
                 setLoginSolver(ServiceFactory.getInstance().get(SysLoginSolver.class.getSimpleName(), SysLoginSolver.class));
                 // 选择协议
                 setProtocol(switchProtocol());
+                setCacheDir(new File("/cache"));
             }
         });
 
