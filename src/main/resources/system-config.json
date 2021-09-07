@@ -1,11 +1,9 @@
 {
-"messageTemplates":[
-
-
-{
-"sign":["signTemplate",
-        "querySignTemplate"]}
-
-]
-
+    "messageTemplates":
+        {
+            "sign":[
+                "signTemplate",
+                "querySignTemplate"
+            ]
+        }
 }
