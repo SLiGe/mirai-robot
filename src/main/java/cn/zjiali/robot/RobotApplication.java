@@ -70,9 +70,11 @@ public class RobotApplication {
         robotManager.init(bot);
         DefaultBeanFactory.getInstance().putBean(RobotManager.class.getSimpleName(), robotManager);
         final GlobalMessageHandler globalMessageHandler = new DefaultGlobalMessageHandler();
-        eventChannel.subscribeAlways(GroupMessageEvent.class, globalMessageHandler::handleGroupMessage);
-        eventChannel.subscribeAlways(FriendMessageEvent.class, globalMessageHandler::handleFriendMessage);
+        eventChannel.subscribeAlways(GroupMessageEvent.class, globalMessageHandler::handleGroupMessageEvent);
+        eventChannel.subscribeAlways(FriendMessageEvent.class, globalMessageHandler::handleFriendMessageEvent);
+        eventChannel.subscribeAlways(StrangerMessageEvent.class, globalMessageHandler::handleOtherMessageEvent);
         eventChannel.subscribeAlways(NewFriendRequestEvent.class, NewFriendRequestEvent::accept);
+        eventChannel.subscribeAlways(GroupTempMessageEvent.class, globalMessageHandler::handleOtherMessageEvent);
         bot.join(); // 阻塞当前线程直到 bot 离线
     }
 
