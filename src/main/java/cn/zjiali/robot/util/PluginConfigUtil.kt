@@ -2,6 +2,8 @@ package cn.zjiali.robot.util
 
 import cn.zjiali.robot.config.AppConfig
 import cn.zjiali.robot.config.Plugin
+import cn.zjiali.robot.config.PluginTemplate
+import cn.zjiali.robot.constant.MsgTemplate
 import cn.zjiali.robot.constant.PluginProperty
 
 /**
@@ -19,12 +21,24 @@ object PluginConfigUtil {
 
     fun getPlugin(pluginCode: String): Plugin {
         return AppConfig.getApplicationConfig().plugins.stream().filter { plugin: Plugin -> pluginCode == plugin.code }
-            .findFirst().orElseThrow { NullPointerException("未找到插件!") }
+            .findFirst().orElseThrow {
+                println("插件: $pluginCode 未找到!")
+                NullPointerException("未找到插件!")
+            }
     }
 
     @JvmStatic
     fun getTemplate(pluginCode: String): String {
         return getPlugin(pluginCode).template.orEmpty()
+    }
+
+    @JvmStatic
+    fun getTemplate(pluginCode: String, templateCode: String?): String {
+        val plugin = getPlugin(pluginCode)
+        return if ("1" == plugin.templateFlag)
+            getPlugin(pluginCode).template.orEmpty()
+        else
+            PluginTemplate.getInstance().getTemplate(templateCode)
     }
 
     @JvmStatic
