@@ -6,9 +6,10 @@
     {
       "name": "一言",
       "enable": 1,
-      "handler": "cn.zjiali.robot.handler.SenHandler",
+      "handler": "cn.zjiali.robot.handler.SenMessageEventHandler",
       "command": "一言",
       "template": "",
+      "templateFlag":"0",
       "code": "oneSen",
       "preHandle": 0,
       "properties": {
@@ -18,26 +19,26 @@
     {
       "name": "签到",
       "enable": 1,
-      "handler": "cn.zjiali.robot.handler.SignInHandler",
-      "configClass": "cn.zjiali.robot.config.plugin.SignInConfig",
+      "handler": "cn.zjiali.robot.handler.SignInMessageEventHandler",
       "command": "签到,积分查询",
       "template": "",
+      "templateFlag":"2",
       "code": "sign",
       "preHandle": 0,
       "properties": {
-        "signTemplate": "签到成功！\n\uD83D\uDCB8获得积分：${getPoints}点\n⭐本月积累签到：${monthDay}天\n\uD83D\uDCB3当前积分：${points}点\n⭐当前等级:${currentLevel}\n⭐每日一句:${todayMsg}",
+        "signTemplate": "签到成功!\n\uD83D\uDCB8获得积分: {getPoints}点\n⭐本月积累签到: {monthDay}天\n\uD83D\uDCB3当前积分: {points}点\n⭐当前等级: {currentLevel}\n⭐每日一句: {todayMsg}",
         "signUrl": "https://robot.zjiali.cn/api/signIn",
-        "querySignTemplate": "\uD83D\uDCB8总积分：${points}点\n⭐连续签到：${monthDay}天\n\uD83D\uDCB3总签到天数：${totalDay}天\n⭐当前等级:${currentLevel}\n⭐每日一句:${todayMsg}",
+        "querySignTemplate": "\uD83D\uDCB8总积分: {points}点\n⭐连续签到: {monthDay}天\n\uD83D\uDCB3总签到天数: {totalDay}天\n⭐当前等级: {currentLevel}\n⭐每日一句: {todayMsg}",
         "querySignUrl": "https://robot.zjiali.cn/api/querySignInData"
       }
     },
     {
       "name": "今日运势",
       "enable": 1,
-      "handler": "cn.zjiali.robot.handler.FortuneHandler",
-      "configClass": "cn.zjiali.robot.config.plugin.FortuneConfig",
+      "handler": "cn.zjiali.robot.handler.FortuneMessageEventHandler",
       "command": "运势",
-      "template": "\uD83C\uDF13您的今日运势为：${fortuneSummary}\n\uD83C\uDF1F星指数：${LuckyStar}\n\uD83D\uDCD7签文：${signText}\n\uD83D\uDCDD解签：${unSignText}",
+      "template": "\uD83C\uDF13您的今日运势为：{fortuneSummary}\n\uD83C\uDF1F星指数：{luckyStar}\n\uD83D\uDCD7签文：{signText}\n\uD83D\uDCDD解签：{unSignText}",
+      "templateFlag":"1",
       "code": "fortune",
       "preHandle": 0,
       "properties": {
@@ -49,10 +50,10 @@
     {
       "name": "老黄历",
       "enable": 0,
-      "handler": "cn.zjiali.robot.handler.YellowCalendarHandler",
-      "configClass": "cn.zjiali.robot.config.plugin.YellowCalendarConfig",
+      "handler": "cn.zjiali.robot.handler.YellowCalendarMessageEventHandler",
       "command": "老黄历",
       "template": "",
+      "templateFlag":"1",
       "code": "yellowCalendar",
       "preHandle": 0,
       "properties": {
@@ -63,10 +64,10 @@
     {
       "name": "万年历",
       "enable": 0,
-      "handler": "cn.zjiali.robot.handler.CalendarHandler",
-      "configClass": "cn.zjiali.robot.config.plugin.CalendarConfig",
+      "handler": "cn.zjiali.robot.handler.CalendarMessageEventHandler",
       "command": "万年历",
       "template": "",
+      "templateFlag":"1",
       "code": "calendar",
       "preHandle": "0",
       "properties": {
@@ -77,9 +78,10 @@
     {
       "name": "笑话",
       "enable": 1,
-      "handler": "cn.zjiali.robot.handler.MoLiHandler",
+      "handler": "cn.zjiali.robot.handler.JokeMessageEventHandler",
       "command": "笑话",
       "template": "",
+      "templateFlag":"0",
       "code": "joke",
       "preHandle": 0,
       "properties": {
@@ -89,9 +91,10 @@
     {
       "name": "观音灵签",
       "enable": 1,
-      "handler": "cn.zjiali.robot.handler.MoLiHandler",
+      "handler": "cn.zjiali.robot.handler.GyLqMessageEventHandler",
       "command": "观音灵签",
       "template": "签号:{number1}\n好坏:{haohua}\n签语:{qianyu}\n诗意解签:{shiyi}\n白话解签:{jieqian}",
+      "templateFlag":"1",
       "code": "gylq",
       "preHandle": 0,
       "properties": {
@@ -101,9 +104,10 @@
     {
       "name": "月老灵签",
       "enable": 1,
-      "handler": "cn.zjiali.robot.handler.MoLiHandler",
+      "handler": "cn.zjiali.robot.handler.YlLqMessageEventHandler",
       "command": "月老灵签",
       "template": "签号:{number1}\n好坏:{haohua}\n诗意解签:{shiyi}\n解签:{jieqian}\n注释:{zhushi}\n白话浅释:{baihua}",
+      "templateFlag":"1",
       "code": "yllq",
       "preHandle": 0,
       "properties": {
@@ -113,9 +117,10 @@
     {
       "name": "财神爷灵签",
       "enable": 1,
-      "handler": "cn.zjiali.robot.handler.MoLiHandler",
+      "handler": "cn.zjiali.robot.handler.CsyLqMessageEventHandler",
       "command": "财神爷灵签",
       "template": "签号:{number1}\n签语:{qianyu}\n注释:{zhushi}\n解签:{jieqian}\n解说:{jieshuo}\n结果:{jieguo}\n婚姻:{hunyin}\n交易:{jiaoyi}\n事业:{shiye}",
+      "templateFlag":"10",
       "code": "csylq",
       "preHandle": 0,
       "properties": {
@@ -125,8 +130,9 @@
     {
       "name": "茉莉聊天",
       "enable": 1,
-      "handler": "cn.zjiali.robot.handler.MoLiHandler",
-      "configClass": "cn.zjiali.robot.config.plugin.MoLiConfig",
+      "handler": "cn.zjiali.robot.handler.MoLiMessageEventHandler",
+      "templateFlag":"0",
+      "code": "MOLI",
       "properties": {
         "chatGroupAt": "1",
         "limit": "5",
@@ -135,6 +141,7 @@
         "type": "",
         "url": "http://i.itpk.cn/api.php",
         "zUrlChat": "https://robot.zjiali.cn/api/moli/getChatReply",
+        "zUrlLq": "https://robot.zjiali.cn/api/moli/queryLq",
         "isMoLiServer": "0"
       }
     }
