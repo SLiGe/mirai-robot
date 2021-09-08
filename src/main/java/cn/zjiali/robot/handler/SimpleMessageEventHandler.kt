@@ -2,6 +2,7 @@ package cn.zjiali.robot.handler
 
 import cn.zjiali.robot.annotation.Autowired
 import cn.zjiali.robot.constant.PluginCode
+import cn.zjiali.robot.factory.MessageFactory
 import cn.zjiali.robot.model.message.OutMessage
 import cn.zjiali.robot.service.MoLiService
 import net.mamoe.mirai.event.events.FriendMessageEvent
@@ -9,7 +10,7 @@ import net.mamoe.mirai.event.events.GroupMessageEvent
 
 /**
  *
- *
+ * 一些简单的消息处理器
  * @author zJiaLi
  * @since 2021-09-04 15:40
  */
@@ -106,4 +107,32 @@ class CsyLqMessageEventHandler : AbstractMessageEventHandler() {
     override fun matchCommand(msg: String?): Boolean {
         return containCommand(PluginCode.CSY_LQ, msg)
     }
+}
+
+/**
+ * 一言处理器
+ *
+ * @author zJiaLi
+ * @since 2020-10-29 20:57
+ */
+class SenMessageEventHandler : AbstractMessageEventHandler() {
+
+    override fun handleGroupMessageEvent(event: GroupMessageEvent): OutMessage {
+        return OutMessage.builder().pluginCode(PluginCode.ONE_SEN).convertFlag(false).content(MessageFactory.getSen())
+            .build()
+    }
+
+    override fun handleFriendMessageEvent(event: FriendMessageEvent): OutMessage {
+        return OutMessage.builder().pluginCode(PluginCode.ONE_SEN).convertFlag(false).content(MessageFactory.getSen())
+            .build()
+    }
+
+    override fun next(): Boolean {
+        return true
+    }
+
+    override fun matchCommand(msg: String): Boolean {
+        return containCommand(PluginCode.ONE_SEN, msg)
+    }
+
 }
