@@ -42,7 +42,7 @@ public class SignInService {
         if (signInDataResponse.getStatus() == 203) {
             return signInDataResponse;
         }
-        signInDataResponse.setGetPoints(point);
+        signInDataResponse.getDataResponse().setGetPoints(point);
         return signInDataResponse;
     }
 

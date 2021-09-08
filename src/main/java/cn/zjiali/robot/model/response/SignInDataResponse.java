@@ -13,11 +13,6 @@ import lombok.Data;
 public class SignInDataResponse {
 
 
-    /**
-     * 获得的积分
-     */
-    private Integer getPoints;
-
 
     private Integer status;
 
@@ -64,7 +59,10 @@ public class SignInDataResponse {
          */
         private int ranking;
 
-
+        /**
+         * 获得的积分
+         */
+        private Integer getPoints;
     }
 
 
