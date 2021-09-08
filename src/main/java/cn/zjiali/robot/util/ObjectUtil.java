@@ -50,6 +50,6 @@ public class ObjectUtil {
     }
 
     public static boolean isNotNullOrEmpty(Object obj){
-        return isNullOrEmpty(obj);
+        return !isNullOrEmpty(obj);
     }
 }
