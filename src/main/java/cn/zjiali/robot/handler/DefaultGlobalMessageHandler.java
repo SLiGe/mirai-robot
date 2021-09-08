@@ -38,7 +38,7 @@ public class DefaultGlobalMessageHandler implements GlobalMessageHandler {
         List<MessageEventHandler> messageEventHandlerList = MessageEventHandlerFactory.getInstance().getBeanList(MessageEventHandler.class);
         List<OutMessage> outMessageList = Lists.newLinkedList();
         for (MessageEventHandler messageEventHandler : messageEventHandlerList) {
-            if (messageEventHandler.matchCommand(msg)) {
+            if (messageEventHandler.matchCommand(msg) && !messageEventHandler.ignore(msg)) {
                 OutMessage outMessage;
                 if (isGroup) {
                     outMessage = messageEventHandler.handleGroupMessageEvent(groupMessageEvent);

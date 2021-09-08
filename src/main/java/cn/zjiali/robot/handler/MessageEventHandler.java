@@ -65,4 +65,14 @@ public interface MessageEventHandler {
         return false;
     }
 
+    /**
+     * 排除关键词
+     *
+     * @param msg 消息
+     * @return 是否忽略
+     */
+    default boolean ignore(String msg) {
+        return false;
+    }
+
 }

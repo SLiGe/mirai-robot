@@ -3,7 +3,6 @@ package cn.zjiali.robot.util
 import cn.zjiali.robot.config.AppConfig
 import cn.zjiali.robot.config.Plugin
 import cn.zjiali.robot.config.PluginTemplate
-import cn.zjiali.robot.constant.MsgTemplate
 import cn.zjiali.robot.constant.PluginProperty
 
 /**
@@ -63,5 +62,14 @@ object PluginConfigUtil {
     @JvmStatic
     fun getEnable(pluginCode: String): Int {
         return getPlugin(pluginCode).enable
+    }
+
+    @JvmStatic
+    fun getIgnoreWords(pluginCode: String): ArrayList<String> {
+        val ignoreKeyWords = getPlugin(pluginCode).ignoreKeyWords
+        if (ObjectUtil.isNotNullOrEmpty(ignoreKeyWords)) {
+           return ignoreKeyWords?.split(",")?.toList() as ArrayList<String>
+        }
+        return ArrayList()
     }
 }

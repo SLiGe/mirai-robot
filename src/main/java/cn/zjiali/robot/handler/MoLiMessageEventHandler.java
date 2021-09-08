@@ -10,6 +10,7 @@ import net.mamoe.mirai.event.events.FriendMessageEvent;
 import net.mamoe.mirai.event.events.GroupMessageEvent;
 import net.mamoe.mirai.message.data.At;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -123,5 +124,11 @@ public class MoLiMessageEventHandler extends AbstractMessageEventHandler {
     @Override
     public boolean matchCommand(String command) {
         return true;
+    }
+
+    @Override
+    public boolean ignore(String msg) {
+        ArrayList<String> ignoreWords = PluginConfigUtil.getIgnoreWords(PluginCode.MOLI);
+        return ignoreWords.contains(msg);
     }
 }
