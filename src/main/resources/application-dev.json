@@ -11,7 +11,7 @@
       "template": "",
       "templateFlag":"0",
       "code": "oneSen",
-      "preHandle": 0,
+      "ignoreKeyWords": "",
       "properties": {
         "url": "https://robot.zjiali.cn/api/getSen"
       }
@@ -24,7 +24,7 @@
       "template": "",
       "templateFlag":"2",
       "code": "sign",
-      "preHandle": 0,
+      "ignoreKeyWords": "",
       "properties": {
         "signTemplate": "签到成功!\n\uD83D\uDCB8获得积分: {getPoints}点\n⭐本月积累签到: {monthDay}天\n\uD83D\uDCB3当前积分: {points}点\n⭐当前等级: {currentLevel}\n⭐每日一句: {todayMsg}",
         "signUrl": "https://robot.zjiali.cn/api/signIn",
@@ -37,10 +37,10 @@
       "enable": 1,
       "handler": "cn.zjiali.robot.handler.FortuneMessageEventHandler",
       "command": "运势",
-      "template": "\uD83C\uDF13您的今日运势为：{fortuneSummary}\n\uD83C\uDF1F星指数：{luckyStar}\n\uD83D\uDCD7签文：{signText}\n\uD83D\uDCDD解签：{unSignText}",
+      "template": "\uD83C\uDF13您的今日运势为: {fortuneSummary}\n\uD83C\uDF1F星指数: {luckyStar}\n\uD83D\uDCD7签文: {signText}\n\uD83D\uDCDD解签: {unSignText}",
       "templateFlag":"1",
       "code": "fortune",
-      "preHandle": 0,
+      "ignoreKeyWords": "",
       "properties": {
         "day_one": "0",
         "point": "0",
@@ -55,7 +55,7 @@
       "template": "",
       "templateFlag":"1",
       "code": "yellowCalendar",
-      "preHandle": 0,
+      "ignoreKeyWords": "",
       "properties": {
         "key": "1",
         "url": "http://v.juhe.cn/laohuangli/d"
@@ -69,7 +69,7 @@
       "template": "",
       "templateFlag":"1",
       "code": "calendar",
-      "preHandle": "0",
+      "ignoreKeyWords": "",
       "properties": {
         "key": "1",
         "url": "http://v.juhe.cn/calendar/day"
@@ -83,7 +83,7 @@
       "template": "",
       "templateFlag":"0",
       "code": "joke",
-      "preHandle": 0,
+      "ignoreKeyWords": "",
       "properties": {
         "url": "https://robot.zjiali.cn/api/moli/queryJoke"
       }
@@ -96,7 +96,7 @@
       "template": "签号:{number1}\n好坏:{haohua}\n签语:{qianyu}\n诗意解签:{shiyi}\n白话解签:{jieqian}",
       "templateFlag":"1",
       "code": "gylq",
-      "preHandle": 0,
+      "ignoreKeyWords": "",
       "properties": {
         "url": "https://robot.zjiali.cn/api/moli/queryLq"
       }
@@ -109,7 +109,7 @@
       "template": "签号:{number1}\n好坏:{haohua}\n诗意解签:{shiyi}\n解签:{jieqian}\n注释:{zhushi}\n白话浅释:{baihua}",
       "templateFlag":"1",
       "code": "yllq",
-      "preHandle": 0,
+      "ignoreKeyWords": "",
       "properties": {
         "url": "https://robot.zjiali.cn/api/moli/queryLq"
       }
@@ -120,9 +120,9 @@
       "handler": "cn.zjiali.robot.handler.CsyLqMessageEventHandler",
       "command": "财神爷灵签",
       "template": "签号:{number1}\n签语:{qianyu}\n注释:{zhushi}\n解签:{jieqian}\n解说:{jieshuo}\n结果:{jieguo}\n婚姻:{hunyin}\n交易:{jiaoyi}\n事业:{shiye}",
-      "templateFlag":"10",
+      "templateFlag":"1",
       "code": "csylq",
-      "preHandle": 0,
+      "ignoreKeyWords": "",
       "properties": {
         "url": "https://robot.zjiali.cn/api/moli/queryLq"
       }
@@ -133,6 +133,7 @@
       "handler": "cn.zjiali.robot.handler.MoLiMessageEventHandler",
       "templateFlag":"0",
       "code": "MOLI",
+      "ignoreKeyWords": "天气,ip,@qq,@lol,@sfz,@sjh,@cy,笑话,观音灵签,月老灵签,财神爷灵签",
       "properties": {
         "chatGroupAt": "1",
         "limit": "5",
