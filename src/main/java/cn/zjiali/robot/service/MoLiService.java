@@ -66,8 +66,8 @@ public class MoLiService {
         paramMap.put("isGroup", isGroup ? 1 : 0);
         String apiURL = PluginConfigUtil.getApiURL(PluginCode.JOKE);
         String jokeContent = HttpUtil.get(apiURL, paramMap);
-        JokeResponse jokeResponse = getChatResponse(jokeContent, JokeResponse.class);
-        return jokeResponse.getContent();
+        RobotBaseResponse<JokeResponse> jokeResponse = toBaseResponse(jokeContent, JokeResponse.class);
+        return jokeResponse.getData().getContent();
 
     }
 
