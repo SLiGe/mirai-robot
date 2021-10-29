@@ -85,7 +85,7 @@
       "code": "joke",
       "ignoreKeyWords": "",
       "properties": {
-        "url": "https://robot.zjiali.cn/api/moli/queryJoke"
+        "url": "https://robot.zjiali.cn/api/queryJoke"
       }
     },
     {
@@ -98,7 +98,7 @@
       "code": "gylq",
       "ignoreKeyWords": "",
       "properties": {
-        "url": "https://robot.zjiali.cn/api/moli/queryLq"
+        "url": "https://robot.zjiali.cn/api/queryLq"
       }
     },
     {
@@ -111,7 +111,7 @@
       "code": "yllq",
       "ignoreKeyWords": "",
       "properties": {
-        "url": "https://robot.zjiali.cn/api/moli/queryLq"
+        "url": "https://robot.zjiali.cn/api/queryLq"
       }
     },
     {
@@ -124,7 +124,7 @@
       "code": "csylq",
       "ignoreKeyWords": "",
       "properties": {
-        "url": "https://robot.zjiali.cn/api/moli/queryLq"
+        "url": "https://robot.zjiali.cn/api/queryLq"
       }
     },
     {
@@ -141,8 +141,8 @@
         "api_secret": "",
         "type": "",
         "url": "http://i.itpk.cn/api.php",
-        "zUrlChat": "https://robot.zjiali.cn/api/moli/getChatReply",
-        "zUrlLq": "https://robot.zjiali.cn/api/moli/queryLq",
+        "zUrlChat": "https://robot.zjiali.cn/api/getChatReply",
+        "zUrlLq": "https://robot.zjiali.cn/api/queryLq",
         "isMoLiServer": "0"
       }
     }
