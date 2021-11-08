@@ -66,7 +66,9 @@ public class MoLiService {
         paramMap.put("isGroup", isGroup ? 1 : 0);
         String apiURL = PluginConfigUtil.getApiURL(PluginCode.JOKE);
         String jokeContent = HttpUtil.get(apiURL, paramMap);
-        RobotBaseResponse<JokeResponse> jokeResponse = toBaseResponse(jokeContent, JokeResponse.class);
+        Type type = new TypeToken<RobotBaseResponse<JokeResponse>>() {
+        }.getType();
+        RobotBaseResponse<JokeResponse> jokeResponse = JsonUtil.toObjByType(jokeContent, type);
         return jokeResponse.getData().getContent();
 
     }
@@ -136,6 +138,7 @@ public class MoLiService {
         }
         return response.getData();
     }
+
 
     public <T> RobotBaseResponse<T> toBaseResponse(String json, Class<T> tClass) {
         Type type = new TypeToken<RobotBaseResponse<String>>() {
