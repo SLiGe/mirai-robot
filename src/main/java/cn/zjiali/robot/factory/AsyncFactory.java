@@ -1,7 +1,7 @@
 package cn.zjiali.robot.factory;
 
-import cn.zjiali.robot.constant.ServerUrl;
 import cn.zjiali.robot.util.HttpUtil;
+import cn.zjiali.robot.util.PropertiesUtil;
 import com.google.gson.JsonObject;
 
 import java.util.TimerTask;
@@ -14,6 +14,8 @@ import java.util.TimerTask;
  */
 public class AsyncFactory {
 
+    public static String SAVE_DATA_URL = "saveData.api";
+
     public static TimerTask sendResponse(final String type, final String response) {
         return new TimerTask() {
             @Override
@@ -21,7 +23,7 @@ public class AsyncFactory {
                 JsonObject jsonObject = new JsonObject();
                 jsonObject.addProperty("response", response);
                 jsonObject.addProperty("type", type);
-                HttpUtil.post(ServerUrl.SAVE_DATA_URL, jsonObject);
+                HttpUtil.post(PropertiesUtil.getApiProperty(SAVE_DATA_URL), jsonObject);
             }
         };
     }

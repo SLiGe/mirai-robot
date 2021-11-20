@@ -1,11 +1,14 @@
 package cn.zjiali.robot.service;
 
 import cn.zjiali.robot.annotation.Service;
-import cn.zjiali.robot.config.plugin.MoLiConfig;
-import cn.zjiali.robot.entity.response.*;
+import cn.zjiali.robot.config.PluginTemplate;
+import cn.zjiali.robot.constant.PluginCode;
+import cn.zjiali.robot.constant.PluginProperty;
+import cn.zjiali.robot.model.response.*;
 import cn.zjiali.robot.util.HttpUtil;
 import cn.zjiali.robot.util.JsonUtil;
 import cn.zjiali.robot.util.MessageUtil;
+import cn.zjiali.robot.util.PluginConfigUtil;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
@@ -21,25 +24,29 @@ public class MoLiService {
 
     public String getCommonChatMessage(String msg) {
         Map<String, Object> paramMap = new HashMap<>();
-
-        if ("1".equals(MoLiConfig.isMoLiServer)) {
+        String isMoLiServer = PluginConfigUtil.getConfigVal(PluginCode.MOLI, PluginProperty.IS_MOLI_SERVER);
+        if ("1".equals(isMoLiServer)) {
             paramMap.put("question", msg);
-            if ("".equals(MoLiConfig.limit)) {
+            String limit = PluginConfigUtil.getConfigVal(PluginCode.MOLI, PluginProperty.MOLI_LIMIT);
+            if ("".equals(limit)) {
                 paramMap.put("limit", "5");
             } else {
-                paramMap.put("limit", MoLiConfig.limit);
+                paramMap.put("limit", limit);
             }
-            if (!"".equals(MoLiConfig.apiKey)) {
-                paramMap.put("api_key", MoLiConfig.apiKey);
+            String apiKey = PluginConfigUtil.getConfigVal(PluginCode.MOLI, PluginProperty.MOLI_API_KEY);
+            if (!"".equals(apiKey)) {
+                paramMap.put("api_key", apiKey);
             }
-            if (!"".equals(MoLiConfig.apiSecret)) {
-                paramMap.put("api_secret", MoLiConfig.apiSecret);
+            String apiSecret = PluginConfigUtil.getConfigVal(PluginCode.MOLI, PluginProperty.MOLI_API_SECRET);
+            if (!"".equals(apiSecret)) {
+                paramMap.put("api_secret", apiSecret);
             }
-            return HttpUtil.get(MoLiConfig.url, paramMap);
+            return HttpUtil.get(PluginConfigUtil.getApiURL(PluginCode.MOLI), paramMap);
         } else {
             paramMap.put("message", msg);
         }
-        String reply = HttpUtil.post(MoLiConfig.zUrlChat, paramMap);
+        String zUrlChat = PluginConfigUtil.getConfigVal(PluginCode.MOLI, PluginProperty.Z_URL_CHAT);
+        String reply = HttpUtil.post(zUrlChat, paramMap);
         return getChatResponse(reply, String.class);
 
     }
@@ -57,12 +64,12 @@ public class MoLiService {
         paramMap.put("qq", qq);
         paramMap.put("groupNum", groupNum);
         paramMap.put("isGroup", isGroup ? 1 : 0);
-        String jokeContent = HttpUtil.get(MoLiConfig.zUrlJoke, paramMap);
-        JokeResponse jokeResponse = getChatResponse(jokeContent, JokeResponse.class);
-        if ("".equals(MoLiConfig.jokeTemplate)) {
-            return jokeResponse.getContent();
-        }
-        return MessageUtil.replaceMessage(MoLiConfig.jokeTemplate, jokeResponse);
+        String apiURL = PluginConfigUtil.getApiURL(PluginCode.JOKE);
+        String jokeContent = HttpUtil.get(apiURL, paramMap);
+        Type type = new TypeToken<RobotBaseResponse<JokeResponse>>() {
+        }.getType();
+        RobotBaseResponse<JokeResponse> jokeResponse = JsonUtil.toObjByType(jokeContent, type);
+        return jokeResponse.getData().getContent();
 
     }
 
@@ -77,7 +84,8 @@ public class MoLiService {
     public String getGylqMessage(long qq, boolean isGroup, long groupNum) {
         String gylqJson = queryLqData(1, qq, isGroup, groupNum);
         GylqResponse gylqResponse = getChatResponse(gylqJson, GylqResponse.class);
-        return MessageUtil.replaceMessage(MoLiConfig.gylqTemplate, gylqResponse);
+        String template = PluginTemplate.getInstance().getTemplate(PluginCode.GY_LQ);
+        return MessageUtil.replaceMessage(template, gylqResponse);
     }
 
     /**
@@ -91,7 +99,8 @@ public class MoLiService {
     public String getYllqMessage(long qq, boolean isGroup, long groupNum) {
         String yllqJson = queryLqData(2, qq, isGroup, groupNum);
         YllqResponse yllqResponse = getChatResponse(yllqJson, YllqResponse.class);
-        return MessageUtil.replaceMessage(MoLiConfig.yllqTemplate, yllqResponse);
+        String template = PluginTemplate.getInstance().getTemplate(PluginCode.YL_LQ);
+        return MessageUtil.replaceMessage(template, yllqResponse);
     }
 
     /**
@@ -105,7 +114,8 @@ public class MoLiService {
     public String getCsylqMessage(long qq, boolean isGroup, long groupNum) {
         String csylqJson = queryLqData(3, qq, isGroup, groupNum);
         CsylqResponse csylqResponse = getChatResponse(csylqJson, CsylqResponse.class);
-        return MessageUtil.replaceMessage(MoLiConfig.csylqTemplate, csylqResponse);
+        String template = PluginTemplate.getInstance().getTemplate(PluginCode.CSY_LQ);
+        return MessageUtil.replaceMessage(template, csylqResponse);
     }
 
     public String queryLqData(int type, long qq, boolean isGroup, long groupNum) {
@@ -114,7 +124,8 @@ public class MoLiService {
         paramMap.put("qq", qq);
         paramMap.put("groupNum", groupNum);
         paramMap.put("isGroup", isGroup ? 1 : 0);
-        return HttpUtil.post(MoLiConfig.zUrlLq, paramMap);
+        String zUrlLq = PluginConfigUtil.getConfigVal(PluginCode.MOLI, PluginProperty.Z_URL_LQ);
+        return HttpUtil.post(zUrlLq, paramMap);
     }
 
     public <T> T getChatResponse(String json, Class<T> tClass) {
@@ -127,6 +138,7 @@ public class MoLiService {
         }
         return response.getData();
     }
+
 
     public <T> RobotBaseResponse<T> toBaseResponse(String json, Class<T> tClass) {
         Type type = new TypeToken<RobotBaseResponse<String>>() {

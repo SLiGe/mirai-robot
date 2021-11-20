@@ -1,6 +1,6 @@
 package cn.zjiali.robot.test.net;
 
-import cn.zjiali.robot.entity.response.RobotBaseResponse;
+import cn.zjiali.robot.model.response.RobotBaseResponse;
 import cn.zjiali.robot.util.HttpUtil;
 import cn.zjiali.robot.util.JsonUtil;
 import cn.zjiali.robot.util.PropertiesUtil;

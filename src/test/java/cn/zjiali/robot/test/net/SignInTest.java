@@ -1,26 +1,14 @@
 package cn.zjiali.robot.test.net;
 
-import cn.zjiali.robot.entity.response.SignInDataResponse;
+import cn.zjiali.robot.model.response.SignInDataResponse;
 import cn.zjiali.robot.factory.MessageFactory;
 import cn.zjiali.robot.factory.ServiceFactory;
 import cn.zjiali.robot.main.ApplicationBootStrap;
-import cn.zjiali.robot.main.interceptor.ReplyBlacklistInterceptor;
+import cn.zjiali.robot.main.interceptor.ReplyBlacklistHandlerInterceptor;
 import cn.zjiali.robot.service.MoLiService;
 import cn.zjiali.robot.service.SignInService;
 import cn.zjiali.robot.util.PropertiesUtil;
-import kotlin.Unit;
-import kotlin.coroutines.Continuation;
-import kotlin.coroutines.CoroutineContext;
-import net.mamoe.mirai.Bot;
-import net.mamoe.mirai.contact.Contact;
-import net.mamoe.mirai.contact.Friend;
 import net.mamoe.mirai.event.events.FriendMessageEvent;
-import net.mamoe.mirai.message.MessageReceipt;
-import net.mamoe.mirai.message.data.Image;
-import net.mamoe.mirai.message.data.Message;
-import net.mamoe.mirai.utils.ExternalResource;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -42,7 +30,7 @@ public class SignInTest {
         String gylqMessage = moLiService.getGylqMessage(357078415L, false, 123456L);
         String jokeMessage = moLiService.getJokeMessage(357078415L, false, 123456L);
         String commonChatMessage = moLiService.getCommonChatMessage("你好呀");
-        ReplyBlacklistInterceptor replyBlacklistInterceptor = ServiceFactory.getInstance().get(ReplyBlacklistInterceptor.class.getSimpleName(), ReplyBlacklistInterceptor.class);
+        ReplyBlacklistHandlerInterceptor replyBlacklistInterceptor = ServiceFactory.getInstance().get(ReplyBlacklistHandlerInterceptor.class.getSimpleName(), ReplyBlacklistHandlerInterceptor.class);
         String replyBlacklist = PropertiesUtil.getProperty("application.properties","robot.reply.blacklist");
         System.out.println(replyBlacklist.contains(Long.toString(357078415L)));
         System.out.println("yllqMessage: " + yllqMessage);

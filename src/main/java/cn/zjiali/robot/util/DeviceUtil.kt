@@ -3,6 +3,7 @@ package cn.zjiali.robot.util
 import cn.hutool.core.io.file.FileReader
 import cn.hutool.core.io.file.FileWriter
 import cn.hutool.json.JSONObject
+import cn.zjiali.robot.model.response.JokeResponse
 import net.mamoe.mirai.utils.DeviceInfo
 import java.io.File
 import kotlin.random.Random
@@ -38,6 +39,7 @@ object DeviceUtil {
 
     @JvmStatic
     fun main(args: Array<String>) {
-        getDeviceInfoJson("357078415")
+        val res = JokeResponse()
+        res.content = "aaa"
     }
 }

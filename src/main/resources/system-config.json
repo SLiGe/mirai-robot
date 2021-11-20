@@ -1,0 +1,9 @@
+{
+    "messageTemplates":
+        {
+            "sign":[
+                "signTemplate",
+                "querySignTemplate"
+            ]
+        }
+}

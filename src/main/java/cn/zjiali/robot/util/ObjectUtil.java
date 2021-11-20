@@ -48,4 +48,8 @@ public class ObjectUtil {
         }
         return false;
     }
+
+    public static boolean isNotNullOrEmpty(Object obj){
+        return !isNullOrEmpty(obj);
+    }
 }
