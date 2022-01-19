@@ -7,10 +7,13 @@ import cn.zjiali.robot.annotation.Service;
 import cn.zjiali.robot.config.AppConfig;
 import cn.zjiali.robot.config.PluginTemplate;
 import cn.zjiali.robot.config.Plugin;
+import cn.zjiali.robot.constant.PluginCode;
 import cn.zjiali.robot.factory.DefaultBeanFactory;
 import cn.zjiali.robot.factory.MessageEventHandlerFactory;
 import cn.zjiali.robot.factory.ServiceFactory;
 import cn.zjiali.robot.handler.MessageEventHandler;
+import cn.zjiali.robot.main.interceptor.HandlerInterceptor;
+import cn.zjiali.robot.main.interceptor.ReplyBlacklistHandlerInterceptor;
 import cn.zjiali.robot.main.websocket.WebSocketManager;
 import cn.zjiali.robot.model.ApplicationConfig;
 import cn.zjiali.robot.model.SystemConfig;
@@ -18,6 +21,7 @@ import cn.zjiali.robot.util.*;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -175,6 +179,8 @@ public class ApplicationBootStrap {
         } catch (IOException | IllegalAccessException | InstantiationException | ClassNotFoundException e) {
             e.printStackTrace();
         }
+        ArrayList<String> ignoreWords = PluginConfigUtil.getIgnoreWords(PluginCode.MOLI);
+        final HandlerInterceptor handlerInterceptor = ServiceFactory.getInstance().getBean(ReplyBlacklistHandlerInterceptor.class.getSimpleName(), HandlerInterceptor.class);
         List<MessageEventHandler> messageEventHandlerList = MessageEventHandlerFactory.getInstance().getBeanList(MessageEventHandler.class);
         try {
             Thread.currentThread().join();
