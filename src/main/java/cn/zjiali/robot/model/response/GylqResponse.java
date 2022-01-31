@@ -7,6 +7,7 @@ import com.google.gson.annotations.SerializedName;
  * @author zJiaLi
  * @since 2021-04-08 18:38
  */
+@Deprecated
 public class GylqResponse {
 
     @SerializedName(value = "number1")
