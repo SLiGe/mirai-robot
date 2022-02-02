@@ -4,6 +4,11 @@
             "sign":[
                 "signTemplate",
                 "querySignTemplate"
+            ],
+            "lq":[
+                "gyTemplate",
+                "csTemplate",
+                "ylTemplate"
             ]
         }
 }

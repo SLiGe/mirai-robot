@@ -85,7 +85,23 @@
       "code": "joke",
       "ignoreKeyWords": "",
       "properties": {
-        "url": "https://robot.zjiali.cn/api/queryJoke"
+        "url": "http://127.0.0.1:8999/api/queryJoke"
+      }
+    },
+    {
+      "name": "灵签",
+      "enable": 1,
+      "handler": "cn.zjiali.robot.handler.SpiritSignMessageEventHandler",
+      "command": "观音灵签,月老灵签,财神灵签",
+      "template": "",
+      "templateFlag":"2",
+      "code": "lq",
+      "ignoreKeyWords": "",
+      "properties": {
+        "url": "http://127.0.0.1:8999/lq/oneSignPerDay",
+        "gyTemplate": "{title}\n诗曰:{shi_yue}\n诗意:{shi_yi}\n解曰:{jie_yue}\n本签精髓:{bqjs}\n详情请点击:{viewUrl}",
+        "ylTemplate": "{title}\n签诗:{qian_shi}\n解签:{jie_qian}\n详情请点击:{viewUrl}",
+        "csTemplate": "{title}\n诗曰:{shi_yue}\n吉凶:{ji_xiong}\n详情请点击:{viewUrl}"
       }
     },
     {

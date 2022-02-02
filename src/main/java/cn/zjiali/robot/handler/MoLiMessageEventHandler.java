@@ -33,15 +33,16 @@ public class MoLiMessageEventHandler extends AbstractMessageEventHandler {
             event.getGroup().sendMessage(new At(event.getSender().getId()).plus(interceptMessage.get("message")));
             return;
         }
+        long senderId = event.getSender().getId();
         if ("1".equals(PluginConfigUtil.getConfigVal(PluginCode.MOLI, PluginProperty.CHAT_GROUP_AT))) {
             String atNick = "@" + event.getBot().getNick();
             if (msg.contains(atNick)) {
                 msg = msg.replace(atNick, "");
-                String sendMsg = moLiService.getCommonChatMessage(msg);
+                String sendMsg = moLiService.getCommonChatMessage(senderId, msg);
                 event.getGroup().sendMessage(new At(event.getSender().getId()).plus(sendMsg));
             }
         } else {
-            String sendMsg = moLiService.getCommonChatMessage(msg);
+            String sendMsg = moLiService.getCommonChatMessage(senderId, msg);
             event.getGroup().sendMessage(new At(event.getSender().getId()).plus(sendMsg));
         }
     }
@@ -54,7 +55,7 @@ public class MoLiMessageEventHandler extends AbstractMessageEventHandler {
             event.getSender().sendMessage(interceptMessage.get("message"));
             return;
         }
-        String sendMsg = moLiService.getCommonChatMessage(msg);
+        String sendMsg = moLiService.getCommonChatMessage(event.getSender().getId(), msg);
         event.getSender().sendMessage(sendMsg);
     }
 
@@ -62,15 +63,16 @@ public class MoLiMessageEventHandler extends AbstractMessageEventHandler {
     public OutMessage handleGroupMessageEvent(GroupMessageEvent event) {
         String chatGroupAt = PluginConfigUtil.getConfigVal(PluginCode.MOLI, PluginProperty.CHAT_GROUP_AT);
         String msg = getMsg(event);
+        long senderId = event.getSender().getId();
         if ("1".equals(chatGroupAt)) {
             String atNick = "@" + event.getBot().getNick();
-            if (msg.contains(atNick)) {
+            if (event.getMessage().contains(new At(event.getBot().getId()))) {
                 msg = msg.replace(atNick, "");
-                String sendMsg = moLiService.getCommonChatMessage(msg);
+                String sendMsg = moLiService.getCommonChatMessage(senderId, msg);
                 return OutMessage.builder().pluginCode(PluginCode.MOLI).content(sendMsg).convertFlag(false).build();
             }
         } else {
-            String sendMsg = moLiService.getCommonChatMessage(msg);
+            String sendMsg = moLiService.getCommonChatMessage(event.getSender().getId(), msg);
             return OutMessage.builder().pluginCode(PluginCode.MOLI).content(sendMsg).convertFlag(false).build();
         }
         return super.handleGroupMessageEvent(event);
@@ -78,7 +80,7 @@ public class MoLiMessageEventHandler extends AbstractMessageEventHandler {
 
     @Override
     public OutMessage handleFriendMessageEvent(FriendMessageEvent event) {
-        String sendMsg = moLiService.getCommonChatMessage(getMsg(event));
+        String sendMsg = moLiService.getCommonChatMessage(event.getSender().getId(), getMsg(event));
         return OutMessage.builder().pluginCode(PluginCode.MOLI).content(sendMsg).convertFlag(false).build();
     }
 
