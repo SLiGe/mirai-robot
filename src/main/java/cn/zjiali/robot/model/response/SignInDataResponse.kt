@@ -1,7 +1,4 @@
-package cn.zjiali.robot.model.response;
-
-
-import lombok.Data;
+package cn.zjiali.robot.model.response
 
 /**
  * 签到数据类
@@ -9,61 +6,52 @@ import lombok.Data;
  * @author zJiaLi
  * @since 2020-10-30 22:44
  */
-@Data
-public class SignInDataResponse {
+class SignInDataResponse {
+    var status: Int? = null
+    var message: String? = null
+    var dataResponse: DataResponse? = null
 
-
-
-    private Integer status;
-
-    private String message;
-
-    private DataResponse dataResponse;
-
-    @Data
-    public static class DataResponse {
+    class DataResponse {
         /**
          * QQ号
          */
-        private String qq;
+        var qq: String? = null
 
         /**
          * 积分数
          */
-        private Integer points;
+        var points: Int? = null
 
         /**
          * 月签到天数
          */
-        private Integer monthDay;
+        var monthDay: Int? = null
 
         /**
          * 总签到天数
          */
-        private Integer totalDay;
+        var totalDay: Int? = null
 
         /**
          * 当前等级
          *
-         *  2020/10/31 修改
+         * 2020/10/31 修改
          */
-        private String currentLevel;
+        var currentLevel: String? = null
 
         /**
          * 每日一句
          */
-        private String todayMsg;
+        var todayMsg: String? = null
 
         /**
          * 排名
          */
-        private int ranking;
+        var ranking = 0
 
         /**
          * 获得的积分
          */
-        private Integer getPoints;
+        var getPoints: Int? = null
     }
-
-
 }

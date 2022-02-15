@@ -24,7 +24,7 @@ class ReplyBlacklistHandlerInterceptor : HandlerInterceptor {
     @Autowired
     private val dictService: DictService? = null
     private var replyBlacklist: String? = null
-    private val queryReplyBlacklistParamMap: MutableMap<String, Any> = Maps.newHashMap()
+    private val queryReplyBlacklistParamMap: MutableMap<String, Any> = mutableMapOf()
 
     @Throws(Exception::class)
     override fun preHandle(messageEvent: MessageEvent?): Boolean {
