@@ -49,30 +49,41 @@
     },
     {
       "name": "老黄历",
-      "enable": 0,
+      "enable": 1,
       "handler": "cn.zjiali.robot.handler.YellowCalendarMessageEventHandler",
       "command": "老黄历",
-      "template": "",
+      "template": "今日老黄历:\n阳历:{yangli}\n阴历:{yinli}\n五行:{wuxing}\n冲煞:{chongsha}\n彭祖百忌:{baiji}\n吉神宜趋:{jishen}\n宜:{yi}\n凶神宜忌:{xiongshen}\n忌:{ji}",
       "templateFlag":"1",
       "code": "yellowCalendar",
       "ignoreKeyWords": "",
       "properties": {
-        "key": "1",
-        "url": "http://v.juhe.cn/laohuangli/d"
+        "url": "https://robot.zjiali.cn/api/yellowCalendar"
       }
     },
     {
       "name": "万年历",
-      "enable": 0,
+      "enable": 1,
       "handler": "cn.zjiali.robot.handler.CalendarMessageEventHandler",
       "command": "万年历",
-      "template": "",
+      "template": "今日万年历:\n假日:{holiday}\n忌:{avoid}\n属相:{animalsYear}\n假日描述:{desc}\n周几:{weekday}\n宜:{suit}\n纪年:{lunarYear}\n农历:{lunar}\n具体日期:{date}",
       "templateFlag":"1",
       "code": "calendar",
       "ignoreKeyWords": "",
       "properties": {
-        "key": "1",
-        "url": "http://v.juhe.cn/calendar/day"
+        "url": "https://robot.zjiali.cn/api/perpetualCalendar"
+      }
+    },
+    {
+      "name": "历史上的今天",
+      "enable": 1,
+      "handler": "cn.zjiali.robot.handler.TodayOfHistoryMessageEventHandler",
+      "command": "历史上的今天",
+      "template": "",
+      "templateFlag":"0",
+      "code": "todayHistory",
+      "ignoreKeyWords": "",
+      "properties": {
+        "url": "https://robot.zjiali.cn/api/perpetualCalendar"
       }
     },
     {
