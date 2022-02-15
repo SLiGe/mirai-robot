@@ -30,7 +30,7 @@ public class WebSocketManager {
     private WebSocketService webSocketService;
     @Autowired
     private WsSecurityManager wsSecurityManager;
-    private final CommonLogger commonLogger = new CommonLogger(WebSocketManager.class.getSimpleName());
+    private final CommonLogger commonLogger = new CommonLogger(WebSocketManager.class.getSimpleName(), WebSocketManager.class);
 
     public void connect() throws IOException {
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
@@ -57,7 +57,7 @@ public class WebSocketManager {
         webSocketClientMap.put(AppConfig.getQQ(), WebSocketClient.builder().webSocket(webSocket).robotQQ(AppConfig.getQQ()).build());
     }
 
-    public void removeSession(){
+    public void removeSession() {
         webSocketClientMap.remove(AppConfig.getQQ());
     }
 

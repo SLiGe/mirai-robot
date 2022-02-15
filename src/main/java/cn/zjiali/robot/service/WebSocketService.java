@@ -19,7 +19,7 @@ import cn.zjiali.robot.util.JsonUtil;
 @Service
 public class WebSocketService {
 
-    private final CommonLogger commonLogger = new CommonLogger(WebSocketService.class.getSimpleName());
+    private final CommonLogger commonLogger = new CommonLogger(WebSocketService.class.getSimpleName(), WebSocketService.class);
     @Autowired
     private RobotManager robotManager;
 

@@ -7,7 +7,7 @@ import net.mamoe.mirai.utils.MiraiLogger
  * @author zJiaLi
  * @since 2021-07-30 14:51
  */
-class CommonLogger(identity: String?) {
+class CommonLogger(identity: String?, clz: Class<*>) {
 
     private val miraiLogger: MiraiLogger
 
@@ -28,6 +28,6 @@ class CommonLogger(identity: String?) {
     }
 
     init {
-        miraiLogger = MiraiLogger.create(identity)
+        miraiLogger = MiraiLogger.Factory.create(clz, identity)
     }
 }

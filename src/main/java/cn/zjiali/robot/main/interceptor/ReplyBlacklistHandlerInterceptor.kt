@@ -19,7 +19,7 @@ import java.io.IOException
  */
 @Service
 class ReplyBlacklistHandlerInterceptor : HandlerInterceptor {
-    private val commonLogger = CommonLogger(ReplyBlacklistHandlerInterceptor::class.java.simpleName)
+    private val commonLogger = CommonLogger(ReplyBlacklistHandlerInterceptor::class.java.simpleName, javaClass)
 
     @Autowired
     private val dictService: DictService? = null

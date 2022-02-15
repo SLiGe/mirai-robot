@@ -19,7 +19,7 @@ import java.util.Map;
 @Component(name = "DefaultWsSecurityManager")
 public class DefaultWsSecurityManager implements WsSecurityManager {
 
-    private final CommonLogger commonLogger = new CommonLogger(WsSecurityManager.class.getSimpleName());
+    private final CommonLogger commonLogger = new CommonLogger(WsSecurityManager.class.getSimpleName(), WsSecurityManager.class);
     @Autowired
     private DictService dictService;
     private final Map<String, Object> queryVerifyKeyParamMap = Maps.newHashMap();
