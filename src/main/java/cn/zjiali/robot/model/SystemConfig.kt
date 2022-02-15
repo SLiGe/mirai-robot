@@ -1,9 +1,6 @@
-package cn.zjiali.robot.model;
+package cn.zjiali.robot.model
 
-import lombok.Data;
-
-import java.util.List;
-import java.util.Map;
+import lombok.Data
 
 /**
  * 系统配置
@@ -11,8 +8,7 @@ import java.util.Map;
  * @author zJiaLi
  * @since 2021-09-04 12:23
  */
-@Data
-public class SystemConfig {
 
-    private Map<String, List<String>> messageTemplates;
+class SystemConfig {
+    var messageTemplates: Map<String, List<String>>? = null
 }
