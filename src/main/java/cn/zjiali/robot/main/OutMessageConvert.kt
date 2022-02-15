@@ -27,7 +27,7 @@ class OutMessageConvert {
             template,
             outMessage.fillObj
         )
-        else MessageUtil.replaceMessage(template, outMessage.fillMap)
+        else MessageUtil.replaceMessageByMap(template, outMessage.fillMap)
         outMessage.finalMessage = finalMessage
         return finalMessage
     }

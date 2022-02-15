@@ -1,9 +1,11 @@
-package cn.zjiali.robot.util;
+package cn.zjiali.robot.util
 
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.Map;
+import cn.hutool.core.util.ReflectUtil
+import cn.hutool.core.util.StrUtil
+import com.google.common.collect.Lists
+import java.lang.StringBuilder
+import java.lang.reflect.Field
+import java.util.stream.Collectors
 
 /**
  * 消息工具类
@@ -11,55 +13,57 @@ import java.util.Map;
  * @author zJiaLi
  * @since 2021-04-04 20:24
  */
-public class MessageUtil {
-
-    private MessageUtil() {
-    }
-
-    /**
-     * 替换消息内容
-     *
-     * @param message 发送消息内容
-     * @param o       提花实例对象
-     * @return
-     */
-    public static String replaceMessage(String message, Object o) {
+object MessageUtil {
+    @JvmStatic
+    fun replaceMessage(message: String, o: Any): String? {
         if (ObjectUtil.isNullOrEmpty(message) || ObjectUtil.isNullOrEmpty(o)) {
-            return null;
+            return null
         }
-        Class<?> aClass = o.getClass();
-        Field[] declaredFields = aClass.getDeclaredFields();
-        for (Field declaredField : declaredFields) {
-            String fieldName = declaredField.getName();
-            if ("serialVersionUID".equals(fieldName) || !message.contains(fieldName)) {
-                continue;
-            }
-            StringBuilder sb = new StringBuilder();
-            sb.append("get").append(fieldName.substring(0, 1).toUpperCase()).append(fieldName.substring(1));
-            try {
-                Method method = aClass.getDeclaredMethod(sb.toString());
-                String invokeValue = String.valueOf(method.invoke(o));
-                fieldName = "{" + fieldName + "}";
-                if (message.contains(fieldName)) {
-                    message = message.replace(fieldName, invokeValue);
+        val fields = Lists.newArrayList(*ReflectUtil.getFields(o.javaClass)).stream().map { obj: Field -> obj.name }
+            .collect(Collectors.toList())
+        val messageBuilder = StringBuilder()
+        val messageArray = message.split("\n".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+        for ((i, childMessage) in messageArray.withIndex()) {
+            val left = childMessage.indexOf("{")
+            val right = childMessage.indexOf("}")
+            if (left > -1 && right > -1) {
+                var fieldName = childMessage.substring(left + 1, right)
+                if (fields.contains(fieldName)) {
+                    val invokeVal = ReflectUtil.getFieldValue(o, fieldName)
+                    if (invokeVal != null && "null" != invokeVal.toString()) {
+                        fieldName = "{$fieldName}"
+                        messageBuilder.append(childMessage.replace(fieldName, invokeVal.toString()))
+                    }
                 }
-            } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-                e.printStackTrace();
+            } else {
+                messageBuilder.append(childMessage)
             }
+            if (i != messageArray.size - 1) messageBuilder.append("\n")
         }
-        return message;
+        return messageBuilder.toString()
     }
 
-    public static String replaceMessage(String message, Map<String, String> fillMap) {
+    @JvmStatic
+    fun replaceMessageByMap(message: String, fillMap: Map<String, String>): String? {
         if (ObjectUtil.isNullOrEmpty(message) || ObjectUtil.isNullOrEmpty(fillMap)) {
-            return null;
+            return null
         }
-        for (Map.Entry<String, String> entry : fillMap.entrySet()) {
-            String fieldName = "{" + entry.getKey() + "}";
-            if (message.contains(fieldName)) {
-                message = message.replace(fieldName, entry.getValue());
+        val messageBuilder = StringBuilder()
+        val messageArray = message.split("\n".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+        for ((i, childMessage) in messageArray.withIndex()) {
+            val left = childMessage.indexOf("{")
+            val right = childMessage.indexOf("}")
+            if (left > -1 && right > -1) {
+                val fieldName = childMessage.substring(left + 1, right)
+                if (fillMap.containsKey(fieldName)) {
+                    val fieldVal = fillMap[fieldName]
+                    if (StrUtil.isNotBlank(fieldVal) && "null" != fieldVal) messageBuilder.append(childMessage)
+                }
+            } else {
+                messageBuilder.append(childMessage)
             }
+            if (i != messageArray.size - 1) messageBuilder.append("\n")
         }
-        return message;
+        return messageBuilder.toString()
     }
 }
