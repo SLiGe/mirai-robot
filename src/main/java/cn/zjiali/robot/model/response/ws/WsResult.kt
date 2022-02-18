@@ -1,34 +1,27 @@
-package cn.zjiali.robot.model.response.ws;
-
-import lombok.Builder;
-import lombok.Data;
+package cn.zjiali.robot.model.response.ws
 
 /**
  * @author zJiaLi
  * @since 2021-07-28 20:09
  */
-@Data
-@Builder
-public class WsResult {
-
+class WsResult {
     /**
      * 消息类型
      */
-    private int msgType;
+    var msgType = 0
 
     /**
      * 传递数据
      */
-    private String dataJson;
+    var dataJson: String? = null
 
     /**
      * 机器人QQ
      */
-    private String robotQQ;
+    var robotQQ: String? = null
 
     /**
      * 时间戳
      */
-    private long timestamp;
-
+    var timestamp: Long = 0
 }

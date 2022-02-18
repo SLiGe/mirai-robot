@@ -1,0 +1,3 @@
+# 定时任务配置
+[cn.zjiali.robot.task]
+WebSocketStatusTask.run = 0/10 * * ? * *

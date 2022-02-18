@@ -1,19 +1,17 @@
 package cn.zjiali.robot.main;
 
+import cn.hutool.cron.CronUtil;
 import cn.zjiali.robot.RobotApplication;
 import cn.zjiali.robot.annotation.Application;
 import cn.zjiali.robot.annotation.Component;
 import cn.zjiali.robot.annotation.Service;
 import cn.zjiali.robot.config.AppConfig;
-import cn.zjiali.robot.config.PluginTemplate;
 import cn.zjiali.robot.config.Plugin;
-import cn.zjiali.robot.constant.PluginCode;
+import cn.zjiali.robot.config.PluginTemplate;
 import cn.zjiali.robot.factory.DefaultBeanFactory;
 import cn.zjiali.robot.factory.MessageEventHandlerFactory;
 import cn.zjiali.robot.factory.ServiceFactory;
 import cn.zjiali.robot.handler.MessageEventHandler;
-import cn.zjiali.robot.main.interceptor.HandlerInterceptor;
-import cn.zjiali.robot.main.interceptor.ReplyBlacklistHandlerInterceptor;
 import cn.zjiali.robot.main.websocket.WebSocketManager;
 import cn.zjiali.robot.model.ApplicationConfig;
 import cn.zjiali.robot.model.SystemConfig;
@@ -22,7 +20,6 @@ import cn.zjiali.robot.util.*;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -98,6 +95,9 @@ public class ApplicationBootStrap {
             commonLogger.info("[WebSocket]====加载中");
             WebSocketManager webSocketManager = ServiceFactory.getInstance().getBean(WebSocketManager.class.getSimpleName(), WebSocketManager.class);
             webSocketManager.connect();
+            //添加定时任务定时确认websocket连接状态
+            CronUtil.setMatchSecond(true);
+            CronUtil.start();
             commonLogger.info("[WebSocket]====加载完成");
         }
 
@@ -105,7 +105,6 @@ public class ApplicationBootStrap {
 
     /**
      * 加载业务类
-     *
      */
     private void loadService() throws ClassNotFoundException, IllegalAccessException, InstantiationException {
         Application annotation = RobotApplication.class.getAnnotation(Application.class);

@@ -1,19 +1,17 @@
-package cn.zjiali.robot.main.websocket;
+package cn.zjiali.robot.main.websocket
 
-import lombok.Builder;
-import lombok.Data;
-import okhttp3.WebSocket;
+import okhttp3.WebSocket
 
 /**
  * @author zJiaLi
  * @since 2021-07-29 10:16
  */
-@Data
-@Builder
-public class WebSocketClient {
+class WebSocketClient {
+     var robotQQ: String? = null
+     var webSocket: WebSocket? = null
 
-    private String robotQQ;
-
-    private WebSocket webSocket;
-
+    constructor(qq: String, webSocket: WebSocket?) {
+        this.robotQQ = qq
+        this.webSocket = webSocket
+    }
 }
