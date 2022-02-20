@@ -12,6 +12,8 @@ import cn.zjiali.robot.model.response.ws.WsClientRes
 import cn.zjiali.robot.model.response.ws.WsResult
 import cn.zjiali.robot.util.CommonLogger
 import cn.zjiali.robot.util.JsonUtil
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 
 /**
  * @author zJiaLi
@@ -26,7 +28,7 @@ class WebSocketService {
 
     @Autowired
     private val robotManager: RobotManager? = null
-    fun handleWsResult(wsResult: WsResult): String {
+    suspend fun handleWsResult(wsResult: WsResult): String {
         val robotQQ = wsResult.robotQQ
         if (StrUtil.isNotBlank(robotQQ) && AppConfig.getQQ() == robotQQ) {
             if (wsResult.msgType == MsgType.SEND_MSG) {

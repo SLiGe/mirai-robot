@@ -1,14 +1,16 @@
 package cn.zjiali.robot.service
 
 import cn.zjiali.robot.annotation.Service
-import kotlin.Throws
-import java.io.IOException
 import cn.zjiali.robot.model.response.RobotBaseResponse
 import cn.zjiali.robot.util.HttpUtil
 import cn.zjiali.robot.util.JsonUtil
 import cn.zjiali.robot.util.PropertiesUtil
+import com.google.common.cache.Cache
+import com.google.common.cache.CacheBuilder
 import com.google.gson.JsonObject
 import com.google.gson.reflect.TypeToken
+import java.io.IOException
+import java.util.concurrent.TimeUnit
 
 /**
  * @author zJiaLi
@@ -16,6 +18,15 @@ import com.google.gson.reflect.TypeToken
  */
 @Service
 class DictService {
+
+    private var cache: Cache<String, String> = CacheBuilder.newBuilder()
+        .expireAfterWrite(5, TimeUnit.MINUTES)
+        .build()
+
+    @Throws(IOException::class)
+    fun getDictVal(cacheKey: String, paramMap: MutableMap<String, Any>): String {
+        return cache.get(cacheKey) { getDictVal(paramMap) }
+    }
 
     @Throws(IOException::class)
     fun getDictVal(paramMap: MutableMap<String, Any>): String {

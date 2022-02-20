@@ -13,6 +13,7 @@ import cn.zjiali.robot.model.response.ws.WsClientRes
 import cn.zjiali.robot.model.response.ws.WsResult
 import cn.zjiali.robot.util.JsonUtil
 import cn.zjiali.robot.util.PropertiesUtil
+import kotlinx.coroutines.*
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.WebSocket
@@ -50,13 +51,17 @@ class WebSocketManager {
         putSession(webSocket)
     }
 
+
+    @OptIn(DelicateCoroutinesApi::class)
     fun handleMessage(webSocket: WebSocket, text: String?) {
         val decryptMsgData = wsSecurityManager!!.decryptMsgData(text)
         commonLogger.info("[WebSocket]====收到消息: {}", decryptMsgData)
         try {
             val wsResult = JsonUtil.json2obj(decryptMsgData, WsResult::class.java)
-            val handleWsResult = webSocketService!!.handleWsResult(wsResult)
-            webSocket.send(handleWsResult)
+            GlobalScope.launch(Dispatchers.Unconfined)  {
+                val handleWsResult = webSocketService!!.handleWsResult(wsResult)
+                webSocket.send(handleWsResult)
+            }
         } catch (_: Exception) {
         }
 
