@@ -30,4 +30,14 @@ class SenderMessageRes {
      * @see cn.zjiali.robot.constant.MsgType
      */
     var sendFlag: Int? = null
+
+    /**
+     * 发送群组集合
+     */
+    var sendGroupList: List<String>? = null
+
+    /**
+     * 接收人集合
+     */
+    var receiverList: List<String>? = null
 }

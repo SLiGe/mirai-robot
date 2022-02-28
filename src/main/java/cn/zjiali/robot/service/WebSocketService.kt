@@ -12,8 +12,6 @@ import cn.zjiali.robot.model.response.ws.WsClientRes
 import cn.zjiali.robot.model.response.ws.WsResult
 import cn.zjiali.robot.util.CommonLogger
 import cn.zjiali.robot.util.JsonUtil
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.launch
 
 /**
  * @author zJiaLi
@@ -40,19 +38,27 @@ class WebSocketService {
                     senderMessageRes.sendMessage
                 )
                 when (senderMessageRes.sendFlag) {
-                    MsgType.SEND_FRIEND_MSG -> robotManager!!.sendFriendMessage(
-                        senderMessageRes.receiver!!.toLong(),
-                        senderMessageRes.sendMessage
-                    )
+                    MsgType.SEND_FRIEND_MSG -> {
+                        senderMessageRes.receiverList!!.forEach {
+                            robotManager!!.sendFriendMessage(
+                                it.toLong(),
+                                senderMessageRes.sendMessage
+                            )
+                        }
+                    }
                     MsgType.SEND_GROUP_MSG -> robotManager!!.sendGroupAtMessage(
                         senderMessageRes.receiver!!.toLong(),
                         senderMessageRes.sendGroup!!.toLong(),
                         senderMessageRes.sendMessage
                     )
-                    MsgType.SEND_GROUP_AT_MSG -> robotManager!!.sendGroupMessage(
-                        senderMessageRes.sendGroup!!.toLong(),
-                        senderMessageRes.sendMessage
-                    )
+                    MsgType.SEND_GROUP_AT_MSG -> {
+                        senderMessageRes.sendGroupList!!.forEach {
+                            robotManager!!.sendGroupMessage(
+                                it.toLong(),
+                                senderMessageRes.sendMessage
+                            )
+                        }
+                    }
                 }
             }
         }
