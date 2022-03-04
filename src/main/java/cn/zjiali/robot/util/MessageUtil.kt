@@ -57,7 +57,10 @@ object MessageUtil {
                 val fieldName = childMessage.substring(left + 1, right)
                 if (fillMap.containsKey(fieldName)) {
                     val fieldVal = fillMap[fieldName]
-                    if (StrUtil.isNotBlank(fieldVal) && "null" != fieldVal) messageBuilder.append(childMessage)
+                    if (StrUtil.isNotBlank(fieldVal) && "null" != fieldVal)
+                        messageBuilder.append(
+                            childMessage.replace("{$fieldName}", fieldVal!!)
+                        )
                 }
             } else {
                 messageBuilder.append(childMessage)
