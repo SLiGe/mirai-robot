@@ -1,6 +1,7 @@
 package cn.zjiali.robot.factory;
 
 
+import cn.hutool.core.util.StrUtil;
 import cn.zjiali.robot.annotation.Autowired;
 import cn.zjiali.robot.model.bean.BeanDefinition;
 import cn.zjiali.robot.util.ClassUtil;
@@ -84,7 +85,8 @@ public class DefaultBeanFactory implements BeanFactory {
             }
             Object bean = getBean(beanName, Class.forName(declaredField.getType().getName()));
             if (bean == null) {
-                bean = initialBean(beanName);
+                bean = initialBean(beanName, declaredField.getType());
+                fillBeanFields(getBeanDefinition(beanName).getTypeClass(), bean);
             }
             declaredField.setAccessible(true);
             declaredField.set(instance, bean);
@@ -92,21 +94,18 @@ public class DefaultBeanFactory implements BeanFactory {
     }
 
 
-    public Object initialBean(Class<?> clazz) throws InstantiationException, IllegalAccessException {
+    public Object initialBean(String beanName, Class<?> clazz) throws InstantiationException, IllegalAccessException {
         Object instance = clazz.newInstance();
-        putBean(clazz.getSimpleName(), instance);
-        return getBeanDefinition(clazz.getSimpleName()).getInstance();
+        beanName = StrUtil.isBlank(beanName) ? clazz.getSimpleName() : beanName;
+        putBean(beanName, instance);
+        return getBeanDefinition(beanName).getInstance();
     }
-
 
 
     public BeanDefinition getBeanDefinition(String beanName) {
         return (BeanDefinition) beanMap.get(beanName);
     }
 
-    public Object initialBean(String clazzName) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
-        return initialBean(Class.forName(clazzName));
-    }
 
     public static BeanFactory getInstance() {
         return beanFactory;
