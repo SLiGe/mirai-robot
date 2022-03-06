@@ -22,7 +22,7 @@ object MessageUtil {
         val fields = Lists.newArrayList(*ReflectUtil.getFields(o.javaClass)).stream().map { obj: Field -> obj.name }
             .collect(Collectors.toList())
         val messageBuilder = StringBuilder()
-        val messageArray = message.split("\n".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+        val messageArray = message.split("\n").dropLastWhile { it.isEmpty() }.toTypedArray()
         for ((i, childMessage) in messageArray.withIndex()) {
             val left = childMessage.indexOf("{")
             val right = childMessage.indexOf("}")
@@ -49,7 +49,7 @@ object MessageUtil {
             return null
         }
         val messageBuilder = StringBuilder()
-        val messageArray = message.split("\n".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+        val messageArray = message.split("\n").dropLastWhile { it.isEmpty() }.toTypedArray()
         for ((i, childMessage) in messageArray.withIndex()) {
             val left = childMessage.indexOf("{")
             val right = childMessage.indexOf("}")

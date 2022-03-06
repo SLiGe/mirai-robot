@@ -58,7 +58,7 @@ class WebSocketManager {
         commonLogger.info("[WebSocket]====收到消息: {}", decryptMsgData)
         try {
             val wsResult = JsonUtil.json2obj(decryptMsgData, WsResult::class.java)
-            GlobalScope.launch(Dispatchers.Unconfined)  {
+            GlobalScope.launch(Dispatchers.Unconfined) {
                 val handleWsResult = webSocketService!!.handleWsResult(wsResult)
                 webSocket.send(handleWsResult)
             }
@@ -68,7 +68,7 @@ class WebSocketManager {
     }
 
     fun getSession(robotQQ: String): WebSocket? {
-        return webSocketClientMap[robotQQ]!!.webSocket
+        return if (webSocketClientMap[robotQQ] != null) webSocketClientMap[robotQQ]?.webSocket else null
     }
 
     fun putSession(webSocket: WebSocket?) {

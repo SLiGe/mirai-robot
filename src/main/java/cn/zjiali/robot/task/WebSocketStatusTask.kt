@@ -21,7 +21,11 @@ class WebSocketStatusTask : Runnable {
             "DefaultWsSecurityManager",
             WsSecurityManager::class.java
         )
-        val session = webSocketManager.getSession(AppConfig.getQQ())
+        var session = webSocketManager.getSession(AppConfig.getQQ())
+        if (session == null) {
+            webSocketManager.connect()
+            session= webSocketManager.getSession(AppConfig.getQQ())
+        }
         val sendFlag = session!!.send(wsSecurityManager.encryptMsgData(WsClientRes(200, "存活检测!").toJson()))
         if (!sendFlag) {
             session.close(1000, "manual close")
