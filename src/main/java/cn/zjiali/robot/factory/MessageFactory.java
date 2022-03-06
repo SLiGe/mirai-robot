@@ -52,39 +52,7 @@ public class MessageFactory {
         return null;
     }
 
-    /**
-     * 获取历史上的今天消息
-     *
-     * @param
-     * @return
-     */
-    public static String getTodayOnHistoryMessage() {
-            //日期,格式:月/日 如:1/1,/10/1,12/12 如月或者日小于10,前面无需加0
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(new Date());
-            int month = calendar.get(Calendar.MONTH);
-            int day = calendar.get(Calendar.DAY_OF_MONTH);
-            String dateStr = month + "/" + day;
-            HashMap<String, Object> paramMap = new HashMap<>(2);
-            paramMap.put("key", PluginConfigUtil.getApiKey(PluginCode.TODAY_HISTORY));
-            paramMap.put("date", dateStr);
-            String response = HttpUtil.get(PluginConfigUtil.getApiURL(PluginCode.TODAY_HISTORY), paramMap);
-            JuHeBaseResponse<List<TodayOnHistoryResponse>> todayOnHistoryResponse = JsonUtil.toObjByType(response, new TypeToken<JuHeBaseResponse<List<TodayOnHistoryResponse>>>() {
-            }.getType());
-            if (todayOnHistoryResponse != null) {
-                if (todayOnHistoryResponse.getError_code() == 0) {
-                    List<TodayOnHistoryResponse> todayOnHistoryResponseResult = todayOnHistoryResponse.getResult();
-                    if (!ObjectUtil.isNullOrEmpty(todayOnHistoryResponseResult)) {
-                        StringBuilder stringBuilder = new StringBuilder();
-                        for (TodayOnHistoryResponse item : todayOnHistoryResponseResult) {
-                            stringBuilder.append(item.getDate()).append("\n").append(item.getTitle());
-                        }
-                        return stringBuilder.toString();
-                    }
-                }
-            }
-        return null;
-    }
+
 
     /**
      * 获取万年历消息

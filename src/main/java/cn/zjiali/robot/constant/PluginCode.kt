@@ -56,6 +56,11 @@ object PluginCode {
     const val CSY_LQ = "csylq"
 
     /**
+     * 灵签
+     */
+    const val LQ = "lq"
+
+    /**
      * 茉莉聊天
      */
     const val MOLI = "MOLI"

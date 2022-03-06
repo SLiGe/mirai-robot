@@ -4,6 +4,7 @@ import cn.hutool.crypto.SecureUtil;
 import cn.hutool.crypto.symmetric.AES;
 import cn.zjiali.robot.annotation.Autowired;
 import cn.zjiali.robot.annotation.Component;
+import cn.zjiali.robot.constant.CacheKey;
 import cn.zjiali.robot.service.DictService;
 import cn.zjiali.robot.util.CommonLogger;
 import com.google.common.collect.Maps;
@@ -19,7 +20,7 @@ import java.util.Map;
 @Component(name = "DefaultWsSecurityManager")
 public class DefaultWsSecurityManager implements WsSecurityManager {
 
-    private final CommonLogger commonLogger = new CommonLogger(WsSecurityManager.class.getSimpleName());
+    private final CommonLogger commonLogger = new CommonLogger(WsSecurityManager.class.getSimpleName(), WsSecurityManager.class);
     @Autowired
     private DictService dictService;
     private final Map<String, Object> queryVerifyKeyParamMap = Maps.newHashMap();
@@ -35,7 +36,7 @@ public class DefaultWsSecurityManager implements WsSecurityManager {
     @SneakyThrows
     @Override
     public String genWsToken(String content) {
-        String verifyKey = dictService.getDictVal(queryVerifyKeyParamMap);
+        String verifyKey = dictService.getDictVal(CacheKey.WS_VERIFY_KEY, queryVerifyKeyParamMap);
         String verifyToken = SecureUtil.md5(content + verifyKey);
         commonLogger.info("[Websocket] === 生成客户端Token robotQQ: {},生成结果: {}", content, verifyToken);
         return verifyToken;
@@ -50,7 +51,7 @@ public class DefaultWsSecurityManager implements WsSecurityManager {
     @SneakyThrows
     @Override
     public String encryptMsgData(String msgData) {
-        String messageEncryptKey = dictService.getDictVal(queryMessageEncryptKeyParamMap);
+        String messageEncryptKey = dictService.getDictVal(CacheKey.MESSAGE_ENCRYPT_KEY, queryMessageEncryptKeyParamMap);
         AES aes = SecureUtil.aes(messageEncryptKey.getBytes(StandardCharsets.UTF_8));
         return aes.encryptHex(msgData, StandardCharsets.UTF_8);
     }
@@ -64,7 +65,7 @@ public class DefaultWsSecurityManager implements WsSecurityManager {
     @SneakyThrows
     @Override
     public String decryptMsgData(String msgData) {
-        String messageEncryptKey = dictService.getDictVal(queryMessageEncryptKeyParamMap);
+        String messageEncryptKey = dictService.getDictVal(CacheKey.MESSAGE_ENCRYPT_KEY, queryMessageEncryptKeyParamMap);
         AES aes = SecureUtil.aes(messageEncryptKey.getBytes(StandardCharsets.UTF_8));
         return aes.decryptStr(msgData, StandardCharsets.UTF_8);
     }

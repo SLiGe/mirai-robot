@@ -22,7 +22,7 @@ import java.util.Map;
 @Service
 public class MoLiService {
 
-    public String getCommonChatMessage(String msg) {
+    public String getCommonChatMessage(long senderId, String msg) {
         Map<String, Object> paramMap = new HashMap<>();
         String isMoLiServer = PluginConfigUtil.getConfigVal(PluginCode.MOLI, PluginProperty.IS_MOLI_SERVER);
         if ("1".equals(isMoLiServer)) {
@@ -44,6 +44,7 @@ public class MoLiService {
             return HttpUtil.get(PluginConfigUtil.getApiURL(PluginCode.MOLI), paramMap);
         } else {
             paramMap.put("message", msg);
+            paramMap.put("qq", Long.toString(senderId));
         }
         String zUrlChat = PluginConfigUtil.getConfigVal(PluginCode.MOLI, PluginProperty.Z_URL_CHAT);
         String reply = HttpUtil.post(zUrlChat, paramMap);

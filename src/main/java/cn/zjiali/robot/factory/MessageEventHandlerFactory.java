@@ -13,7 +13,7 @@ public class MessageEventHandlerFactory extends AbstractBeanFactory {
 
     private static final MessageEventHandlerFactory MESSAGE_EVENT_HANDLER_FACTORY = new MessageEventHandlerFactory();
 
-    private final CommonLogger commonLogger = new CommonLogger(MessageEventHandlerFactory.class.getName());
+    private final CommonLogger commonLogger = new CommonLogger(MessageEventHandlerFactory.class.getName(),MessageEventHandlerFactory.class);
 
     public static MessageEventHandlerFactory getInstance() {
         return MESSAGE_EVENT_HANDLER_FACTORY;

@@ -16,4 +16,19 @@ object MsgTemplate {
      * 签到查询消息模板
      */
     const val QUERY_SIGN_TEMPLATE = "querySignTemplate"
+
+    /**
+     * 观音灵签消息模板
+     */
+    const val GY_LQ_TEMPLATE = "gyTemplate"
+
+    /**
+     * 月老灵签消息模板
+     */
+    const val YL_LQ_TEMPLATE = "ylTemplate"
+
+    /**
+     * 财神灵签消息模板
+     */
+    const val CS_LQ_TEMPLATE = "csTemplate"
 }

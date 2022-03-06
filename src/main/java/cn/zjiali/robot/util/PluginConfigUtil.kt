@@ -19,7 +19,7 @@ object PluginConfigUtil {
     }
 
     fun getPlugin(pluginCode: String): Plugin {
-        return AppConfig.getApplicationConfig().plugins.stream().filter { plugin: Plugin -> pluginCode == plugin.code }
+        return AppConfig.getApplicationConfig().plugins!!.stream().filter { plugin: Plugin -> pluginCode == plugin.code }
             .findFirst().orElseThrow {
                 println("插件: $pluginCode 未找到!")
                 NullPointerException("未找到插件!")

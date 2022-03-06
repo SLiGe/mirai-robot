@@ -1,12 +1,13 @@
 package cn.zjiali.robot.main;
 
+import cn.hutool.cron.CronUtil;
 import cn.zjiali.robot.RobotApplication;
 import cn.zjiali.robot.annotation.Application;
 import cn.zjiali.robot.annotation.Component;
 import cn.zjiali.robot.annotation.Service;
 import cn.zjiali.robot.config.AppConfig;
-import cn.zjiali.robot.config.PluginTemplate;
 import cn.zjiali.robot.config.Plugin;
+import cn.zjiali.robot.config.PluginTemplate;
 import cn.zjiali.robot.factory.DefaultBeanFactory;
 import cn.zjiali.robot.factory.MessageEventHandlerFactory;
 import cn.zjiali.robot.factory.ServiceFactory;
@@ -18,8 +19,10 @@ import cn.zjiali.robot.util.*;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -30,7 +33,7 @@ import java.util.stream.Collectors;
  */
 public class ApplicationBootStrap {
 
-    private final CommonLogger commonLogger = new CommonLogger(ApplicationBootStrap.class.getName());
+    private final CommonLogger commonLogger = new CommonLogger(ApplicationBootStrap.class.getName(), ApplicationBootStrap.class);
 
     private ApplicationBootStrap() {
     }
@@ -61,17 +64,20 @@ public class ApplicationBootStrap {
         Map<String, List<String>> messageTemplateMap = systemConfig.getMessageTemplates();
         PluginTemplate pluginTemplate = PluginTemplate.getInstance();
         List<Plugin> plugins = AppConfig.getApplicationConfig().getPlugins();
-        plugins.stream().filter(plugin -> !"0".equals(plugin.getTemplateFlag()))
+        Objects.requireNonNull(plugins).stream().filter(plugin -> !"0".equals(plugin.getTemplateFlag()))
                 .forEach(plugin -> {
                     if ("1".equals(plugin.getTemplateFlag())) {
                         String template = plugin.getTemplate();
                         pluginTemplate.putTemplate(plugin.getCode(), template);
                     } else if ("2".equals(plugin.getTemplateFlag())) {
-                        List<String> templates = messageTemplateMap.get(plugin.getCode());
-                        templates.forEach(messageTemplateCode -> {
-                            String templateText = plugin.getProperties().get(messageTemplateCode);
-                            pluginTemplate.putTemplate(messageTemplateCode, templateText);
-                        });
+                        List<String> templates = null;
+                        if (messageTemplateMap != null) {
+                            templates = messageTemplateMap.get(plugin.getCode());
+                            templates.forEach(messageTemplateCode -> {
+                                String templateText = Objects.requireNonNull(plugin.getProperties()).get(messageTemplateCode);
+                                pluginTemplate.putTemplate(messageTemplateCode, templateText);
+                            });
+                        }
                     }
                 });
     }
@@ -89,6 +95,9 @@ public class ApplicationBootStrap {
             commonLogger.info("[WebSocket]====加载中");
             WebSocketManager webSocketManager = ServiceFactory.getInstance().getBean(WebSocketManager.class.getSimpleName(), WebSocketManager.class);
             webSocketManager.connect();
+            //添加定时任务定时确认websocket连接状态
+            CronUtil.setMatchSecond(true);
+            CronUtil.start();
             commonLogger.info("[WebSocket]====加载完成");
         }
 
@@ -96,10 +105,6 @@ public class ApplicationBootStrap {
 
     /**
      * 加载业务类
-     *
-     * @throws ClassNotFoundException
-     * @throws IllegalAccessException
-     * @throws InstantiationException
      */
     private void loadService() throws ClassNotFoundException, IllegalAccessException, InstantiationException {
         Application annotation = RobotApplication.class.getAnnotation(Application.class);
@@ -139,7 +144,7 @@ public class ApplicationBootStrap {
             String configFilePath = System.getProperty("application.config.file");
             File configFile = new File(configFilePath);
             if (configFile.exists()) {
-                configStream = new FileInputStream(configFile);
+                configStream = Files.newInputStream(configFile.toPath());
             }
         } else {
             String appProfile = PropertiesUtil.getProperty("application.properties", "application.profile");
@@ -169,18 +174,5 @@ public class ApplicationBootStrap {
         configStream.close();
     }
 
-    public static void main(String[] args) {
-        try {
-            getInstance().init();
-        } catch (IOException | IllegalAccessException | InstantiationException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        List<MessageEventHandler> messageEventHandlerList = MessageEventHandlerFactory.getInstance().getBeanList(MessageEventHandler.class);
-        try {
-            Thread.currentThread().join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
 
 }

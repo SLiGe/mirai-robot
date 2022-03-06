@@ -25,12 +25,12 @@ public class SignInTest {
         ApplicationBootStrap.getInstance().init();
         SignInService signInService = ServiceFactory.getInstance().get(SignInService.class.getSimpleName(), SignInService.class);
         MoLiService moLiService = ServiceFactory.getInstance().get(MoLiService.class.getSimpleName(), MoLiService.class);
+        String commonChatMessage = moLiService.getCommonChatMessage(357078415,"你好呀");
+        String jokeMessage = moLiService.getJokeMessage(357078415L, false, 123456L);
         String yllqMessage = moLiService.getYllqMessage(357078415L, false, 123456L);
         String csylqMessage = moLiService.getCsylqMessage(357078415L, false, 123456L);
         String gylqMessage = moLiService.getGylqMessage(357078415L, false, 123456L);
-        String jokeMessage = moLiService.getJokeMessage(357078415L, false, 123456L);
-        String commonChatMessage = moLiService.getCommonChatMessage("你好呀");
-        ReplyBlacklistHandlerInterceptor replyBlacklistInterceptor = ServiceFactory.getInstance().get(ReplyBlacklistHandlerInterceptor.class.getSimpleName(), ReplyBlacklistHandlerInterceptor.class);
+        ReplyBlacklistHandlerInterceptor replyBlacklistHandlerInterceptor = ServiceFactory.getInstance().get(ReplyBlacklistHandlerInterceptor.class.getSimpleName(), ReplyBlacklistHandlerInterceptor.class);
         String replyBlacklist = PropertiesUtil.getProperty("application.properties","robot.reply.blacklist");
         System.out.println(replyBlacklist.contains(Long.toString(357078415L)));
         System.out.println("yllqMessage: " + yllqMessage);

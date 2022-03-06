@@ -6,7 +6,7 @@
     {
       "name": "一言",
       "enable": 1,
-      "handler": "cn.zjiali.robot.handler.SenHandler",
+      "messageEventHandler": "cn.zjiali.robot.handler.SenMessageEventHandlerr.SenHandler",
       "configClass": "cn.zjiali.robot.config.plugin.SenConfig",
       "properties": {
         "command": "一言"
@@ -15,7 +15,7 @@
     {
       "name": "签到",
       "enable": 1,
-      "handler": "cn.zjiali.robot.handler.SignInHandler",
+      "messageEventHandler": "cn.zjiali.robot.handler.SignInMessageEventHandlerignInHandler",
       "configClass": "cn.zjiali.robot.config.plugin.SignInConfig",
       "properties": {
         "command": "签到,积分查询",
@@ -26,7 +26,7 @@
     {
       "name": "今日运势",
       "enable": 1,
-      "handler": "cn.zjiali.robot.handler.FortuneHandler",
+      "messageEventHandler": "cn.zjiali.robot.handler.FortuneMessageEventHandlerrtuneHandler",
       "configClass": "cn.zjiali.robot.config.plugin.FortuneConfig",
       "properties": {
         "command": "运势",

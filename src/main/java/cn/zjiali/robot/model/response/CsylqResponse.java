@@ -6,6 +6,7 @@ import com.google.gson.annotations.SerializedName;
  * @author zJiaLi
  * @since 2021-04-08 18:46
  */
+@Deprecated
 public class CsylqResponse {
     @SerializedName("number1")
     private String number1;
