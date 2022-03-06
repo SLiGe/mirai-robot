@@ -18,12 +18,12 @@
     {
       "name": "一言",//插件名称
       "enable": 1,//是否加载 0否 1是
-      "handler": "cn.zjiali.robot.handler.SenMessageEventHandler", //处理器地址,请勿修改
+      "handler": "cn.zjiali.robot.handler.SenMessageEventHandler",//处理器地址,请勿修改
       "command": "一言",//插件命令
       "template": "",//发送消息模板
-      "templateFlag": "0",//是否使用消息模板 0否1是
-      "code": "oneSen", //插件代码,请勿修改
-      "ignoreKeyWords": "", //忽略触发关键字
+      "templateFlag":"0",//是否使用消息模板  0=无模板 1=单一模板 2=多个模板(多个模板写到properties属性内)
+      "code": "oneSen",//插件代码,请勿修改
+      "ignoreKeyWords": "",//忽略触发关键字
       "properties": { //插件配置
         "url": "https://robot.zjiali.cn/api/getSen"
       }
@@ -34,7 +34,7 @@
       "handler": "cn.zjiali.robot.handler.SignInMessageEventHandler",
       "command": "签到,积分查询",
       "template": "",
-      "templateFlag": "2",
+      "templateFlag":"2",
       "code": "sign",
       "ignoreKeyWords": "",
       "properties": {
@@ -50,7 +50,7 @@
       "handler": "cn.zjiali.robot.handler.FortuneMessageEventHandler",
       "command": "运势",
       "template": "\uD83C\uDF13您的今日运势为: {fortuneSummary}\n\uD83C\uDF1F星指数: {luckyStar}\n\uD83D\uDCD7签文: {signText}\n\uD83D\uDCDD解签: {unSignText}",
-      "templateFlag": "1",
+      "templateFlag":"1",
       "code": "fortune",
       "ignoreKeyWords": "",
       "properties": {
@@ -61,30 +61,41 @@
     },
     {
       "name": "老黄历",
-      "enable": 0,
+      "enable": 1,
       "handler": "cn.zjiali.robot.handler.YellowCalendarMessageEventHandler",
       "command": "老黄历",
-      "template": "",
-      "templateFlag": "1",
+      "template": "今日老黄历:\n阳历:{yangli}\n阴历:{yinli}\n五行:{wuxing}\n冲煞:{chongsha}\n彭祖百忌:{baiji}\n吉神宜趋:{jishen}\n宜:{yi}\n凶神宜忌:{xiongshen}\n忌:{ji}",
+      "templateFlag":"1",
       "code": "yellowCalendar",
       "ignoreKeyWords": "",
       "properties": {
-        "key": "1",
-        "url": "http://v.juhe.cn/laohuangli/d"
+        "url": "https://robot.zjiali.cn/api/yellowCalendar"
       }
     },
     {
       "name": "万年历",
-      "enable": 0,
+      "enable": 1,
       "handler": "cn.zjiali.robot.handler.CalendarMessageEventHandler",
       "command": "万年历",
-      "template": "",
-      "templateFlag": "1",
+      "template": "今日万年历:\n假日:{holiday}\n忌:{avoid}\n属相:{animalsYear}\n假日描述:{desc}\n周几:{weekday}\n宜:{suit}\n纪年:{lunarYear}\n农历:{lunar}\n具体日期:{date}",
+      "templateFlag":"1",
       "code": "calendar",
       "ignoreKeyWords": "",
       "properties": {
-        "key": "1",
-        "url": "http://v.juhe.cn/calendar/day"
+        "url": "https://robot.zjiali.cn/api/perpetualCalendar"
+      }
+    },
+    {
+      "name": "历史上的今天",
+      "enable": 1,
+      "handler": "cn.zjiali.robot.handler.TodayOfHistoryMessageEventHandler",
+      "command": "历史上的今天",
+      "template": "",
+      "templateFlag":"0",
+      "code": "todayHistory",
+      "ignoreKeyWords": "",
+      "properties": {
+        "url": "https://robot.zjiali.cn/api/perpetualCalendar"
       }
     },
     {
@@ -93,11 +104,27 @@
       "handler": "cn.zjiali.robot.handler.JokeMessageEventHandler",
       "command": "笑话",
       "template": "",
-      "templateFlag": "0",
+      "templateFlag":"0",
       "code": "joke",
       "ignoreKeyWords": "",
       "properties": {
-        "url": "https://robot.zjiali.cn/api/queryJoke"
+        "url": "http://127.0.0.1:8999/api/queryJoke"
+      }
+    },
+    {
+      "name": "灵签",
+      "enable": 1,
+      "handler": "cn.zjiali.robot.handler.SpiritSignMessageEventHandler",
+      "command": "观音灵签,月老灵签,财神灵签",
+      "template": "",
+      "templateFlag":"2",
+      "code": "lq",
+      "ignoreKeyWords": "",
+      "properties": {
+        "url": "http://127.0.0.1:8999/lq/oneSignPerDay",
+        "gyTemplate": "{title}\n诗曰:{shi_yue}\n诗意:{shi_yi}\n解曰:{jie_yue}\n本签精髓:{bqjs}\n详情请点击:{viewUrl}",
+        "ylTemplate": "{title}\n签诗:{qian_shi}\n解签:{jie_qian}\n详情请点击:{viewUrl}",
+        "csTemplate": "{title}\n诗曰:{shi_yue}\n吉凶:{ji_xiong}\n详情请点击:{viewUrl}"
       }
     },
     {
@@ -106,7 +133,7 @@
       "handler": "cn.zjiali.robot.handler.GyLqMessageEventHandler",
       "command": "观音灵签",
       "template": "签号:{number1}\n好坏:{haohua}\n签语:{qianyu}\n诗意解签:{shiyi}\n白话解签:{jieqian}",
-      "templateFlag": "1",
+      "templateFlag":"1",
       "code": "gylq",
       "ignoreKeyWords": "",
       "properties": {
@@ -119,7 +146,7 @@
       "handler": "cn.zjiali.robot.handler.YlLqMessageEventHandler",
       "command": "月老灵签",
       "template": "签号:{number1}\n好坏:{haohua}\n诗意解签:{shiyi}\n解签:{jieqian}\n注释:{zhushi}\n白话浅释:{baihua}",
-      "templateFlag": "1",
+      "templateFlag":"1",
       "code": "yllq",
       "ignoreKeyWords": "",
       "properties": {
@@ -132,7 +159,7 @@
       "handler": "cn.zjiali.robot.handler.CsyLqMessageEventHandler",
       "command": "财神爷灵签",
       "template": "签号:{number1}\n签语:{qianyu}\n注释:{zhushi}\n解签:{jieqian}\n解说:{jieshuo}\n结果:{jieguo}\n婚姻:{hunyin}\n交易:{jiaoyi}\n事业:{shiye}",
-      "templateFlag": "1",
+      "templateFlag":"1",
       "code": "csylq",
       "ignoreKeyWords": "",
       "properties": {
@@ -143,7 +170,7 @@
       "name": "茉莉聊天",
       "enable": 1,
       "handler": "cn.zjiali.robot.handler.MoLiMessageEventHandler",
-      "templateFlag": "0",
+      "templateFlag":"0",
       "code": "MOLI",
       "ignoreKeyWords": "天气,ip,@qq,@lol,@sfz,@sjh,@cy,笑话,观音灵签,月老灵签,财神爷灵签",
       "properties": {
@@ -163,14 +190,14 @@
 ```
 
 - 消息模板中{}里的字段可在`src\main\java\cn\zjiali\robot\entity\response` 中查看各插件对应的实体
-
+- 开发新插件需要实现`AbstractMessageEventHandler`,可参照现有插件
 - 进入到项目目录,执行``mvn clean package``
 
 - 启动参数 ,在启动命令后追加即可,如: `java -jar -Drobot.protocol=0`
     - application.config.file 配置文件地址
     - robot.protocol 协议选择使用协议(0 - Android 手机, 1 - Android 平板, 2 - Android 手表)
 
-- 执行 java -jar mirai-robot.jar
+- 执行 `java -jar -Drobot.protocol=0 -Dapplication.config.file=G:\application-dev-3333.json mirai-robot.jar`
 
 # 鸣谢
 
