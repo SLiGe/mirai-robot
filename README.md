@@ -1,6 +1,8 @@
 # Mirai-Robot
 
     mirai-robot机器人插件,基于mirai机器人协议,依赖`mirai-core-jvm`
+# 服务接口
+接口文档地址: [ApiDoc]<https://robot.zjiali.cn/> , 可自行开发对应插件
 
 # 如何使用
 
