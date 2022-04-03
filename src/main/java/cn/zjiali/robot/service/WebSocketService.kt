@@ -36,6 +36,12 @@ class WebSocketService {
                     senderMessageRes.receiver,
                     senderMessageRes.sendMessage
                 )
+                if (StrUtil.isBlank(senderMessageRes.sendMessage)) return wsSecurityManager?.encryptMsgData(
+                    WsClientRes(
+                        404,
+                        "消息体为空!"
+                    ).toJson()
+                )!!
                 when (senderMessageRes.sendFlag) {
                     MsgType.SEND_FRIEND_MSG -> {
                         senderMessageRes.receiverList!!.forEach {

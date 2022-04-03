@@ -43,7 +43,9 @@ class SpiritSignMessageEventHandler : AbstractMessageEventHandler() {
      fun signPerDay(msg: String, qq: String): OutMessage? {
         val signType = chooseSignType(msg)
         val paramMap = Maps.newHashMap<String, Any>()
-        paramMap["type"] = signType
+         if (signType != null) {
+             paramMap["type"] = signType
+         }
         paramMap["qq"] = qq
         val signRes = HttpUtil.post(getConfigVal(PluginCode.LQ, PluginProperty.API_URL), paramMap)
         if (signRes != null) {
@@ -58,7 +60,7 @@ class SpiritSignMessageEventHandler : AbstractMessageEventHandler() {
                         .setIgnoreNullValue(false)
                         .setFieldNameEditor { key: String? -> key }
                 ).copy()
-                messageParamMap["viewUrl"] = robotBaseResponse.data?.viewUrl
+                messageParamMap["viewUrl"] = robotBaseResponse.data?.viewUrl.toString()
                 return OutMessage.builder().convertFlag(true).templateCode(chooseSignTemplate(msg))
                     .pluginCode(PluginCode.LQ)
                     .fillMap(messageParamMap).fillFlag(AppConstants.FILL_OUT_MESSAGE_MAP_FLAG).build()
