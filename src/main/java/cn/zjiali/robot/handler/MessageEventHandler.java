@@ -75,4 +75,13 @@ public interface MessageEventHandler {
         return false;
     }
 
+    /**
+     * 插件排序
+     *
+     * @return 序号
+     */
+    default int order() {
+        return Integer.MIN_VALUE;
+    }
+
 }

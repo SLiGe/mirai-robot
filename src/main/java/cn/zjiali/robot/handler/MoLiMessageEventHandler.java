@@ -133,4 +133,9 @@ public class MoLiMessageEventHandler extends AbstractMessageEventHandler {
         ArrayList<String> ignoreWords = PluginConfigUtil.getIgnoreWords(PluginCode.MOLI);
         return ignoreWords.contains(msg);
     }
+
+    @Override
+    public int order() {
+        return Integer.MAX_VALUE;
+    }
 }

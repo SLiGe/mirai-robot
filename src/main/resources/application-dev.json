@@ -155,6 +155,19 @@
       }
     },
     {
+      "name": "点歌",
+      "enable": 1,
+      "handler": "cn.zjiali.robot.handler.RequestSongMessageEventHandler",
+      "command": "点歌",
+      "template": "",
+      "templateFlag":"0",
+      "code": "request_song",
+      "ignoreKeyWords": "",
+      "properties": {
+        "url": "https://robot.zjiali.cn/api/song/requestSong"
+      }
+    },
+    {
       "name": "茉莉聊天",
       "enable": 1,
       "handler": "cn.zjiali.robot.handler.MoLiMessageEventHandler",

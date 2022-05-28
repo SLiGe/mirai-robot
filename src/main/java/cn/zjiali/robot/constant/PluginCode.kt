@@ -64,4 +64,9 @@ object PluginCode {
      * 茉莉聊天
      */
     const val MOLI = "MOLI"
+
+    /**
+     * 点歌*/
+    const val REQUEST_SONG: String = "request_song"
+
 }

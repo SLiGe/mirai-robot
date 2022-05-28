@@ -1,0 +1,73 @@
+package cn.zjiali.robot.handler
+
+import cn.zjiali.robot.constant.AppConstants
+import cn.zjiali.robot.constant.PluginCode
+import cn.zjiali.robot.model.message.OutMessage
+import cn.zjiali.robot.model.response.RequestSongResponse
+import cn.zjiali.robot.model.response.RobotBaseResponse
+import cn.zjiali.robot.util.HttpUtil
+import cn.zjiali.robot.util.JsonUtil
+import cn.zjiali.robot.util.PluginConfigUtil.getApiURL
+import cn.zjiali.robot.util.PluginConfigUtil.getCommand
+import com.google.gson.JsonObject
+import com.google.gson.reflect.TypeToken
+import net.mamoe.mirai.event.events.FriendMessageEvent
+import net.mamoe.mirai.event.events.GroupMessageEvent
+import net.mamoe.mirai.message.data.*
+import net.mamoe.mirai.utils.MiraiExperimentalApi
+
+/**
+ * 万年历处理器
+ *
+ * @author zJiaLi
+ * @since 2021-04-04 11:02
+ */
+class RequestSongMessageEventHandler : AbstractMessageEventHandler() {
+    override fun handleGroupMessageEvent(event: GroupMessageEvent): OutMessage {
+        val songName = event.message.content.replace(getCommand(PluginCode.REQUEST_SONG), "").trim()
+        return requestSong(songName)!!
+    }
+
+    override fun handleFriendMessageEvent(event: FriendMessageEvent): OutMessage {
+        val songName = event.message.content.replace(getCommand(PluginCode.REQUEST_SONG), "").trim()
+        return requestSong(songName)!!
+    }
+
+    override fun next(): Boolean {
+        return false
+    }
+
+    override fun matchCommand(msg: String): Boolean {
+        return msg.startsWith(getCommand(PluginCode.REQUEST_SONG))
+    }
+
+    //@OptIn(MiraiExperimentalApi::class)
+    private fun requestSong(songName: String): OutMessage? {
+        val postData = JsonObject()
+        postData.addProperty("keyword", songName)
+        postData.addProperty("type", "qq")
+        val response = HttpUtil.post(getApiURL(PluginCode.REQUEST_SONG), postData)
+        val type = object : TypeToken<RobotBaseResponse<RequestSongResponse?>?>() {}.type
+        val baseResponse = JsonUtil.toObjByType<RobotBaseResponse<RequestSongResponse>>(response, type)
+        if (baseResponse.status == 200) {
+            val songResponse = baseResponse.data
+            val musicInfo = songResponse.musicInfo
+            val musicShare = MusicShare(
+                MusicKind.QQMusic,
+                musicInfo.title,
+                musicInfo.desc,
+                musicInfo.jurl,
+                musicInfo.purl,
+                musicInfo.murl
+            )
+           // val msg: Message = SimpleServiceMessage(2, songResponse.musicMessage.toString())
+            return OutMessage.builder().convertFlag(false)
+                .messageType(AppConstants.MESSAGE_TYPE_PLUGIN)//.messageChain(msg.plus(songResponse.musicInfo.jurl))
+                .message(musicShare)
+                .pluginCode(PluginCode.REQUEST_SONG)
+                .build()
+        }
+        return null
+    }
+
+}

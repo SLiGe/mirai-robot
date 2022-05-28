@@ -1,6 +1,9 @@
 package cn.zjiali.robot.model.message;
 
+import net.mamoe.mirai.message.data.Message;
+
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * @author zJiaLi
@@ -45,7 +48,14 @@ public class OutMessage {
 
     private String finalMessage;
 
-    OutMessage(String content, String pluginCode, boolean convertFlag, String templateCode, int fillFlag, Map<String, String> fillMap, Object fillObj, String finalMessage) {
+    private Message message;
+
+    /**
+     * 1 总处理器转换消息 2 插件自提供消息
+     */
+    private int messageType;
+
+    OutMessage(String content, String pluginCode, boolean convertFlag, String templateCode, int fillFlag, Map<String, String> fillMap, Object fillObj, String finalMessage, int messageType, Message message) {
         this.content = content;
         this.pluginCode = pluginCode;
         this.convertFlag = convertFlag;
@@ -54,6 +64,8 @@ public class OutMessage {
         this.fillMap = fillMap;
         this.fillObj = fillObj;
         this.finalMessage = finalMessage;
+        this.messageType = messageType;
+        this.message = message;
     }
 
     public static OutMessageBuilder builder() {
@@ -125,63 +137,49 @@ public class OutMessage {
         this.finalMessage = finalMessage;
     }
 
-    public boolean equals(final Object o) {
-        if (o == this) return true;
-        if (!(o instanceof OutMessage)) return false;
-        final OutMessage other = (OutMessage) o;
-        if (!other.canEqual((Object) this)) return false;
-        final Object this$content = this.getContent();
-        final Object other$content = other.getContent();
-        if (this$content == null ? other$content != null : !this$content.equals(other$content)) return false;
-        final Object this$pluginCode = this.getPluginCode();
-        final Object other$pluginCode = other.getPluginCode();
-        if (this$pluginCode == null ? other$pluginCode != null : !this$pluginCode.equals(other$pluginCode))
-            return false;
-        if (this.isConvertFlag() != other.isConvertFlag()) return false;
-        final Object this$templateCode = this.getTemplateCode();
-        final Object other$templateCode = other.getTemplateCode();
-        if (this$templateCode == null ? other$templateCode != null : !this$templateCode.equals(other$templateCode))
-            return false;
-        if (this.getFillFlag() != other.getFillFlag()) return false;
-        final Object this$fillMap = this.getFillMap();
-        final Object other$fillMap = other.getFillMap();
-        if (this$fillMap == null ? other$fillMap != null : !this$fillMap.equals(other$fillMap)) return false;
-        final Object this$fillObj = this.getFillObj();
-        final Object other$fillObj = other.getFillObj();
-        if (this$fillObj == null ? other$fillObj != null : !this$fillObj.equals(other$fillObj)) return false;
-        final Object this$finalMessage = this.getFinalMessage();
-        final Object other$finalMessage = other.getFinalMessage();
-        if (this$finalMessage == null ? other$finalMessage != null : !this$finalMessage.equals(other$finalMessage))
-            return false;
-        return true;
+    public int getMessageType() {
+        return messageType;
     }
 
-    protected boolean canEqual(final Object other) {
-        return other instanceof OutMessage;
+    public void setMessageType(int messageType) {
+        this.messageType = messageType;
     }
 
-    public int hashCode() {
-        final int PRIME = 59;
-        int result = 1;
-        final Object $content = this.getContent();
-        result = result * PRIME + ($content == null ? 43 : $content.hashCode());
-        final Object $pluginCode = this.getPluginCode();
-        result = result * PRIME + ($pluginCode == null ? 43 : $pluginCode.hashCode());
-        result = result * PRIME + (this.isConvertFlag() ? 79 : 97);
-        final Object $templateCode = this.getTemplateCode();
-        result = result * PRIME + ($templateCode == null ? 43 : $templateCode.hashCode());
-        result = result * PRIME + this.getFillFlag();
-        final Object $fillMap = this.getFillMap();
-        result = result * PRIME + ($fillMap == null ? 43 : $fillMap.hashCode());
-        final Object $fillObj = this.getFillObj();
-        result = result * PRIME + ($fillObj == null ? 43 : $fillObj.hashCode());
-        final Object $finalMessage = this.getFinalMessage();
-        result = result * PRIME + ($finalMessage == null ? 43 : $finalMessage.hashCode());
-        return result;
+    public Message getMessage() {
+        return message;
     }
 
+    public void setMessage(Message message) {
+        this.message = message;
+    }
+
+    @Override
     public String toString() {
-        return "OutMessage(content=" + this.getContent() + ", pluginCode=" + this.getPluginCode() + ", convertFlag=" + this.isConvertFlag() + ", templateCode=" + this.getTemplateCode() + ", fillFlag=" + this.getFillFlag() + ", fillMap=" + this.getFillMap() + ", fillObj=" + this.getFillObj() + ", finalMessage=" + this.getFinalMessage() + ")";
+        return "OutMessage{" +
+                "content='" + content + '\'' +
+                ", pluginCode='" + pluginCode + '\'' +
+                ", convertFlag=" + convertFlag +
+                ", templateCode='" + templateCode + '\'' +
+                ", fillFlag=" + fillFlag +
+                ", fillMap=" + fillMap +
+                ", fillObj=" + fillObj +
+                ", finalMessage='" + finalMessage + '\'' +
+                ", message=" + message +
+                ", messageType=" + messageType +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        OutMessage that = (OutMessage) o;
+        return convertFlag == that.convertFlag && fillFlag == that.fillFlag && messageType == that.messageType && Objects.equals(content, that.content) && Objects.equals(pluginCode, that.pluginCode) && Objects.equals(templateCode, that.templateCode) && Objects.equals(fillMap, that.fillMap) && Objects.equals(fillObj, that.fillObj) && Objects.equals(finalMessage, that.finalMessage) && Objects.equals(message, that.message);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(content, pluginCode, convertFlag, templateCode, fillFlag, fillMap, fillObj, finalMessage, message, messageType);
     }
 
     public static class OutMessageBuilder {
@@ -193,6 +191,10 @@ public class OutMessage {
         private Map<String, String> fillMap;
         private Object fillObj;
         private String finalMessage;
+
+        private Message message;
+
+        private int messageType = 1;
 
         OutMessageBuilder() {
         }
@@ -237,12 +239,34 @@ public class OutMessage {
             return this;
         }
 
-        public OutMessage build() {
-            return new OutMessage(content, pluginCode, convertFlag, templateCode, fillFlag, fillMap, fillObj, finalMessage);
+        public OutMessageBuilder messageType(int messageType) {
+            this.messageType = messageType;
+            return this;
         }
 
+        public OutMessageBuilder message(Message message) {
+            this.message = message;
+            return this;
+        }
+
+
+        public OutMessage build() {
+            return new OutMessage(content, pluginCode, convertFlag, templateCode, fillFlag, fillMap, fillObj, finalMessage, messageType, message);
+        }
+
+        @Override
         public String toString() {
-            return "OutMessage.OutMessageBuilder(content=" + this.content + ", pluginCode=" + this.pluginCode + ", convertFlag=" + this.convertFlag + ", templateCode=" + this.templateCode + ", fillFlag=" + this.fillFlag + ", fillMap=" + this.fillMap + ", fillObj=" + this.fillObj + ", finalMessage=" + this.finalMessage + ")";
+            return "OutMessageBuilder{" +
+                    "content='" + content + '\'' +
+                    ", pluginCode='" + pluginCode + '\'' +
+                    ", convertFlag=" + convertFlag +
+                    ", templateCode='" + templateCode + '\'' +
+                    ", fillFlag=" + fillFlag +
+                    ", fillMap=" + fillMap +
+                    ", fillObj=" + fillObj +
+                    ", finalMessage='" + finalMessage + '\'' +
+                    ", messageType=" + messageType +
+                    '}';
         }
     }
 }
