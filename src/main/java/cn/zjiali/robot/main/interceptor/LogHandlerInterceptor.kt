@@ -11,7 +11,7 @@ import net.mamoe.mirai.event.events.MessageEvent
  * @author zJiaLi
  * @since 2021-09-04 18:14
  */
-@Service
+//@Service
 class LogHandlerInterceptor : HandlerInterceptor {
 
     private val logger: CommonLogger = CommonLogger(javaClass.simpleName, javaClass)
