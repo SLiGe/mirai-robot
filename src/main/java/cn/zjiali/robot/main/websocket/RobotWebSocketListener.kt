@@ -1,6 +1,6 @@
 package cn.zjiali.robot.main.websocket
 
-import cn.zjiali.robot.factory.ServiceFactory
+import cn.zjiali.robot.util.GuiceUtil
 import okhttp3.Response
 import okhttp3.WebSocket
 import okhttp3.WebSocketListener
@@ -11,8 +11,8 @@ import okio.ByteString
  * @since 2021-07-29 10:19
  */
 class RobotWebSocketListener : WebSocketListener() {
-    private val webSocketManager = ServiceFactory.getInstance().getBean(
-        WebSocketManager::class.java.simpleName, WebSocketManager::class.java
+    private val webSocketManager = GuiceUtil.getBean(
+        WebSocketManager::class.java
     )
 
     override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {

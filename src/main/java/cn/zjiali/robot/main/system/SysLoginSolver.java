@@ -2,15 +2,11 @@ package cn.zjiali.robot.main.system;
 
 import cn.hutool.core.codec.Base64;
 import cn.zjiali.robot.annotation.Service;
-import cn.zjiali.robot.util.HttpUtil;
-import cn.zjiali.robot.util.JsonUtil;
-import cn.zjiali.robot.util.ObjectUtil;
-import cn.zjiali.robot.util.PropertiesUtil;
+import cn.zjiali.robot.util.*;
 import com.google.gson.JsonObject;
 import kotlin.coroutines.Continuation;
 import net.mamoe.mirai.Bot;
 import net.mamoe.mirai.utils.LoginSolver;
-import net.mamoe.mirai.utils.MiraiLogger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -26,21 +22,23 @@ import java.util.Scanner;
 @Service
 public class SysLoginSolver extends LoginSolver {
 
-    private static final MiraiLogger miraiLogger = MiraiLogger.create(SysLoginSolver.class.getName());
+
+    private static final CommonLogger commonLogger = new CommonLogger(SysLoginSolver.class.getName(), SysLoginSolver.class);
 
     private static final String VERIFY_CODE_VIEW_URL = "verifyCode.view.url";
 
     @Nullable
     @Override
     public Object onSolvePicCaptcha(@NotNull Bot bot, byte[] bytes, @NotNull Continuation<? super String> continuation) {
+
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("qq", String.valueOf(bot.getId()));
         jsonObject.addProperty("base64", Base64.encode(bytes));
         String responseJson = HttpUtil.post(PropertiesUtil.getApiProperty(VERIFY_CODE_VIEW_URL), jsonObject);
         JsonObject response = JsonUtil.json2obj(responseJson, JsonObject.class);
         String verifyCodeUrl = response.get("data").getAsString();
-        miraiLogger.warning("请打开以下网址后,在控制台输入验证码!");
-        miraiLogger.warning(verifyCodeUrl);
+        commonLogger.warning("请打开以下网址后,在控制台输入验证码!");
+        commonLogger.warning(verifyCodeUrl);
         for (int i = 0; i < 3; i++) {
             String code = new Scanner(System.in).nextLine();
             if (ObjectUtil.isNullOrEmpty(code)) continue;
@@ -52,19 +50,19 @@ public class SysLoginSolver extends LoginSolver {
     @Nullable
     @Override
     public Object onSolveSliderCaptcha(@NotNull Bot bot, @NotNull String s, @NotNull Continuation<? super String> continuation) {
-        miraiLogger.warning("请打开以下网址后,完成滑动验证码验证!");
-        miraiLogger.warning("完成后在控制台输入任意字符");
-        miraiLogger.warning(s);
+        commonLogger.warning("请打开以下网址后,完成滑动验证码验证!");
+        commonLogger.warning("完成后在控制台输入任意字符");
+        commonLogger.warning(s);
         return userVerify();
     }
 
     @Nullable
     @Override
     public Object onSolveUnsafeDeviceLoginVerify(@NotNull Bot bot, @NotNull String s, @NotNull Continuation<? super String> continuation) {
-        miraiLogger.warning("需要进行账户安全认证");
-        miraiLogger.warning("该账户有[设备锁]/[不常用登录地点]/[不常用设备登录]的问题");
-        miraiLogger.warning("请将该链接在浏览器中打开并完成认证, 成功后在控制台输入任意字符");
-        miraiLogger.warning(s);
+        commonLogger.warning("需要进行账户安全认证");
+        commonLogger.warning("该账户有[设备锁]/[不常用登录地点]/[不常用设备登录]的问题");
+        commonLogger.warning("请将该链接在浏览器中打开并完成认证, 成功后在控制台输入任意字符");
+        commonLogger.warning(s);
         return userVerify();
     }
 

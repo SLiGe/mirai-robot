@@ -14,7 +14,6 @@ import com.google.gson.reflect.TypeToken
 import net.mamoe.mirai.event.events.FriendMessageEvent
 import net.mamoe.mirai.event.events.GroupMessageEvent
 import net.mamoe.mirai.message.data.*
-import net.mamoe.mirai.utils.MiraiExperimentalApi
 
 /**
  * 万年历处理器

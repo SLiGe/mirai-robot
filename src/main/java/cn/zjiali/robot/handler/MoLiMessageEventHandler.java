@@ -1,11 +1,11 @@
 package cn.zjiali.robot.handler;
 
-import cn.zjiali.robot.annotation.Autowired;
 import cn.zjiali.robot.constant.PluginCode;
 import cn.zjiali.robot.constant.PluginProperty;
 import cn.zjiali.robot.model.message.OutMessage;
 import cn.zjiali.robot.service.MoLiService;
 import cn.zjiali.robot.util.PluginConfigUtil;
+import com.google.inject.Inject;
 import net.mamoe.mirai.event.events.FriendMessageEvent;
 import net.mamoe.mirai.event.events.GroupMessageEvent;
 import net.mamoe.mirai.message.data.At;
@@ -22,7 +22,7 @@ import java.util.Map;
  */
 public class MoLiMessageEventHandler extends AbstractMessageEventHandler {
 
-    @Autowired
+    @Inject
     private MoLiService moLiService;
 
     @Override

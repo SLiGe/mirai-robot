@@ -1,5 +1,7 @@
 package cn.zjiali.robot.test.net;
 
+import cn.zjiali.robot.factory.MessageEventHandlerFactory;
+import cn.zjiali.robot.handler.MessageEventHandler;
 import cn.zjiali.robot.model.response.SignInDataResponse;
 import cn.zjiali.robot.factory.MessageFactory;
 import cn.zjiali.robot.factory.ServiceFactory;
@@ -12,6 +14,8 @@ import net.mamoe.mirai.event.events.FriendMessageEvent;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.Comparator;
+import java.util.List;
 
 /**
  * @author zJiaLi
@@ -23,6 +27,8 @@ public class SignInTest {
     @Test
     public void testSignIn() throws IOException, ClassNotFoundException, IllegalAccessException, InstantiationException {
         ApplicationBootStrap.getInstance().init();
+        //处理器排序
+
         SignInService signInService = ServiceFactory.getInstance().get(SignInService.class.getSimpleName(), SignInService.class);
         MoLiService moLiService = ServiceFactory.getInstance().get(MoLiService.class.getSimpleName(), MoLiService.class);
         String commonChatMessage = moLiService.getCommonChatMessage(357078415,"你好呀");

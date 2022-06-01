@@ -1,11 +1,10 @@
 package cn.zjiali.robot.main.interceptor
 
-import cn.zjiali.robot.annotation.Autowired
-import cn.zjiali.robot.annotation.Service
 import cn.zjiali.robot.constant.CacheKey
 import cn.zjiali.robot.util.CommonLogger
 import cn.zjiali.robot.service.DictService
 import cn.zjiali.robot.util.PropertiesUtil
+import com.google.inject.Inject
 import net.mamoe.mirai.event.events.MessageEvent
 import kotlin.Throws
 import java.lang.Exception
@@ -17,11 +16,10 @@ import java.io.IOException
  * @author zJiaLi
  * @since 2021-06-14 12:15
  */
-@Service
 class ReplyBlacklistHandlerInterceptor : HandlerInterceptor {
     private val commonLogger = CommonLogger(ReplyBlacklistHandlerInterceptor::class.java.simpleName, javaClass)
 
-    @Autowired
+    @Inject
     private val dictService: DictService? = null
     private var replyBlacklist: String? = null
     private val queryReplyBlacklistParamMap: MutableMap<String, Any> = mutableMapOf()

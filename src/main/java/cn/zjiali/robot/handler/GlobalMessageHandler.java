@@ -1,9 +1,9 @@
 package cn.zjiali.robot.handler;
 
 import cn.hutool.core.collection.CollectionUtil;
-import cn.zjiali.robot.factory.ServiceFactory;
 import cn.zjiali.robot.main.interceptor.HandlerInterceptor;
 import cn.zjiali.robot.model.message.OutMessage;
+import cn.zjiali.robot.util.GuiceUtil;
 import net.mamoe.mirai.event.events.*;
 
 import java.util.List;
@@ -27,7 +27,7 @@ public interface GlobalMessageHandler {
      */
     default boolean doPreHandle(MessageEvent messageEvent) {
         boolean preHandle = false;
-        List<HandlerInterceptor> handlerInterceptors = ServiceFactory.getInstance().getBeanList(HandlerInterceptor.class);
+        List<HandlerInterceptor> handlerInterceptors = GuiceUtil.getMultiBean(HandlerInterceptor.class);
         if (CollectionUtil.isNotEmpty(handlerInterceptors)) {
             for (HandlerInterceptor handlerInterceptor : handlerInterceptors) {
                 try {
@@ -69,7 +69,7 @@ public interface GlobalMessageHandler {
      * @param outMessageList 输出消息列表
      */
     default void triggerAfterCompletion(MessageEvent messageEvent, List<OutMessage> outMessageList) {
-        List<HandlerInterceptor> handlerInterceptors = ServiceFactory.getInstance().getBeanList(HandlerInterceptor.class);
+        List<HandlerInterceptor> handlerInterceptors = GuiceUtil.getMultiBean(HandlerInterceptor.class);
         if (CollectionUtil.isNotEmpty(handlerInterceptors)) {
             for (HandlerInterceptor handlerInterceptor : handlerInterceptors) {
                 try {

@@ -1,6 +1,6 @@
 package cn.zjiali.robot.manager
 
-import cn.zjiali.robot.annotation.Component
+import com.google.inject.Singleton
 import net.mamoe.mirai.Bot
 import net.mamoe.mirai.message.data.At
 import net.mamoe.mirai.message.data.Message
@@ -10,7 +10,7 @@ import net.mamoe.mirai.message.data.PlainText
  * @author zJiaLi
  * @since 2021-07-30 16:02
  */
-@Component
+@Singleton
 class RobotManager {
     var bot: Bot? = null
         private set
