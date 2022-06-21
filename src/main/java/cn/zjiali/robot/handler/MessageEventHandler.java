@@ -84,4 +84,14 @@ public interface MessageEventHandler {
         return Integer.MIN_VALUE;
     }
 
+    /**
+     * 插件编码
+     *
+     * @return 插件编码
+     */
+    default String code() {
+        return "";
+    }
+
+
 }
