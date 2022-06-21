@@ -27,5 +27,13 @@ class GroupAction {
      */
     var memberNumber: Long? = null
 
+    /**
+     * 踢群提示
+     */
+    var kickMessage: String? = null
 
+    /**
+     * 踢群拉黑标志
+     */
+    var kickBlockFlag: Int? = null
 }

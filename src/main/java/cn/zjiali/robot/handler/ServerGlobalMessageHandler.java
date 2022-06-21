@@ -6,7 +6,7 @@ import cn.zjiali.robot.constant.AppConstants;
 import cn.zjiali.robot.main.OutMessageConvert;
 import cn.zjiali.robot.model.message.OutMessage;
 import cn.zjiali.robot.model.response.RobotBaseResponse;
-import cn.zjiali.robot.model.response.server.PluginInfo;
+import cn.zjiali.robot.model.server.PluginInfo;
 import cn.zjiali.robot.util.HttpUtil;
 import cn.zjiali.robot.util.JsonUtil;
 import cn.zjiali.robot.util.ObjectUtil;

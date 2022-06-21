@@ -1,4 +1,4 @@
-package cn.zjiali.robot.model.response.server
+package cn.zjiali.robot.model.server
 
 /**
  *

@@ -6,6 +6,7 @@ import cn.zjiali.robot.config.AppConfig
 import cn.zjiali.robot.constant.MsgType
 import cn.zjiali.robot.manager.RobotManager
 import cn.zjiali.robot.manager.WsSecurityManager
+import cn.zjiali.robot.model.response.ws.GroupAction
 import cn.zjiali.robot.model.response.ws.SenderMessageRes
 import cn.zjiali.robot.model.response.ws.WsClientRes
 import cn.zjiali.robot.model.response.ws.WsResult
@@ -28,14 +29,17 @@ class WebSocketService {
     private val robotManager: RobotManager? = null
 
     @Inject
+    private val groupActionService: GroupActionService? = null
+
+    @Inject
     @Named("DefaultWsSecurityManager")
     private val wsSecurityManager: WsSecurityManager? = null
 
     suspend fun handleWsResult(wsResult: WsResult): String {
         val robotQQ = wsResult.robotQQ
         if (StrUtil.isNotBlank(robotQQ) && AppConfig.getQQ() == robotQQ) {
+            val dataJson = wsResult.dataJson
             if (wsResult.msgType == MsgType.SEND_MSG) {
-                val dataJson = wsResult.dataJson
                 val senderMessageRes = JsonUtil.json2obj(dataJson, SenderMessageRes::class.java)
                 commonLogger.info(
                     "[WebSocket]====接收QQ:{} ,接收内容:{} ",
@@ -73,6 +77,9 @@ class WebSocketService {
                         }
                     }
                 }
+            } else if (wsResult.msgType == MsgType.GROUP_ACTION) {
+                val groupAction = JsonUtil.json2obj(dataJson, GroupAction::class.java)
+                groupActionService!!.doAction(groupAction)
             }
         }
         return wsSecurityManager?.encryptMsgData(WsClientRes(200, "处理成功!").toJson())!!
