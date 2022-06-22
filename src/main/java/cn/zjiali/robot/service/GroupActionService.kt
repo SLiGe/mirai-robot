@@ -13,7 +13,6 @@ import com.google.inject.Singleton
 import net.mamoe.mirai.contact.Group
 import net.mamoe.mirai.contact.getMember
 import net.mamoe.mirai.contact.isAdministrator
-import net.mamoe.mirai.contact.mute
 import net.mamoe.mirai.containsGroup
 
 /**
@@ -27,7 +26,7 @@ class GroupActionService {
     @Inject
     private val robotManager: RobotManager? = null
 
-    suspend fun doAction(groupAction: GroupAction): Unit {
+    suspend fun doAction(groupAction: GroupAction) {
         val groupNumber = groupAction.groupNumber
         var group: Group? = null
         val bot = robotManager?.bot
@@ -52,7 +51,7 @@ class GroupActionService {
         }
     }
 
-    private fun postGroupMember(group: Group): Unit {
+    private fun postGroupMember(group: Group) {
         val members: MutableList<GroupMember> = ArrayList()
         group.members.forEach { member ->
             run {
