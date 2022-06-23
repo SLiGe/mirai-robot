@@ -1,7 +1,5 @@
 package cn.zjiali.robot.main.websocket
 
-import cn.zjiali.robot.annotation.Autowired
-import cn.zjiali.robot.annotation.Component
 import java.util.concurrent.ConcurrentHashMap
 import cn.zjiali.robot.service.WebSocketService
 import cn.zjiali.robot.util.CommonLogger
@@ -13,6 +11,9 @@ import cn.zjiali.robot.model.response.ws.WsClientRes
 import cn.zjiali.robot.model.response.ws.WsResult
 import cn.zjiali.robot.util.JsonUtil
 import cn.zjiali.robot.util.PropertiesUtil
+import com.google.inject.Inject
+import com.google.inject.Singleton
+import com.google.inject.name.Named
 import kotlinx.coroutines.*
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -23,14 +24,15 @@ import java.util.concurrent.TimeUnit
  * @author zJiaLi
  * @since 2021-07-29 10:18
  */
-@Component
+@Singleton
 class WebSocketManager {
     private val webSocketClientMap: MutableMap<String, WebSocketClient> = ConcurrentHashMap()
 
-    @Autowired
+    @Inject
     private val webSocketService: WebSocketService? = null
 
-    @Autowired
+    @Inject
+    @Named("DefaultWsSecurityManager")
     private val wsSecurityManager: WsSecurityManager? = null
     private val commonLogger = CommonLogger(WebSocketManager::class.java.simpleName, WebSocketManager::class.java)
 

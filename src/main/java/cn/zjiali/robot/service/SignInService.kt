@@ -10,6 +10,7 @@ import cn.zjiali.robot.util.HttpUtil
 import cn.zjiali.robot.util.JsonUtil
 import com.google.gson.JsonObject
 import com.google.gson.reflect.TypeToken
+import com.google.inject.Singleton
 import java.util.*
 
 /**
@@ -19,6 +20,7 @@ import java.util.*
  * @since 2020-10-30 22:06
  */
 @Service
+@Singleton
 class SignInService {
     fun doSignIn(qq: String?, group: String?, msgType: Int): SignInDataResponse? {
         val jsonObject = JsonObject()

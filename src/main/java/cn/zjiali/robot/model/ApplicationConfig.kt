@@ -15,4 +15,9 @@ class ApplicationConfig {
     var qq: String? = null
     var password: String? = null
 
+    /**
+     * 是否服务端控制
+     */
+    var serverControl = 0
+
 }

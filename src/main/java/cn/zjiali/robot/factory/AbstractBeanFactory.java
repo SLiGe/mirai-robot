@@ -6,6 +6,7 @@ import java.util.List;
  * @author zJiaLi
  * @since 2021-05-28 14:14
  */
+@Deprecated
 public abstract class AbstractBeanFactory implements BeanFactory {
 
     @Override

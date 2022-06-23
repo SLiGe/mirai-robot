@@ -1,10 +1,10 @@
 package cn.zjiali.robot.task
 
 import cn.zjiali.robot.config.AppConfig
-import cn.zjiali.robot.factory.ServiceFactory
 import cn.zjiali.robot.main.websocket.WebSocketManager
 import cn.zjiali.robot.manager.WsSecurityManager
 import cn.zjiali.robot.model.response.ws.WsClientRes
+import cn.zjiali.robot.util.GuiceUtil
 
 /**
  * @author zJiaLi
@@ -13,12 +13,10 @@ import cn.zjiali.robot.model.response.ws.WsClientRes
 class WebSocketStatusTask : Runnable {
 
     override fun run() {
-        val webSocketManager = ServiceFactory.getInstance().getBean(
-            WebSocketManager::class.java.simpleName,
+        val webSocketManager =GuiceUtil.getBean(
             WebSocketManager::class.java
         )
-        val wsSecurityManager = ServiceFactory.getInstance().get(
-            "DefaultWsSecurityManager",
+        val wsSecurityManager = GuiceUtil.getBean(
             WsSecurityManager::class.java
         )
         var session = webSocketManager.getSession(AppConfig.getQQ())

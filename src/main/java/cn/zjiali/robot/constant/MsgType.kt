@@ -16,6 +16,11 @@ object MsgType {
     const val SEND_MSG = 1
 
     /**
+     * 群组操作
+     */
+    const val GROUP_ACTION = 2
+
+    /**
      * 发送好友消息
      */
     const val SEND_FRIEND_MSG = 1

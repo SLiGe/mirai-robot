@@ -3,7 +3,6 @@ package cn.zjiali.robot.manager;
 import cn.zjiali.robot.util.Threads;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 
-import javax.annotation.PreDestroy;
 import java.util.TimerTask;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
@@ -69,7 +68,6 @@ public class AsyncManager {
     /**
      * 停止任务线程池
      */
-    @PreDestroy
     public void shutdown() {
         Threads.shutdownAndAwaitTermination(scheduledExecutorService);
     }

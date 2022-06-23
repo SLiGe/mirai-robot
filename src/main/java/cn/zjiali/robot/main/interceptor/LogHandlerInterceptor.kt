@@ -1,6 +1,5 @@
 package cn.zjiali.robot.main.interceptor
 
-import cn.zjiali.robot.annotation.Service
 import cn.zjiali.robot.model.message.OutMessage
 import cn.zjiali.robot.util.CommonLogger
 import net.mamoe.mirai.event.events.MessageEvent
@@ -11,7 +10,7 @@ import net.mamoe.mirai.event.events.MessageEvent
  * @author zJiaLi
  * @since 2021-09-04 18:14
  */
-@Service
+//@Service
 class LogHandlerInterceptor : HandlerInterceptor {
 
     private val logger: CommonLogger = CommonLogger(javaClass.simpleName, javaClass)
@@ -22,7 +21,7 @@ class LogHandlerInterceptor : HandlerInterceptor {
     }
 
     override fun afterCompletion(messageEvent: MessageEvent?, outMessageList: List<OutMessage?>?) {
-        if (outMessageList != null && outMessageList.isNotEmpty()) {
+        if (!outMessageList.isNullOrEmpty()) {
             for (outMessage in outMessageList) {
                 if (outMessage != null)
                     logger.debug("输出消息内容:{}", outMessage.finalMessage)

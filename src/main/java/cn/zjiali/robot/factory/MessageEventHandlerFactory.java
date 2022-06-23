@@ -9,6 +9,7 @@ import java.lang.reflect.InvocationTargetException;
  * @author zJiaLi
  * @since 2020-10-30 09:24
  */
+@Deprecated
 public class MessageEventHandlerFactory extends AbstractBeanFactory {
 
     private static final MessageEventHandlerFactory MESSAGE_EVENT_HANDLER_FACTORY = new MessageEventHandlerFactory();

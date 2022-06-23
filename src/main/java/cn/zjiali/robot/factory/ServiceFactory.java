@@ -8,6 +8,7 @@ import java.util.List;
  * @author zJiaLi
  * @since 2021-04-07 21:19
  */
+@Deprecated
 public class ServiceFactory extends AbstractBeanFactory {
 
     private final static ServiceFactory serviceFactory = new ServiceFactory();

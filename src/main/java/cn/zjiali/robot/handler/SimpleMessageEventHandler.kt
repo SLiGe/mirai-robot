@@ -1,10 +1,10 @@
 package cn.zjiali.robot.handler
 
-import cn.zjiali.robot.annotation.Autowired
 import cn.zjiali.robot.constant.PluginCode
 import cn.zjiali.robot.factory.MessageFactory
 import cn.zjiali.robot.model.message.OutMessage
 import cn.zjiali.robot.service.MoLiService
+import com.google.inject.Inject
 import net.mamoe.mirai.event.events.FriendMessageEvent
 import net.mamoe.mirai.event.events.GroupMessageEvent
 
@@ -16,7 +16,7 @@ import net.mamoe.mirai.event.events.GroupMessageEvent
  */
 class JokeMessageEventHandler : AbstractMessageEventHandler() {
 
-    @Autowired
+    @Inject
     private val moLiService: MoLiService? = null
 
     override fun handleGroupMessageEvent(event: GroupMessageEvent?): OutMessage {
@@ -39,7 +39,7 @@ class JokeMessageEventHandler : AbstractMessageEventHandler() {
 }
 
 class YlLqMessageEventHandler : AbstractMessageEventHandler() {
-    @Autowired
+    @Inject
     private val moLiService: MoLiService? = null
 
     override fun handleGroupMessageEvent(event: GroupMessageEvent?): OutMessage {
@@ -62,7 +62,7 @@ class YlLqMessageEventHandler : AbstractMessageEventHandler() {
 }
 
 class GyLqMessageEventHandler : AbstractMessageEventHandler() {
-    @Autowired
+    @Inject
     private val moLiService: MoLiService? = null
 
     override fun handleGroupMessageEvent(event: GroupMessageEvent?): OutMessage {
@@ -87,7 +87,7 @@ class GyLqMessageEventHandler : AbstractMessageEventHandler() {
 
 
 class CsyLqMessageEventHandler : AbstractMessageEventHandler() {
-    @Autowired
+    @Inject
     private val moLiService: MoLiService? = null
 
     override fun handleGroupMessageEvent(event: GroupMessageEvent?): OutMessage {

@@ -1,6 +1,5 @@
 package cn.zjiali.robot.handler;
 
-import cn.zjiali.robot.annotation.Autowired;
 import cn.zjiali.robot.config.PluginTemplate;
 import cn.zjiali.robot.constant.AppConstants;
 import cn.zjiali.robot.constant.MsgTemplate;
@@ -9,6 +8,7 @@ import cn.zjiali.robot.model.message.OutMessage;
 import cn.zjiali.robot.model.response.SignInDataResponse;
 import cn.zjiali.robot.service.SignInService;
 import cn.zjiali.robot.util.MessageUtil;
+import com.google.inject.Inject;
 import net.mamoe.mirai.event.events.FriendMessageEvent;
 import net.mamoe.mirai.event.events.GroupMessageEvent;
 import net.mamoe.mirai.message.data.At;
@@ -22,7 +22,7 @@ import net.mamoe.mirai.message.data.At;
  */
 public class SignInMessageEventHandler extends AbstractMessageEventHandler {
 
-    @Autowired
+    @Inject
     private SignInService signInService;
 
 

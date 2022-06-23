@@ -1,21 +1,19 @@
 package cn.zjiali.robot.main;
 
 import cn.hutool.cron.CronUtil;
-import cn.zjiali.robot.RobotApplication;
-import cn.zjiali.robot.annotation.Application;
-import cn.zjiali.robot.annotation.Component;
-import cn.zjiali.robot.annotation.Service;
 import cn.zjiali.robot.config.AppConfig;
 import cn.zjiali.robot.config.Plugin;
 import cn.zjiali.robot.config.PluginTemplate;
-import cn.zjiali.robot.factory.DefaultBeanFactory;
-import cn.zjiali.robot.factory.MessageEventHandlerFactory;
-import cn.zjiali.robot.factory.ServiceFactory;
-import cn.zjiali.robot.handler.MessageEventHandler;
+import cn.zjiali.robot.guice.module.HandlerInterceptorModule;
+import cn.zjiali.robot.guice.module.ManagerModule;
+import cn.zjiali.robot.guice.module.MessageHandlerModule;
+import cn.zjiali.robot.guice.module.SimpleMessageEventHandlerModule;
 import cn.zjiali.robot.main.websocket.WebSocketManager;
 import cn.zjiali.robot.model.ApplicationConfig;
 import cn.zjiali.robot.model.SystemConfig;
 import cn.zjiali.robot.util.*;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -40,16 +38,25 @@ public class ApplicationBootStrap {
 
     private static final ApplicationBootStrap applicationBootStrap = new ApplicationBootStrap();
 
+    private Injector injector;
+
     public static ApplicationBootStrap getInstance() {
         return applicationBootStrap;
     }
 
-    public void init() throws IOException, IllegalAccessException, InstantiationException, ClassNotFoundException {
-        loadService();
+    public Injector getInjector() {
+        return injector;
+    }
+
+    public void init() throws IOException {
         loadAppConfig();
+        initGuiceContext();
         loadMessageTemplate();
-        fillBeanDefinition();
         loadWebSocket();
+    }
+
+    private void initGuiceContext() {
+        this.injector = Guice.createInjector(new ManagerModule(), new MessageHandlerModule(), new SimpleMessageEventHandlerModule(), new HandlerInterceptorModule());
     }
 
     /**
@@ -57,7 +64,8 @@ public class ApplicationBootStrap {
      */
     private void loadMessageTemplate() {
         InputStream configStream = ApplicationBootStrap.class.getResourceAsStream("/system-config.json");
-        if (configStream == null) throw new RuntimeException("加载消息模板出错,请检查配置文件system-config.json是否存在!");
+        if (configStream == null)
+            throw new RuntimeException("加载消息模板出错,请检查配置文件system-config.json是否存在!");
         String systemConfigJson = new BufferedReader(new InputStreamReader(configStream, StandardCharsets.UTF_8))
                 .lines().collect(Collectors.joining(System.lineSeparator()));
         SystemConfig systemConfig = JsonUtil.json2obj(systemConfigJson, SystemConfig.class);
@@ -82,10 +90,6 @@ public class ApplicationBootStrap {
                 });
     }
 
-    private void fillBeanDefinition() {
-        DefaultBeanFactory.getInstance().fillBeanDefinitionFields();
-    }
-
     /**
      * 加载WebSocket
      */
@@ -93,7 +97,7 @@ public class ApplicationBootStrap {
         String webSocketFlag = PropertiesUtil.getApplicationProperty("robot.websocket.flag");
         if ("1".equals(webSocketFlag)) {
             commonLogger.info("[WebSocket]====加载中");
-            WebSocketManager webSocketManager = ServiceFactory.getInstance().getBean(WebSocketManager.class.getSimpleName(), WebSocketManager.class);
+            WebSocketManager webSocketManager = this.injector.getInstance(WebSocketManager.class);
             webSocketManager.connect();
             //添加定时任务定时确认websocket连接状态
             CronUtil.setMatchSecond(true);
@@ -101,33 +105,6 @@ public class ApplicationBootStrap {
             commonLogger.info("[WebSocket]====加载完成");
         }
 
-    }
-
-    /**
-     * 加载业务类
-     */
-    private void loadService() throws ClassNotFoundException, IllegalAccessException, InstantiationException {
-        Application annotation = RobotApplication.class.getAnnotation(Application.class);
-        String[] basePackages = annotation.basePackages();
-        for (String basePackage : basePackages) {
-            List<String> className = PackageUtil.getClassName(basePackage, true);
-            if (!ObjectUtil.isNullOrEmpty(className)) {
-                for (String clz : className) {
-                    Class<?> aClass = Class.forName(clz, false, this.getClass().getClassLoader());
-                    Service service = aClass.getAnnotation(Service.class);
-                    Component component = aClass.getAnnotation(Component.class);
-                    if (service != null) {
-                        Object instance = aClass.newInstance();
-                        String serviceName = "".equals(service.name()) ? instance.getClass().getSimpleName() : service.name();
-                        ServiceFactory.getInstance().put(serviceName, instance);
-                    } else if (component != null) {
-                        Object instance = aClass.newInstance();
-                        String serviceName = "".equals(component.name()) ? instance.getClass().getSimpleName() : component.name();
-                        ServiceFactory.getInstance().put(serviceName, instance);
-                    }
-                }
-            }
-        }
     }
 
 
@@ -156,21 +133,7 @@ public class ApplicationBootStrap {
         }
         String appConfigJson = new BufferedReader(new InputStreamReader(configStream, StandardCharsets.UTF_8))
                 .lines().collect(Collectors.joining(System.lineSeparator()));
-        final ApplicationConfig applicationConfig = JsonUtil.json2obj(appConfigJson, ApplicationConfig.class);
-        AppConfig.applicationConfig = applicationConfig;
-        final List<Plugin> plugins = applicationConfig.getPlugins();
-        if (plugins != null) {
-            for (Plugin plugin : plugins) {
-                String pluginName = plugin.getName();
-                String pluginHandler = plugin.getHandler();
-                int pluginEnable = plugin.getEnable();
-                if (pluginEnable == 1) {
-                    MessageEventHandler messageEventHandler = MessageEventHandlerFactory.getInstance().put(pluginName, pluginHandler);
-                    AppConfig.msgMessageEventHandlers.add(messageEventHandler);
-                    commonLogger.info("[loadAppConfig]====加载 [{}] 成功！", pluginName);
-                }
-            }
-        }
+        AppConfig.applicationConfig = JsonUtil.json2obj(appConfigJson, ApplicationConfig.class);
         configStream.close();
     }
 

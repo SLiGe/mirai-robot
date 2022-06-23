@@ -2,14 +2,12 @@ package cn.zjiali.robot;
 
 import cn.zjiali.robot.annotation.Application;
 import cn.zjiali.robot.config.AppConfig;
-import cn.zjiali.robot.factory.DefaultBeanFactory;
-import cn.zjiali.robot.factory.ServiceFactory;
-import cn.zjiali.robot.handler.DefaultGlobalMessageHandler;
 import cn.zjiali.robot.handler.GlobalMessageHandler;
 import cn.zjiali.robot.main.ApplicationBootStrap;
 import cn.zjiali.robot.main.system.SysLoginSolver;
 import cn.zjiali.robot.manager.RobotManager;
 import cn.zjiali.robot.util.DeviceUtil;
+import cn.zjiali.robot.util.GuiceUtil;
 import cn.zjiali.robot.util.ObjectUtil;
 import kotlin.Unit;
 import net.mamoe.mirai.Bot;
@@ -53,7 +51,7 @@ public class RobotApplication {
                 //加载设备信息
                 loadDeviceInfoJson(Objects.requireNonNull(DeviceUtil.getDeviceInfoJson(AppConfig.applicationConfig.getQq())));
                 //设置登录解决器
-                setLoginSolver(ServiceFactory.getInstance().get(SysLoginSolver.class.getSimpleName(), SysLoginSolver.class));
+                setLoginSolver(GuiceUtil.getBean(SysLoginSolver.class));
                 // 选择协议
                 setProtocol(switchProtocol());
                 setCacheDir(new File("/cache"));
@@ -68,10 +66,9 @@ public class RobotApplication {
             return Unit.INSTANCE;
         });
         //保存robot实例
-        final RobotManager robotManager = new RobotManager();
+        final RobotManager robotManager = GuiceUtil.getBean(RobotManager.class);
         robotManager.init(bot);
-        DefaultBeanFactory.getInstance().putBean(RobotManager.class.getSimpleName(), robotManager);
-        final GlobalMessageHandler globalMessageHandler = new DefaultGlobalMessageHandler();
+        final GlobalMessageHandler globalMessageHandler = GuiceUtil.getBean(GlobalMessageHandler.class);
         eventChannel.subscribeAlways(GroupMessageEvent.class, globalMessageHandler::handleGroupMessageEvent);
         eventChannel.subscribeAlways(FriendMessageEvent.class, globalMessageHandler::handleFriendMessageEvent);
         eventChannel.subscribeAlways(StrangerMessageEvent.class, globalMessageHandler::handleOtherMessageEvent);

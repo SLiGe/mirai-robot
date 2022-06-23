@@ -2,12 +2,12 @@ package cn.zjiali.robot.manager;
 
 import cn.hutool.crypto.SecureUtil;
 import cn.hutool.crypto.symmetric.AES;
-import cn.zjiali.robot.annotation.Autowired;
-import cn.zjiali.robot.annotation.Component;
 import cn.zjiali.robot.constant.CacheKey;
 import cn.zjiali.robot.service.DictService;
 import cn.zjiali.robot.util.CommonLogger;
 import com.google.common.collect.Maps;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import lombok.SneakyThrows;
 
 import java.nio.charset.StandardCharsets;
@@ -17,16 +17,17 @@ import java.util.Map;
  * @author zJiaLi
  * @since 2021-07-28 12:36
  */
-@Component(name = "DefaultWsSecurityManager")
+@Singleton
 public class DefaultWsSecurityManager implements WsSecurityManager {
 
     private final CommonLogger commonLogger = new CommonLogger(WsSecurityManager.class.getSimpleName(), WsSecurityManager.class);
-    @Autowired
-    private DictService dictService;
+    private final DictService dictService;
     private final Map<String, Object> queryVerifyKeyParamMap = Maps.newHashMap();
     private final Map<String, Object> queryMessageEncryptKeyParamMap = Maps.newHashMap();
 
-    public DefaultWsSecurityManager() {
+    @Inject
+    public DefaultWsSecurityManager(DictService dictService) {
+        this.dictService = dictService;
         queryVerifyKeyParamMap.put("dictCode", "verifyKey");
         queryVerifyKeyParamMap.put("dictTypeCode", "D00002");
         queryMessageEncryptKeyParamMap.put("dictTypeCode", "D00002");

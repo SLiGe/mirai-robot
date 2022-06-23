@@ -9,6 +9,7 @@ import com.google.common.cache.Cache
 import com.google.common.cache.CacheBuilder
 import com.google.gson.JsonObject
 import com.google.gson.reflect.TypeToken
+import com.google.inject.Singleton
 import java.io.IOException
 import java.util.concurrent.TimeUnit
 
@@ -17,6 +18,7 @@ import java.util.concurrent.TimeUnit
  * @since 2021-07-30 17:48
  */
 @Service
+@Singleton
 class DictService {
 
     private var cache: Cache<String, String> = CacheBuilder.newBuilder()

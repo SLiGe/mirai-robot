@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
  * @author zJiaLi
  * @since 2021-05-28 11:00
  */
+@Deprecated
 public class DefaultBeanFactory implements BeanFactory {
 
     private final Map<String, Object> beanMap = new ConcurrentHashMap<>();

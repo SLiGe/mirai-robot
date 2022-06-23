@@ -10,6 +10,7 @@ import cn.zjiali.robot.util.JsonUtil;
 import cn.zjiali.robot.util.MessageUtil;
 import cn.zjiali.robot.util.PluginConfigUtil;
 import com.google.gson.reflect.TypeToken;
+import com.google.inject.Singleton;
 
 import java.lang.reflect.Type;
 import java.util.HashMap;
@@ -20,6 +21,7 @@ import java.util.Map;
  * @since 2021-04-08 12:49
  */
 @Service
+@Singleton
 public class MoLiService {
 
     public String getCommonChatMessage(long senderId, String msg) {
