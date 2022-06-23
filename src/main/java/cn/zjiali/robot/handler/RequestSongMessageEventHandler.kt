@@ -44,6 +44,10 @@ class RequestSongMessageEventHandler : AbstractMessageEventHandler() {
         return msg.startsWith(getCommand(PluginCode.REQUEST_SONG, messageEvent))
     }
 
+    override fun code(): String {
+        return PluginCode.REQUEST_SONG
+    }
+
 
     private fun requestSong(songName: String, event: MessageEvent): OutMessage? {
         val postData = JsonObject()
@@ -52,7 +56,7 @@ class RequestSongMessageEventHandler : AbstractMessageEventHandler() {
         val response = HttpUtil.post(getApiURL(PluginCode.REQUEST_SONG, event), postData)
         val type = object : TypeToken<RobotBaseResponse<RequestSongResponse?>?>() {}.type
         val baseResponse = JsonUtil.toObjByType<RobotBaseResponse<RequestSongResponse>>(response, type)
-        if (baseResponse.status == 200) {
+        if (baseResponse.success()) {
             val songResponse = baseResponse.data
             val musicInfo = songResponse.musicInfo
             val musicShare = MusicShare(

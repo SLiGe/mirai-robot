@@ -39,6 +39,10 @@ class TodayOfHistoryMessageEventHandler : AbstractMessageEventHandler() {
         return containCommand(PluginCode.TODAY_HISTORY, msg)
     }
 
+    override fun code(): String {
+        return PluginCode.TODAY_HISTORY
+    }
+
     private fun todayOnHistoryMessage(event: MessageEvent): String? {
         val response = HttpUtil.get(getApiURL(PluginCode.TODAY_HISTORY, event))
         val todayOnHistoryResponse = JsonUtil.toObjByType<RobotBaseResponse<List<TodayOnHistoryResponse>>>(
@@ -46,7 +50,7 @@ class TodayOfHistoryMessageEventHandler : AbstractMessageEventHandler() {
             object : TypeToken<RobotBaseResponse<List<TodayOnHistoryResponse?>?>?>() {}.type
         )
         if (todayOnHistoryResponse != null) {
-            if (todayOnHistoryResponse.status == 200) {
+            if (todayOnHistoryResponse.success()) {
                 val todayOnHistoryResponseResult = todayOnHistoryResponse.data
                 if (!ObjectUtil.isNullOrEmpty(todayOnHistoryResponseResult)) {
                     val stringBuilder = StringBuilder()

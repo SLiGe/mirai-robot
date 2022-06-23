@@ -35,11 +35,15 @@ class YellowCalendarMessageEventHandler : AbstractMessageEventHandler() {
         return containCommand(PluginCode.YELLOW_CALENDAR, msg)
     }
 
+    override fun code(): String {
+        return PluginCode.YELLOW_CALENDAR
+    }
+
     private fun yellowCalendarMessage(event: MessageEvent): OutMessage? {
         val response = HttpUtil.get(getApiURL(PluginCode.YELLOW_CALENDAR, event))
         val type = object : TypeToken<RobotBaseResponse<YellowCalendarResponse?>?>() {}.type
         val baseResponse = JsonUtil.toObjByType<RobotBaseResponse<YellowCalendarResponse>>(response, type)
-        if (baseResponse.status == 200) {
+        if (baseResponse.success()) {
             val yellowCalendarResponse = baseResponse.data
             return OutMessage.builder().convertFlag(true).templateCode(PluginCode.YELLOW_CALENDAR)
                 .pluginCode(PluginCode.YELLOW_CALENDAR)

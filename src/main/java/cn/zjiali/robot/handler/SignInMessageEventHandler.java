@@ -85,9 +85,7 @@ public class SignInMessageEventHandler extends AbstractMessageEventHandler {
             SignInDataResponse.DataResponse dataResponse = response.getDataResponse();
             return OutMessage.builder().convertFlag(true)
                     .pluginCode(PluginCode.SIGN)
-                    .groupId(groupId(event))
-                    .senderId(event.getSender().getId())
-                    .fromMsgType(fromMsgType(event))
+                    .event(event)
                     .fillFlag(AppConstants.FILL_OUT_MESSAGE_OBJECT_FLAG)
                     .templateCode(MsgTemplate.QUERY_SIGN_TEMPLATE).fillObj(dataResponse).build();
         }
@@ -128,5 +126,10 @@ public class SignInMessageEventHandler extends AbstractMessageEventHandler {
     @Override
     public boolean matchCommand(String msg) {
         return containCommand(PluginCode.SIGN, msg);
+    }
+
+    @Override
+    public String code() {
+        return PluginCode.SIGN;
     }
 }

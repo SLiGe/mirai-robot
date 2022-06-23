@@ -38,6 +38,10 @@ class JokeMessageEventHandler : AbstractMessageEventHandler() {
     override fun matchCommand(msg: String?): Boolean {
         return containCommand(PluginCode.JOKE, msg)
     }
+
+    override fun code(): String {
+        return PluginCode.JOKE
+    }
 }
 
 class YlLqMessageEventHandler : AbstractMessageEventHandler() {
@@ -62,6 +66,10 @@ class YlLqMessageEventHandler : AbstractMessageEventHandler() {
 
     override fun matchCommand(msg: String?): Boolean {
         return containCommand(PluginCode.YL_LQ, msg)
+    }
+
+    override fun code(): String {
+        return PluginCode.YL_LQ
     }
 }
 
@@ -89,6 +97,9 @@ class GyLqMessageEventHandler : AbstractMessageEventHandler() {
         return containCommand(PluginCode.GY_LQ, msg)
     }
 
+    override fun code(): String {
+        return PluginCode.GY_LQ
+    }
 }
 
 
@@ -114,6 +125,10 @@ class CsyLqMessageEventHandler : AbstractMessageEventHandler() {
 
     override fun matchCommand(msg: String?): Boolean {
         return containCommand(PluginCode.CSY_LQ, msg)
+    }
+
+    override fun code(): String {
+        return PluginCode.CSY_LQ
     }
 }
 
@@ -143,6 +158,10 @@ class SenMessageEventHandler : AbstractMessageEventHandler() {
 
     override fun matchCommand(msg: String): Boolean {
         return containCommand(PluginCode.ONE_SEN, msg)
+    }
+
+    override fun code(): String {
+        return PluginCode.ONE_SEN
     }
 
 }

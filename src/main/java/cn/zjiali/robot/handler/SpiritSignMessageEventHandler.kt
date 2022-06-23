@@ -39,6 +39,10 @@ class SpiritSignMessageEventHandler : AbstractMessageEventHandler() {
         return containCommand(PluginCode.LQ, msg)
     }
 
+    override fun code(): String {
+        return PluginCode.LQ
+    }
+
     fun signPerDay(msg: String, qq: String, groupId: Long?, msgFrom: Int): OutMessage? {
         val signType = chooseSignType(msg)
         val paramMap = Maps.newHashMap<String, Any>()
@@ -50,7 +54,7 @@ class SpiritSignMessageEventHandler : AbstractMessageEventHandler() {
         if (signRes != null) {
             val type = object : TypeToken<RobotBaseResponse<SignPerDayRes?>?>() {}.type
             val robotBaseResponse = JsonUtil.toObjByType<RobotBaseResponse<SignPerDayRes?>?>(signRes, type)
-            if (robotBaseResponse.status == 200) {
+            if (robotBaseResponse.success()) {
                 val signData = robotBaseResponse.data?.signData
                 val messageParamMap = Maps.newHashMap<String, String>()
                 BeanCopier.create<Map<String, String>>(

@@ -35,11 +35,15 @@ class CalendarMessageEventHandler : AbstractMessageEventHandler() {
         return containCommand(PluginCode.CALENDAR, msg)
     }
 
+    override fun code(): String {
+        return PluginCode.CALENDAR
+    }
+
     private fun calendarMessage(event: MessageEvent): OutMessage? {
         val response = HttpUtil.get(getApiURL(PluginCode.CALENDAR, event))
         val type = object : TypeToken<RobotBaseResponse<CalendarResponse?>?>() {}.type
         val baseResponse = JsonUtil.toObjByType<RobotBaseResponse<CalendarResponse>>(response, type)
-        if (baseResponse.status == 200) {
+        if (baseResponse.success()) {
             val calendarResponse = baseResponse.data
             return OutMessage.builder().convertFlag(true).fillFlag(AppConstants.FILL_OUT_MESSAGE_OBJECT_FLAG)
                 .pluginCode(PluginCode.CALENDAR)
