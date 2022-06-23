@@ -11,6 +11,7 @@ import cn.zjiali.robot.util.MessageUtil;
 import com.google.inject.Inject;
 import net.mamoe.mirai.event.events.FriendMessageEvent;
 import net.mamoe.mirai.event.events.GroupMessageEvent;
+import net.mamoe.mirai.event.events.MessageEvent;
 import net.mamoe.mirai.message.data.At;
 
 
@@ -49,17 +50,17 @@ public class SignInMessageEventHandler extends AbstractMessageEventHandler {
         String message = event.getMessage().contentToString();
         long senderQQ = event.getSender().getId();
         long groupNum = event.getGroup().getId();
-        return getSignInMsg2(message, senderQQ, groupNum, 2);
+        return getSignInMsg2(message, senderQQ, groupNum, 2, event);
     }
 
     @Override
     public OutMessage handleFriendMessageEvent(FriendMessageEvent event) {
         String message = event.getMessage().contentToString();
         long senderQQ = event.getSender().getId();
-        return getSignInMsg2(message, senderQQ, 0, 1);
+        return getSignInMsg2(message, senderQQ, 0, 1, event);
     }
 
-    private OutMessage getSignInMsg2(String message, long senderQQ, long groupNum, int msgType) {
+    private OutMessage getSignInMsg2(String message, long senderQQ, long groupNum, int msgType, MessageEvent event) {
         if (message.contains("签到")) {
             SignInDataResponse response = signInService.doSignIn(Long.toString(senderQQ), Long.toString(groupNum), msgType);
             if (response == null) {
@@ -84,6 +85,9 @@ public class SignInMessageEventHandler extends AbstractMessageEventHandler {
             SignInDataResponse.DataResponse dataResponse = response.getDataResponse();
             return OutMessage.builder().convertFlag(true)
                     .pluginCode(PluginCode.SIGN)
+                    .groupId(groupId(event))
+                    .senderId(event.getSender().getId())
+                    .fromMsgType(fromMsgType(event))
                     .fillFlag(AppConstants.FILL_OUT_MESSAGE_OBJECT_FLAG)
                     .templateCode(MsgTemplate.QUERY_SIGN_TEMPLATE).fillObj(dataResponse).build();
         }

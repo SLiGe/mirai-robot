@@ -26,4 +26,14 @@ object AppConstants {
      */
     const val MESSAGE_TYPE_PLUGIN = 2
 
+    /**
+     * 消息来自好友
+     */
+    const val MSG_FROM_FRIEND = 1
+
+    /**
+     * 消息来自群组
+     */
+    const val MSG_FROM_GROUP = 2
+
 }

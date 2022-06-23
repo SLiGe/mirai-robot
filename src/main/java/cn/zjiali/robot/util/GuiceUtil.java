@@ -30,9 +30,7 @@ public class GuiceUtil {
         List<T> beanList = Lists.newArrayList();
         Injector injector = ApplicationBootStrap.getInstance().getInjector();
         List<Binding<T>> bindingList = injector.findBindingsByType(TypeLiteral.get(clz));
-        bindingList.forEach(value -> {
-            beanList.add(value.getProvider().get());
-        });
+        bindingList.forEach(value -> beanList.add(value.getProvider().get()));
         return beanList;
     }
 }

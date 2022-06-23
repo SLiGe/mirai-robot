@@ -53,11 +53,11 @@ public class ServerGlobalMessageHandler implements GlobalMessageHandler {
     private void handleMessage(boolean isGroup, GroupMessageEvent groupMessageEvent, MessageEvent friendMessageEvent) {
         boolean preHandle = doPreHandle(isGroup ? groupMessageEvent : friendMessageEvent);
         if (!preHandle) return;
-        String msg = isGroup ? groupMessageEvent.getMessage().contentToString() : friendMessageEvent.getMessage().contentToString();
         ArrayList<MessageEventHandler> messageEventHandlerList = filterMessageEventHandlerList(isGroup, groupMessageEvent);
         List<OutMessage> outMessageList = Lists.newLinkedList();
+        MessageEvent messageEvent = isGroup ? groupMessageEvent : friendMessageEvent;
         for (MessageEventHandler messageEventHandler : messageEventHandlerList) {
-            if (messageEventHandler.matchCommand(msg) && !messageEventHandler.ignore(msg)) {
+            if (messageEventHandler.matchCommand(messageEvent) && !messageEventHandler.ignore(messageEvent)) {
                 OutMessage outMessage;
                 if (isGroup) {
                     outMessage = messageEventHandler.handleGroupMessageEvent(groupMessageEvent);

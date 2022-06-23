@@ -8,12 +8,11 @@ import cn.zjiali.robot.model.response.FortuneResponse
 import cn.zjiali.robot.model.response.RobotBaseResponse
 import cn.zjiali.robot.util.HttpUtil
 import cn.zjiali.robot.util.JsonUtil
-import cn.zjiali.robot.util.PluginConfigUtil.getApiURL
-import cn.zjiali.robot.util.PluginConfigUtil.getConfigVal
 import com.google.gson.JsonObject
 import com.google.gson.reflect.TypeToken
 import net.mamoe.mirai.event.events.FriendMessageEvent
 import net.mamoe.mirai.event.events.GroupMessageEvent
+import net.mamoe.mirai.event.events.MessageEvent
 
 /**
  * 运势消息处理器
@@ -32,14 +31,20 @@ class FortuneMessageEventHandler : AbstractMessageEventHandler() {
      * @param msgType  消息类型
      * @return
      */
-    private fun getFortuneMsg(senderQQ: Long, groupNum: Long, msgType: Int): OutMessage? {
+    private fun getFortuneMsg(senderQQ: Long, groupNum: Long, msgType: Int, event: MessageEvent): OutMessage? {
         val jsonObject = JsonObject()
         jsonObject.addProperty("qq", senderQQ.toString())
-        jsonObject.addProperty("isOne", getConfigVal(PluginCode.FORTUNE, PluginProperty.FORTUNE_DAY_ONE))
+        jsonObject.addProperty(
+            "isOne",
+            getConfigVal(PluginCode.FORTUNE, PluginProperty.FORTUNE_DAY_ONE, groupNum, senderQQ)
+        )
         jsonObject.addProperty("isGroup", if (msgType == 1) 0 else 1)
-        jsonObject.addProperty("isIntegral", getConfigVal(PluginCode.FORTUNE, PluginProperty.FORTUNE_POINT))
+        jsonObject.addProperty(
+            "isIntegral",
+            getConfigVal(PluginCode.FORTUNE, PluginProperty.FORTUNE_POINT, groupNum, senderQQ)
+        )
         jsonObject.addProperty("groupNum", groupNum.toString())
-        val response = HttpUtil.post(getApiURL(PluginCode.FORTUNE), jsonObject)
+        val response = HttpUtil.post(getApiURL(PluginCode.FORTUNE, event), jsonObject)
             ?: return OutMessage.builder().convertFlag(false).content("运势服务故障,请联系管理员!").build()
         val type = object : TypeToken<RobotBaseResponse<FortuneResponse?>?>() {}.type
         val robotBaseResponse = JsonUtil.toObjByType<RobotBaseResponse<FortuneResponse>>(response, type)
@@ -55,6 +60,7 @@ class FortuneMessageEventHandler : AbstractMessageEventHandler() {
             val dataResponse = responseData.dataResponse
             return OutMessage.builder().convertFlag(true).templateCode(PluginCode.FORTUNE)
                 .pluginCode(PluginCode.FORTUNE)
+                .event(event)
                 .fillFlag(AppConstants.FILL_OUT_MESSAGE_OBJECT_FLAG)
                 .fillObj(dataResponse).build()
         }
@@ -64,12 +70,12 @@ class FortuneMessageEventHandler : AbstractMessageEventHandler() {
     override fun handleGroupMessageEvent(event: GroupMessageEvent): OutMessage {
         val qq = event.sender.id
         val groupNum = event.group.id
-        return getFortuneMsg(qq, groupNum, 2)!!
+        return getFortuneMsg(qq, groupNum, 2, event)!!
     }
 
     override fun handleFriendMessageEvent(event: FriendMessageEvent): OutMessage {
         val qq = event.sender.id
-        return getFortuneMsg(qq, 0, 1)!!
+        return getFortuneMsg(qq, 0, 1, event)!!
     }
 
     override fun next(): Boolean {

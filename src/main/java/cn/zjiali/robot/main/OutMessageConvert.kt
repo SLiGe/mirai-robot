@@ -1,9 +1,12 @@
 package cn.zjiali.robot.main
 
+import cn.zjiali.robot.config.AppConfig
 import cn.zjiali.robot.constant.AppConstants
-import cn.zjiali.robot.util.PluginConfigUtil.getTemplate
+import cn.zjiali.robot.manager.PluginManager
 import cn.zjiali.robot.model.message.OutMessage
+import cn.zjiali.robot.util.GuiceUtil
 import cn.zjiali.robot.util.MessageUtil
+import cn.zjiali.robot.util.PluginConfigUtil
 
 /**
  * 发送消息转换类
@@ -21,7 +24,11 @@ class OutMessageConvert {
             return content
         }
         val templateCode = outMessage.templateCode
-        val template = getTemplate(outMessage.pluginCode, templateCode)
+        val pluginManager = GuiceUtil.getBean(PluginManager::class.java)
+        val template =
+            if (outMessage.fromMsgType == AppConstants.MSG_FROM_GROUP && AppConfig.serverControl())
+                pluginManager.getTemplate(outMessage.pluginCode, templateCode, outMessage.groupId, outMessage.senderId)
+            else PluginConfigUtil.getTemplate(outMessage.pluginCode, templateCode)
         val fillFlag = outMessage.fillFlag
         val finalMessage = if (fillFlag == AppConstants.FILL_OUT_MESSAGE_OBJECT_FLAG) MessageUtil.replaceMessage(
             template,

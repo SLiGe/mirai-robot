@@ -21,12 +21,14 @@ class JokeMessageEventHandler : AbstractMessageEventHandler() {
 
     override fun handleGroupMessageEvent(event: GroupMessageEvent?): OutMessage {
         val jokeMessage = moLiService?.getJokeMessage(event!!.sender.id, true, event.group.id)
-        return OutMessage.builder().pluginCode(PluginCode.JOKE).convertFlag(false).content(jokeMessage).build()
+        return OutMessage.builder().pluginCode(PluginCode.JOKE).convertFlag(false).event(event).content(jokeMessage)
+            .build()
     }
 
     override fun handleFriendMessageEvent(event: FriendMessageEvent?): OutMessage {
         val jokeMessage = moLiService?.getJokeMessage(event!!.sender.id, true, event.sender.id)
-        return OutMessage.builder().pluginCode(PluginCode.JOKE).convertFlag(false).content(jokeMessage).build()
+        return OutMessage.builder().pluginCode(PluginCode.JOKE).convertFlag(false).event(event).content(jokeMessage)
+            .build()
     }
 
     override fun next(): Boolean {
@@ -44,12 +46,14 @@ class YlLqMessageEventHandler : AbstractMessageEventHandler() {
 
     override fun handleGroupMessageEvent(event: GroupMessageEvent?): OutMessage {
         val ylMessage = moLiService?.getYllqMessage(event!!.sender.id, true, event.group.id)
-        return OutMessage.builder().pluginCode(PluginCode.YL_LQ).convertFlag(false).content(ylMessage).build()
+        return OutMessage.builder().pluginCode(PluginCode.YL_LQ).convertFlag(false).event(event).content(ylMessage)
+            .build()
     }
 
     override fun handleFriendMessageEvent(event: FriendMessageEvent?): OutMessage {
         val ylMessage = moLiService?.getYllqMessage(event!!.sender.id, true, event.sender.id)
-        return OutMessage.builder().pluginCode(PluginCode.YL_LQ).convertFlag(false).content(ylMessage).build()
+        return OutMessage.builder().pluginCode(PluginCode.YL_LQ).convertFlag(false).event(event).content(ylMessage)
+            .build()
     }
 
     override fun next(): Boolean {
@@ -67,12 +71,14 @@ class GyLqMessageEventHandler : AbstractMessageEventHandler() {
 
     override fun handleGroupMessageEvent(event: GroupMessageEvent?): OutMessage {
         val gyMessage = moLiService?.getGylqMessage(event!!.sender.id, true, event.group.id)
-        return OutMessage.builder().pluginCode(PluginCode.GY_LQ).convertFlag(false).content(gyMessage).build()
+        return OutMessage.builder().pluginCode(PluginCode.GY_LQ).convertFlag(false).event(event).content(gyMessage)
+            .build()
     }
 
     override fun handleFriendMessageEvent(event: FriendMessageEvent?): OutMessage {
         val gyMessage = moLiService?.getGylqMessage(event!!.sender.id, true, event.sender.id)
-        return OutMessage.builder().pluginCode(PluginCode.GY_LQ).convertFlag(false).content(gyMessage).build()
+        return OutMessage.builder().pluginCode(PluginCode.GY_LQ).convertFlag(false).event(event).content(gyMessage)
+            .build()
     }
 
     override fun next(): Boolean {
@@ -92,12 +98,14 @@ class CsyLqMessageEventHandler : AbstractMessageEventHandler() {
 
     override fun handleGroupMessageEvent(event: GroupMessageEvent?): OutMessage {
         val csyMessage = moLiService?.getCsylqMessage(event!!.sender.id, true, event.group.id)
-        return OutMessage.builder().pluginCode(PluginCode.CSY_LQ).convertFlag(false).content(csyMessage).build()
+        return OutMessage.builder().pluginCode(PluginCode.CSY_LQ).convertFlag(false).event(event).content(csyMessage)
+            .build()
     }
 
     override fun handleFriendMessageEvent(event: FriendMessageEvent?): OutMessage {
         val csyMessage = moLiService?.getCsylqMessage(event!!.sender.id, true, event.sender.id)
-        return OutMessage.builder().pluginCode(PluginCode.CSY_LQ).convertFlag(false).content(csyMessage).build()
+        return OutMessage.builder().pluginCode(PluginCode.CSY_LQ).convertFlag(false).event(event).content(csyMessage)
+            .build()
     }
 
     override fun next(): Boolean {
@@ -119,11 +127,13 @@ class SenMessageEventHandler : AbstractMessageEventHandler() {
 
     override fun handleGroupMessageEvent(event: GroupMessageEvent): OutMessage {
         return OutMessage.builder().pluginCode(PluginCode.ONE_SEN).convertFlag(false).content(MessageFactory.getSen())
+            .event(event)
             .build()
     }
 
     override fun handleFriendMessageEvent(event: FriendMessageEvent): OutMessage {
-        return OutMessage.builder().pluginCode(PluginCode.ONE_SEN).convertFlag(false).content(MessageFactory.getSen())
+        return OutMessage.builder().pluginCode(PluginCode.ONE_SEN).convertFlag(false)
+            .event(event).content(MessageFactory.getSen())
             .build()
     }
 

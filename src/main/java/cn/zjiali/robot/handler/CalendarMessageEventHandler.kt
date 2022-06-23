@@ -7,10 +7,10 @@ import cn.zjiali.robot.model.response.CalendarResponse
 import cn.zjiali.robot.model.response.RobotBaseResponse
 import cn.zjiali.robot.util.HttpUtil
 import cn.zjiali.robot.util.JsonUtil
-import cn.zjiali.robot.util.PluginConfigUtil.getApiURL
 import com.google.gson.reflect.TypeToken
 import net.mamoe.mirai.event.events.FriendMessageEvent
 import net.mamoe.mirai.event.events.GroupMessageEvent
+import net.mamoe.mirai.event.events.MessageEvent
 
 /**
  * 万年历处理器
@@ -20,11 +20,11 @@ import net.mamoe.mirai.event.events.GroupMessageEvent
  */
 class CalendarMessageEventHandler : AbstractMessageEventHandler() {
     override fun handleGroupMessageEvent(event: GroupMessageEvent): OutMessage {
-        return calendarMessage!!
+        return calendarMessage(event)!!
     }
 
     override fun handleFriendMessageEvent(event: FriendMessageEvent): OutMessage {
-        return calendarMessage!!
+        return calendarMessage(event)!!
     }
 
     override fun next(): Boolean {
@@ -35,24 +35,18 @@ class CalendarMessageEventHandler : AbstractMessageEventHandler() {
         return containCommand(PluginCode.CALENDAR, msg)
     }
 
-    companion object {
-        /**
-         * 获取万年历消息
-         *
-         * @return
-         */
-        val calendarMessage: OutMessage?
-            get() {
-                val response = HttpUtil.get(getApiURL(PluginCode.CALENDAR))
-                val type = object : TypeToken<RobotBaseResponse<CalendarResponse?>?>() {}.type
-                val baseResponse = JsonUtil.toObjByType<RobotBaseResponse<CalendarResponse>>(response, type)
-                if (baseResponse.status == 200) {
-                    val calendarResponse = baseResponse.data
-                    return OutMessage.builder().convertFlag(true).fillFlag(AppConstants.FILL_OUT_MESSAGE_OBJECT_FLAG)
-                        .pluginCode(PluginCode.CALENDAR)
-                        .fillObj(calendarResponse).templateCode(PluginCode.CALENDAR).build()
-                }
-                return null
-            }
+    private fun calendarMessage(event: MessageEvent): OutMessage? {
+        val response = HttpUtil.get(getApiURL(PluginCode.CALENDAR, event))
+        val type = object : TypeToken<RobotBaseResponse<CalendarResponse?>?>() {}.type
+        val baseResponse = JsonUtil.toObjByType<RobotBaseResponse<CalendarResponse>>(response, type)
+        if (baseResponse.status == 200) {
+            val calendarResponse = baseResponse.data
+            return OutMessage.builder().convertFlag(true).fillFlag(AppConstants.FILL_OUT_MESSAGE_OBJECT_FLAG)
+                .pluginCode(PluginCode.CALENDAR)
+                .event(event)
+                .fillObj(calendarResponse).templateCode(PluginCode.CALENDAR).build()
+        }
+        return null
     }
+
 }
