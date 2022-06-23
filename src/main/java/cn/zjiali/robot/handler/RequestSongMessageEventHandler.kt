@@ -7,12 +7,11 @@ import cn.zjiali.robot.model.response.RequestSongResponse
 import cn.zjiali.robot.model.response.RobotBaseResponse
 import cn.zjiali.robot.util.HttpUtil
 import cn.zjiali.robot.util.JsonUtil
-import cn.zjiali.robot.util.PluginConfigUtil.getApiURL
-import cn.zjiali.robot.util.PluginConfigUtil.getCommand
 import com.google.gson.JsonObject
 import com.google.gson.reflect.TypeToken
 import net.mamoe.mirai.event.events.FriendMessageEvent
 import net.mamoe.mirai.event.events.GroupMessageEvent
+import net.mamoe.mirai.event.events.MessageEvent
 import net.mamoe.mirai.message.data.*
 
 /**
@@ -23,13 +22,13 @@ import net.mamoe.mirai.message.data.*
  */
 class RequestSongMessageEventHandler : AbstractMessageEventHandler() {
     override fun handleGroupMessageEvent(event: GroupMessageEvent): OutMessage {
-        val songName = event.message.content.replace(getCommand(PluginCode.REQUEST_SONG), "").trim()
-        return requestSong(songName)!!
+        val songName = event.message.content.replace(getCommand(PluginCode.REQUEST_SONG, event), "").trim()
+        return requestSong(songName, event)!!
     }
 
     override fun handleFriendMessageEvent(event: FriendMessageEvent): OutMessage {
-        val songName = event.message.content.replace(getCommand(PluginCode.REQUEST_SONG), "").trim()
-        return requestSong(songName)!!
+        val songName = event.message.content.replace(getCommand(PluginCode.REQUEST_SONG, event), "").trim()
+        return requestSong(songName, event)!!
     }
 
     override fun next(): Boolean {
@@ -40,12 +39,17 @@ class RequestSongMessageEventHandler : AbstractMessageEventHandler() {
         return msg.startsWith(getCommand(PluginCode.REQUEST_SONG))
     }
 
-    //@OptIn(MiraiExperimentalApi::class)
-    private fun requestSong(songName: String): OutMessage? {
+    override fun matchCommand(messageEvent: MessageEvent?): Boolean {
+        val msg = messageEvent!!.message.contentToString()
+        return msg.startsWith(getCommand(PluginCode.REQUEST_SONG, messageEvent))
+    }
+
+
+    private fun requestSong(songName: String, event: MessageEvent): OutMessage? {
         val postData = JsonObject()
         postData.addProperty("keyword", songName)
         postData.addProperty("type", "qq")
-        val response = HttpUtil.post(getApiURL(PluginCode.REQUEST_SONG), postData)
+        val response = HttpUtil.post(getApiURL(PluginCode.REQUEST_SONG, event), postData)
         val type = object : TypeToken<RobotBaseResponse<RequestSongResponse?>?>() {}.type
         val baseResponse = JsonUtil.toObjByType<RobotBaseResponse<RequestSongResponse>>(response, type)
         if (baseResponse.status == 200) {
@@ -59,9 +63,8 @@ class RequestSongMessageEventHandler : AbstractMessageEventHandler() {
                 musicInfo.purl,
                 musicInfo.murl
             )
-           // val msg: Message = SimpleServiceMessage(2, songResponse.musicMessage.toString())
             return OutMessage.builder().convertFlag(false)
-                .messageType(AppConstants.MESSAGE_TYPE_PLUGIN)//.messageChain(msg.plus(songResponse.musicInfo.jurl))
+                .messageType(AppConstants.MESSAGE_TYPE_PLUGIN)
                 .message(musicShare)
                 .pluginCode(PluginCode.REQUEST_SONG)
                 .build()

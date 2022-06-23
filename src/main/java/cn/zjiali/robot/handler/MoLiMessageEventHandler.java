@@ -2,12 +2,14 @@ package cn.zjiali.robot.handler;
 
 import cn.zjiali.robot.constant.PluginCode;
 import cn.zjiali.robot.constant.PluginProperty;
+import cn.zjiali.robot.manager.PluginManager;
 import cn.zjiali.robot.model.message.OutMessage;
 import cn.zjiali.robot.service.MoLiService;
 import cn.zjiali.robot.util.PluginConfigUtil;
 import com.google.inject.Inject;
 import net.mamoe.mirai.event.events.FriendMessageEvent;
 import net.mamoe.mirai.event.events.GroupMessageEvent;
+import net.mamoe.mirai.event.events.MessageEvent;
 import net.mamoe.mirai.message.data.At;
 
 import java.util.ArrayList;
@@ -132,6 +134,18 @@ public class MoLiMessageEventHandler extends AbstractMessageEventHandler {
     public boolean ignore(String msg) {
         ArrayList<String> ignoreWords = PluginConfigUtil.getIgnoreWords(PluginCode.MOLI);
         return ignoreWords.contains(msg);
+    }
+
+    @Override
+    public boolean ignore(MessageEvent messageEvent) {
+        String msg = messageEvent.getMessage().contentToString();
+        if (messageEvent instanceof GroupMessageEvent) {
+            long groupId = ((GroupMessageEvent) messageEvent).getGroup().getId();
+            long senderId = messageEvent.getSender().getId();
+            ArrayList<String> ignoreWords = pluginManager.getIgnoreWords(PluginCode.MOLI, groupId, senderId);
+            return ignoreWords.contains(msg);
+        }
+        return ignore(msg);
     }
 
     @Override

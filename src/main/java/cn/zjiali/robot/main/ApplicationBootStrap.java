@@ -9,6 +9,7 @@ import cn.zjiali.robot.guice.module.ManagerModule;
 import cn.zjiali.robot.guice.module.MessageHandlerModule;
 import cn.zjiali.robot.guice.module.SimpleMessageEventHandlerModule;
 import cn.zjiali.robot.main.websocket.WebSocketManager;
+import cn.zjiali.robot.manager.ServerConfigManager;
 import cn.zjiali.robot.model.ApplicationConfig;
 import cn.zjiali.robot.model.SystemConfig;
 import cn.zjiali.robot.util.*;
@@ -52,6 +53,7 @@ public class ApplicationBootStrap {
         loadAppConfig();
         initGuiceContext();
         loadMessageTemplate();
+        loadServerConfig();
         loadWebSocket();
     }
 
@@ -135,6 +137,16 @@ public class ApplicationBootStrap {
                 .lines().collect(Collectors.joining(System.lineSeparator()));
         AppConfig.applicationConfig = JsonUtil.json2obj(appConfigJson, ApplicationConfig.class);
         configStream.close();
+    }
+
+    /**
+     * 加载服务端配置
+     */
+    private void loadServerConfig() {
+        if (AppConfig.applicationConfig.serverControl()) {
+            ServerConfigManager serverConfigManager = GuiceUtil.getBean(ServerConfigManager.class);
+            serverConfigManager.pullServerConfig();
+        }
     }
 
 

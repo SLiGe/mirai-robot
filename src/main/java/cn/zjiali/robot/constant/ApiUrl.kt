@@ -7,6 +7,8 @@ package cn.zjiali.robot.constant
  */
 object ApiUrl {
 
+    const val QUERY_GROUP_PLUGIN_CONFIG = ""
+
     /**
      * 查询群组关联差劲啊
      */

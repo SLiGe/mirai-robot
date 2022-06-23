@@ -1,6 +1,9 @@
 package cn.zjiali.robot.handler;
 
+import cn.zjiali.robot.manager.PluginManager;
 import cn.zjiali.robot.util.PluginConfigUtil;
+import com.google.inject.Inject;
+import net.mamoe.mirai.event.events.GroupMessageEvent;
 import net.mamoe.mirai.event.events.MessageEvent;
 
 import java.util.Arrays;
@@ -13,6 +16,9 @@ import java.util.List;
  * @since 2021-04-08 21:11
  */
 public abstract class AbstractMessageEventHandler implements MessageEventHandler {
+
+    @Inject
+    protected PluginManager pluginManager;
 
     /**
      * 获取消息内容
@@ -52,4 +58,39 @@ public abstract class AbstractMessageEventHandler implements MessageEventHandler
         List<String> commandArray = Arrays.asList(command.split(","));
         return containCommand(msg, commandArray);
     }
+
+    public boolean containCommand(String pluginCode, MessageEvent event) {
+        String msg = event.getMessage().contentToString();
+        if (event instanceof GroupMessageEvent) {
+            long groupId = ((GroupMessageEvent) event).getGroup().getId();
+            long senderId = event.getSender().getId();
+            String command = pluginManager.getCommand(pluginCode, groupId, senderId);
+            List<String> commandArray = Arrays.asList(command.split(","));
+            return containCommand(msg, commandArray);
+        }
+        return containCommand(pluginCode, msg);
+    }
+
+    public String getCommand(String pluginCode, MessageEvent event) {
+        if (event instanceof GroupMessageEvent) {
+            long groupId = ((GroupMessageEvent) event).getGroup().getId();
+            long senderId = event.getSender().getId();
+            return pluginManager.getCommand(pluginCode, groupId, senderId);
+        }
+        return PluginConfigUtil.getCommand(pluginCode);
+    }
+
+    public String getCommand(String pluginCode) {
+        return PluginConfigUtil.getCommand(pluginCode);
+    }
+
+    public String getApiURL(String pluginCode, MessageEvent event){
+        if (event instanceof GroupMessageEvent) {
+            long groupId = ((GroupMessageEvent) event).getGroup().getId();
+            long senderId = event.getSender().getId();
+            return pluginManager.getApiURL(pluginCode, groupId, senderId);
+        }
+        return PluginConfigUtil.getApiURL(pluginCode);
+    }
+
 }

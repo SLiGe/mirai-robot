@@ -4,6 +4,7 @@ package cn.zjiali.robot.handler;
 import cn.zjiali.robot.model.message.OutMessage;
 import net.mamoe.mirai.event.events.FriendMessageEvent;
 import net.mamoe.mirai.event.events.GroupMessageEvent;
+import net.mamoe.mirai.event.events.MessageEvent;
 
 /**
  * @author zJiaLi
@@ -66,12 +67,31 @@ public interface MessageEventHandler {
     }
 
     /**
+     * 命令匹配是否匹配
+     *
+     * @return boolean
+     */
+    default boolean matchCommand(MessageEvent messageEvent) {
+        return false;
+    }
+
+    /**
      * 排除关键词
      *
      * @param msg 消息
      * @return 是否忽略
      */
     default boolean ignore(String msg) {
+        return false;
+    }
+
+    /**
+     * 排除关键词
+     *
+     * @param messageEvent 消息事件
+     * @return 是否忽略
+     */
+    default boolean ignore(MessageEvent messageEvent) {
         return false;
     }
 

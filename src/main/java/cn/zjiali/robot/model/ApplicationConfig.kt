@@ -20,4 +20,8 @@ class ApplicationConfig {
      */
     var serverControl = 0
 
+    fun serverControl(): Boolean {
+        return this.serverControl == 1
+    }
+
 }

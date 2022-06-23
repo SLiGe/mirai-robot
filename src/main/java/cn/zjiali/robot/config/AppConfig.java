@@ -28,12 +28,15 @@ public class AppConfig {
     }
 
 
-
     public static String getQQ() {
         return getApplicationConfig().getQq();
     }
 
     public static List<MessageEventHandler> getMsgHandlers() {
         return msgMessageEventHandlers;
+    }
+
+    public static boolean serverControl() {
+        return applicationConfig.serverControl();
     }
 }
