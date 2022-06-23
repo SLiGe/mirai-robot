@@ -4,7 +4,7 @@ package cn.zjiali.robot.model.response;
  * @author zJiaLi
  * @since 2021-05-08 10:02
  */
-public class RobotBaseResponse <T>{
+public class RobotBaseResponse<T> {
 
     private int status;
 
@@ -19,6 +19,10 @@ public class RobotBaseResponse <T>{
         this.status = status;
         this.message = message;
         this.data = data;
+    }
+
+    public boolean success() {
+        return this.status == 200;
     }
 
     public int getStatus() {
