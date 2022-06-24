@@ -22,7 +22,7 @@ class PluginManager {
     private var serverConfigManager: ServerConfigManager? = null
 
     fun getConfigVal(pluginCode: String, key: String, groupId: Long, senderId: Long): String? {
-        if (AppConfig.serverControl()) {
+        if (AppConfig.serverControl() && groupId > 0) {
             val configVal = getConfigVal(pluginCode, key, true, groupId, senderId)
             return if (StrUtil.isBlank(configVal)) {
                 PluginConfigUtil.getConfigVal(pluginCode, key)
@@ -31,7 +31,7 @@ class PluginManager {
     }
 
     fun getTemplate(pluginCode: String, groupId: Long, senderId: Long): String {
-        return if (AppConfig.serverControl()) Optional.ofNullable(
+        return if (AppConfig.serverControl() && groupId > 0) Optional.ofNullable(
             getConfigVal(
                 pluginCode,
                 ConfigKey.TEMPLATE,
@@ -45,7 +45,7 @@ class PluginManager {
     }
 
     fun getTemplate(pluginCode: String, templateCode: String?, groupId: Long, senderId: Long): String {
-        if (AppConfig.serverControl()) {
+        if (AppConfig.serverControl() && groupId > 0) {
             val templateFlag =
                 Optional.ofNullable(getConfigVal(pluginCode, ConfigKey.TEMPLATE_FLAG, false, groupId, senderId))
                     .orElse(PluginConfigUtil.getPlugin(pluginCode).templateFlag)
@@ -65,7 +65,7 @@ class PluginManager {
     }
 
     fun getApiURL(pluginCode: String, groupId: Long, senderId: Long): String {
-        return if (AppConfig.serverControl()) Optional.ofNullable(
+        return if (AppConfig.serverControl() && groupId > 0) Optional.ofNullable(
             getConfigVal(
                 pluginCode,
                 PluginProperty.API_URL,
@@ -79,7 +79,7 @@ class PluginManager {
     }
 
     fun getCommand(pluginCode: String, groupId: Long, senderId: Long): String {
-        return if (AppConfig.serverControl()) Optional.ofNullable(
+        return if (AppConfig.serverControl() && groupId > 0) Optional.ofNullable(
             getConfigVal(
                 pluginCode,
                 ConfigKey.COMMAND,
@@ -93,7 +93,7 @@ class PluginManager {
     }
 
     fun getIgnoreWords(pluginCode: String, groupId: Long, senderId: Long): ArrayList<String> {
-        val ignoreKeyWords = if (AppConfig.serverControl())
+        val ignoreKeyWords = if (AppConfig.serverControl() && groupId > 0)
             Optional.ofNullable(getConfigVal(pluginCode, ConfigKey.IGNORE_KEY_WORDS, false, groupId, senderId))
                 .orElse(PluginConfigUtil.getPlugin(pluginCode).ignoreKeyWords)
         else PluginConfigUtil.getPlugin(pluginCode).ignoreKeyWords
