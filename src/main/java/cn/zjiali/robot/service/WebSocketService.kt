@@ -5,11 +5,9 @@ import cn.zjiali.robot.annotation.Service
 import cn.zjiali.robot.config.AppConfig
 import cn.zjiali.robot.constant.MsgType
 import cn.zjiali.robot.manager.RobotManager
+import cn.zjiali.robot.manager.ServerConfigManager
 import cn.zjiali.robot.manager.WsSecurityManager
-import cn.zjiali.robot.model.response.ws.GroupAction
-import cn.zjiali.robot.model.response.ws.SenderMessageRes
-import cn.zjiali.robot.model.response.ws.WsClientRes
-import cn.zjiali.robot.model.response.ws.WsResult
+import cn.zjiali.robot.model.response.ws.*
 import cn.zjiali.robot.util.CommonLogger
 import cn.zjiali.robot.util.JsonUtil
 import com.google.inject.Inject
@@ -34,6 +32,9 @@ class WebSocketService {
     @Inject
     @Named("DefaultWsSecurityManager")
     private val wsSecurityManager: WsSecurityManager? = null
+
+    @Inject
+    private val serverConfigManager: ServerConfigManager? = null
 
     suspend fun handleWsResult(wsResult: WsResult): String {
         val robotQQ = wsResult.robotQQ
@@ -80,6 +81,8 @@ class WebSocketService {
             } else if (wsResult.msgType == MsgType.GROUP_ACTION) {
                 val groupAction = JsonUtil.json2obj(dataJson, GroupAction::class.java)
                 groupActionService!!.doAction(groupAction)
+            } else if (wsResult.msgType == MsgType.CONFIG_ACTION) {
+                serverConfigManager?.pullServerConfig()
             }
         }
         return wsSecurityManager?.encryptMsgData(WsClientRes(200, "处理成功!").toJson())!!
