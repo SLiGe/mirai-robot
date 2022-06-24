@@ -7,6 +7,7 @@ package cn.zjiali.robot.model.server
 class AjaxResult<T> {
     var code: String? = null
     var msg: String? = null
+    var token: String? = null
     var data: T? = null
         private set
 

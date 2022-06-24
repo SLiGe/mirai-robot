@@ -20,6 +20,22 @@ class ApplicationConfig {
      */
     var serverControl = 0
 
+    /**
+     * 服务端的用户
+     */
+    var serverUser: String? = null
+
+    /**
+     * 服务端的密码
+     */
+    var serverPwd: String? = null
+
+    /**
+     * 服务端的地址
+     */
+    var serverUrl: String? = null
+
+
     fun serverControl(): Boolean {
         return this.serverControl == 1
     }
