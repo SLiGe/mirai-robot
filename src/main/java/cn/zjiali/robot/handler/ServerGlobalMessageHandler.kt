@@ -1,30 +1,29 @@
-package cn.zjiali.robot.handler;
+package cn.zjiali.robot.handler
 
-import cn.hutool.core.collection.CollectionUtil;
-import cn.zjiali.robot.constant.ApiUrl;
-import cn.zjiali.robot.constant.AppConstants;
-import cn.zjiali.robot.main.OutMessageConvert;
-import cn.zjiali.robot.model.message.OutMessage;
-import cn.zjiali.robot.model.response.RobotBaseResponse;
-import cn.zjiali.robot.model.server.PluginInfo;
-import cn.zjiali.robot.util.HttpUtil;
-import cn.zjiali.robot.util.JsonUtil;
-import cn.zjiali.robot.util.ObjectUtil;
-import cn.zjiali.robot.util.PropertiesUtil;
-import com.google.common.collect.Lists;
-import com.google.gson.JsonObject;
-import com.google.gson.reflect.TypeToken;
-import com.google.inject.Inject;
-import net.mamoe.mirai.event.events.FriendMessageEvent;
-import net.mamoe.mirai.event.events.GroupMessageEvent;
-import net.mamoe.mirai.event.events.MessageEvent;
-import net.mamoe.mirai.message.data.At;
-
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
+import cn.hutool.core.collection.CollectionUtil
+import cn.zjiali.robot.constant.ApiUrl
+import cn.zjiali.robot.constant.AppConstants
+import cn.zjiali.robot.main.OutMessageConvert.Companion.instance
+import cn.zjiali.robot.model.message.OutMessage
+import cn.zjiali.robot.model.response.RobotBaseResponse
+import cn.zjiali.robot.model.server.PluginInfo
+import cn.zjiali.robot.util.HttpUtil
+import cn.zjiali.robot.util.JsonUtil
+import cn.zjiali.robot.util.ObjectUtil
+import cn.zjiali.robot.util.PropertiesUtil
+import com.google.common.collect.Lists
+import com.google.gson.JsonObject
+import com.google.gson.reflect.TypeToken
+import com.google.inject.Inject
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import net.mamoe.mirai.event.events.FriendMessageEvent
+import net.mamoe.mirai.event.events.GroupMessageEvent
+import net.mamoe.mirai.event.events.MessageEvent
+import net.mamoe.mirai.message.data.At
+import java.util.stream.Collectors
 
 /**
  * 服务端消息处理器
@@ -32,66 +31,83 @@ import java.util.stream.Collectors;
  * @author zJiaLi
  * @since 2020-10-29 21:20
  */
-public class ServerGlobalMessageHandler implements GlobalMessageHandler {
-
+class ServerGlobalMessageHandler : GlobalMessageHandler {
     @Inject
-    private Set<MessageEventHandler> messageEventHandlers;
+    private val messageEventHandlers: Set<MessageEventHandler>? = null
 
-    public void handleGroupMessageEvent(GroupMessageEvent event) {
-        handleMessage(true, event, null);
+    @OptIn(DelicateCoroutinesApi::class)
+    override fun handleGroupMessageEvent(event: GroupMessageEvent) {
+        GlobalScope.launch(Dispatchers.Unconfined) {
+            handleMessage(true, event, null)
+        }
     }
 
-    public void handleFriendMessageEvent(FriendMessageEvent event) {
-        handleMessage(false, null, event);
+    @OptIn(DelicateCoroutinesApi::class)
+    override fun handleFriendMessageEvent(event: FriendMessageEvent) {
+        GlobalScope.launch(Dispatchers.Unconfined) {
+            handleMessage(false, null, event)
+        }
     }
 
-    @Override
-    public void handleOtherMessageEvent(MessageEvent event) {
-        handleMessage(false, null, event);
+    @OptIn(DelicateCoroutinesApi::class)
+    override fun handleOtherMessageEvent(event: MessageEvent) {
+        GlobalScope.launch(Dispatchers.Unconfined) {
+            handleMessage(false, null, event)
+        }
+
     }
 
-    private void handleMessage(boolean isGroup, GroupMessageEvent groupMessageEvent, MessageEvent friendMessageEvent) {
-        boolean preHandle = doPreHandle(isGroup ? groupMessageEvent : friendMessageEvent);
-        if (!preHandle) return;
-        ArrayList<MessageEventHandler> messageEventHandlerList = filterMessageEventHandlerList(isGroup, groupMessageEvent);
-        List<OutMessage> outMessageList = Lists.newLinkedList();
-        MessageEvent messageEvent = isGroup ? groupMessageEvent : friendMessageEvent;
-        for (MessageEventHandler messageEventHandler : messageEventHandlerList) {
+    private suspend fun handleMessage(
+        isGroup: Boolean,
+        groupMessageEvent: GroupMessageEvent?,
+        friendMessageEvent: MessageEvent?
+    ) {
+        val preHandle = doPreHandle(if (isGroup) groupMessageEvent else friendMessageEvent)
+        if (!preHandle) return
+        val messageEventHandlerList = filterMessageEventHandlerList(isGroup, groupMessageEvent)
+        val outMessageList: MutableList<OutMessage> = Lists.newLinkedList()
+        val messageEvent = if (isGroup) groupMessageEvent else friendMessageEvent
+        for (messageEventHandler in messageEventHandlerList) {
             if (messageEventHandler.matchCommand(messageEvent) && !messageEventHandler.ignore(messageEvent)) {
-                OutMessage outMessage;
+                var outMessage: OutMessage?
                 if (isGroup) {
-                    outMessage = messageEventHandler.handleGroupMessageEvent(groupMessageEvent);
-                    if (outMessage == null) continue;
-                    int messageType = outMessage.getMessageType();
+                    outMessage = messageEventHandler.handleGroupMessageEvent(groupMessageEvent)
+                    if (outMessage == null) continue
+                    val messageType = outMessage.messageType
                     if (messageType == AppConstants.MESSAGE_TYPE_HANDLER) {
-                        String message = OutMessageConvert.getInstance().convert(outMessage);
-                        if (!ObjectUtil.isNullOrEmpty(message))
-                            groupMessageEvent.getGroup().sendMessage(new At(groupMessageEvent.getSender().getId()).plus(message));
+                        val message = instance.convert(outMessage)
+                        if (!ObjectUtil.isNullOrEmpty(message)) groupMessageEvent!!.group.sendMessage(
+                            At(
+                                groupMessageEvent.sender.id
+                            ).plus(message!!)
+                        )
                     } else if (messageType == AppConstants.MESSAGE_TYPE_PLUGIN) {
-                        if (outMessage.getMessage() != null) {
-                            groupMessageEvent.getGroup().sendMessage(outMessage.getMessage());
+                        if (outMessage.message != null) {
+                            groupMessageEvent!!.group.sendMessage(outMessage.message)
                         }
                     }
                 } else {
-                    outMessage = messageEventHandler.handleFriendMessageEvent((FriendMessageEvent) friendMessageEvent);
-                    if (outMessage == null) continue;
-                    int messageType = outMessage.getMessageType();
+                    outMessage = messageEventHandler.handleFriendMessageEvent(friendMessageEvent as FriendMessageEvent?)
+                    if (outMessage == null) continue
+                    val messageType = outMessage.messageType
                     if (messageType == AppConstants.MESSAGE_TYPE_HANDLER) {
-                        String message = OutMessageConvert.getInstance().convert(outMessage);
-                        if (!ObjectUtil.isNullOrEmpty(message)) friendMessageEvent.getSender().sendMessage(message);
+                        val message = instance.convert(outMessage)
+                        if (!ObjectUtil.isNullOrEmpty(message)) friendMessageEvent!!.sender.sendMessage(
+                            message!!
+                        )
                     } else if (messageType == AppConstants.MESSAGE_TYPE_PLUGIN) {
-                        if (outMessage.getMessage() != null) {
-                            friendMessageEvent.getSender().sendMessage(outMessage.getMessage());
+                        if (outMessage.message != null) {
+                            friendMessageEvent!!.sender.sendMessage(outMessage.message)
                         }
                     }
                 }
                 if (ObjectUtil.isNotNullOrEmpty(outMessage)) {
-                    outMessageList.add(outMessage);
+                    outMessageList.add(outMessage)
                 }
-                if (!messageEventHandler.next()) break;
+                if (!messageEventHandler.next()) break
             }
         }
-        triggerAfterCompletion(isGroup ? groupMessageEvent : friendMessageEvent, outMessageList);
+        triggerAfterCompletion(if (isGroup) groupMessageEvent else friendMessageEvent, outMessageList)
     }
 
     /**
@@ -100,28 +116,33 @@ public class ServerGlobalMessageHandler implements GlobalMessageHandler {
      * @param isGroup 是否群
      * @return 消息处理器
      */
-    private ArrayList<MessageEventHandler> filterMessageEventHandlerList(boolean isGroup, GroupMessageEvent groupMessageEvent) {
-        ArrayList<MessageEventHandler> messageEventHandlerList = Lists.newArrayList(messageEventHandlers);
+    private fun filterMessageEventHandlerList(
+        isGroup: Boolean,
+        groupMessageEvent: GroupMessageEvent?
+    ): List<MessageEventHandler> {
+        val messageEventHandlerList = messageEventHandlers!!.toList()
         if (isGroup) {
-            long groupNumber = groupMessageEvent.getGroup().getId();
-            JsonObject jsonObject = new JsonObject();
-            jsonObject.addProperty("groupNumber", groupNumber);
-            String serverGroupPluginJson = HttpUtil.post(PropertiesUtil.getApiProperty(ApiUrl.QUERY_GROUP_PLUGIN), JsonUtil.obj2str(jsonObject));
-            RobotBaseResponse<List<PluginInfo>> pluginInfoResponse = JsonUtil.toObjByType(serverGroupPluginJson, new TypeToken<RobotBaseResponse<List<PluginInfo>>>() {
-            }.getType());
-            List<PluginInfo> serverGroupPluginList = pluginInfoResponse.getData();
+            val groupNumber = groupMessageEvent!!.group.id
+            val jsonObject = JsonObject()
+            jsonObject.addProperty("groupNumber", groupNumber)
+            val serverGroupPluginJson =
+                HttpUtil.post(PropertiesUtil.getApiProperty(ApiUrl.QUERY_GROUP_PLUGIN), JsonUtil.obj2str(jsonObject))
+            val pluginInfoResponse = JsonUtil.toObjByType<RobotBaseResponse<List<PluginInfo?>>>(
+                serverGroupPluginJson,
+                object : TypeToken<RobotBaseResponse<List<PluginInfo?>?>?>() {}.type
+            )
+            val serverGroupPluginList = pluginInfoResponse.data
             if (CollectionUtil.isNotEmpty(serverGroupPluginList)) {
-                Set<String> pluginCodeSet = serverGroupPluginList.stream().map(PluginInfo::getPluginCode).collect(Collectors.toSet());
-                messageEventHandlerList.removeIf(messageEventHandler -> {
-                    String code = messageEventHandler.code();
-                    return !pluginCodeSet.contains(code);
-                });
+                val pluginCodeSet =
+                    serverGroupPluginList.stream().map { plugin -> plugin!!.pluginCode }.collect(Collectors.toSet())
+                messageEventHandlerList.dropWhile { messageEventHandler: MessageEventHandler ->
+                    val code = messageEventHandler.code()
+                    !pluginCodeSet.contains(code)
+                }
             }
         }
         //处理器排序
-        messageEventHandlerList.sort(Comparator.comparingInt(MessageEventHandler::order));
-        return messageEventHandlerList;
+        messageEventHandlerList.sortedWith(Comparator.comparingInt { obj: MessageEventHandler -> obj.order() })
+        return messageEventHandlerList
     }
-
-
 }
