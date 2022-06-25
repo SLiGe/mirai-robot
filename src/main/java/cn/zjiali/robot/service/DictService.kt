@@ -1,6 +1,5 @@
 package cn.zjiali.robot.service
 
-import cn.zjiali.robot.annotation.Service
 import cn.zjiali.robot.model.response.RobotBaseResponse
 import cn.zjiali.robot.util.HttpUtil
 import cn.zjiali.robot.util.JsonUtil
@@ -17,7 +16,6 @@ import java.util.concurrent.TimeUnit
  * @author zJiaLi
  * @since 2021-07-30 17:48
  */
-@Service
 @Singleton
 class DictService {
 

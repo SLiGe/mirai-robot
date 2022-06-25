@@ -1,6 +1,5 @@
 package cn.zjiali.robot.service
 
-import cn.zjiali.robot.annotation.Service
 import cn.zjiali.robot.constant.PluginCode
 import cn.zjiali.robot.constant.PluginProperty
 import cn.zjiali.robot.manager.PluginManager
@@ -20,7 +19,6 @@ import java.util.*
  * @author zJiaLi
  * @since 2020-10-30 22:06
  */
-@Service
 @Singleton
 class SignInService {
 
