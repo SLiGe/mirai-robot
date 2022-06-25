@@ -4,6 +4,7 @@ import cn.zjiali.robot.constant.ApiUrl
 import cn.zjiali.robot.enums.GroupActionType
 import cn.zjiali.robot.manager.RobotManager
 import cn.zjiali.robot.model.response.ws.GroupAction
+import cn.zjiali.robot.model.server.GroupInfo
 import cn.zjiali.robot.model.server.GroupMember
 import cn.zjiali.robot.util.HttpUtil
 import cn.zjiali.robot.util.JsonUtil
@@ -30,25 +31,45 @@ class GroupActionService {
         val groupNumber = groupAction.groupNumber
         var group: Group? = null
         val bot = robotManager?.bot
-        if (bot?.containsGroup(groupNumber!!) == true) {
+        if (bot?.containsGroup(groupNumber!!) == true && groupAction.actionType != GroupActionType.PULL_GROUP.ordinal) {
             group = bot.getGroup(groupNumber!!)
         }
-        if (group == null) return
+        if (group == null && groupAction.actionType != GroupActionType.PULL_GROUP.ordinal) return
         when (groupAction.actionType) {
+            GroupActionType.PULL_GROUP.ordinal -> {
+                val groupList = ArrayList<GroupInfo>()
+                bot?.groups!!.forEach { g ->
+                    groupList.add(
+                        GroupInfo(
+                            g.name,
+                            g.id,
+                            g.owner.id,
+                            g.avatarUrl,
+                            bot.id
+                        )
+                    )
+                }
+                postGroup(groupList)
+            }
+
             GroupActionType.PULL_MEMBER.ordinal -> {
-                postGroupMember(group)
+                postGroupMember(group!!)
             }
 
             GroupActionType.MUTE_MEMBER.ordinal -> {
                 val memberNumber = groupAction.memberNumber
-                group.getMember(memberNumber!!)!!.mute(groupAction.muteTime!!)
+                group?.getMember(memberNumber!!)!!.mute(groupAction.muteTime!!)
             }
 
             GroupActionType.REMOVE_MEMBER.ordinal -> {
-                group.getMember(groupAction.memberNumber!!)!!
+                group?.getMember(groupAction.memberNumber!!)!!
                     .kick(groupAction.kickMessage!!, (groupAction.kickBlockFlag!! == 1))
             }
         }
+    }
+
+    private fun postGroup(groupList: ArrayList<GroupInfo>) {
+        HttpUtil.post(PropertiesUtil.getApiProperty(ApiUrl.POST_GROUP_INFO), JsonUtil.obj2str(groupList))
     }
 
     private fun postGroupMember(group: Group) {

@@ -1,5 +1,6 @@
 package cn.zjiali.robot.util;
 
+import cn.zjiali.robot.config.AppConfig;
 import cn.zjiali.robot.manager.ServerTokenManager;
 import com.google.gson.JsonObject;
 import net.mamoe.mirai.utils.MiraiLogger;
@@ -25,9 +26,12 @@ public class HttpUtil {
     static {
         okHttpClient = new OkHttpClient.Builder().addInterceptor(chain -> {
             Request.Builder requestBuilder = chain.request().newBuilder();
-            ServerTokenManager serverTokenManager = GuiceUtil.getBean(ServerTokenManager.class);
-            requestBuilder.addHeader("Authorization", serverTokenManager.serverToken());
-            requestBuilder.addHeader("Cookie", "Admin-Token=" + serverTokenManager.serverToken());
+            requestBuilder.addHeader("Client-Type", "robot");
+            if (!chain.request().url().toString().equals(AppConfig.getApplicationConfig().getServerUrl())) {
+                ServerTokenManager serverTokenManager = GuiceUtil.getBean(ServerTokenManager.class);
+                requestBuilder.addHeader("Authorization", serverTokenManager.serverToken());
+                requestBuilder.addHeader("Cookie", "Admin-Token=" + serverTokenManager.serverToken());
+            }
             return chain.proceed(requestBuilder.build());
         }).callTimeout(Duration.ofSeconds(25)).connectTimeout(Duration.ofSeconds(15)).build();
     }
