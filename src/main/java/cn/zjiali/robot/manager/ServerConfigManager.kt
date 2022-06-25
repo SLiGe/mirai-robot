@@ -5,8 +5,10 @@ import cn.zjiali.robot.model.server.AjaxResult
 import cn.zjiali.robot.model.server.GroupPluginConfig
 import cn.zjiali.robot.util.HttpUtil
 import cn.zjiali.robot.util.JsonUtil
+import cn.zjiali.robot.util.PropertiesUtil
 import com.google.common.cache.Cache
 import com.google.common.cache.CacheBuilder
+import com.google.gson.JsonObject
 import com.google.gson.reflect.TypeToken
 import com.google.inject.Singleton
 import java.util.concurrent.TimeUnit
@@ -24,12 +26,12 @@ class ServerConfigManager {
         .build()
 
 
-    fun getGroupPluginConfig(groupId: Long): List<GroupPluginConfig> {
-        return cache.getIfPresent(groupId.toString())!!
+    fun getGroupPluginConfig(groupId: Long): List<GroupPluginConfig>? {
+        return cache.getIfPresent(groupId.toString())
     }
 
     fun pullServerConfig() {
-        val groupPluginConfigJson = HttpUtil.get(ApiUrl.QUERY_GROUP_PLUGIN_CONFIG)
+        val groupPluginConfigJson = HttpUtil.post(PropertiesUtil.getApiProperty(ApiUrl.QUERY_GROUP_PLUGIN_CONFIG), JsonObject())
         val groupPluginConfig = JsonUtil.toObjByType<AjaxResult<List<GroupPluginConfig>>>(
             groupPluginConfigJson,
             object : TypeToken<AjaxResult<List<GroupPluginConfig>>>() {}.type

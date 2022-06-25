@@ -30,11 +30,13 @@ class OutMessageConvert {
                 pluginManager.getTemplate(outMessage.pluginCode, templateCode, outMessage.groupId, outMessage.senderId)
             else PluginConfigUtil.getTemplate(outMessage.pluginCode, templateCode)
         val fillFlag = outMessage.fillFlag
-        val finalMessage = if (fillFlag == AppConstants.FILL_OUT_MESSAGE_OBJECT_FLAG) MessageUtil.replaceMessage(
-            template,
-            outMessage.fillObj
-        )
-        else MessageUtil.replaceMessageByMap(template, outMessage.fillMap)
+        val finalMessage = if (fillFlag == AppConstants.FILL_OUT_MESSAGE_OBJECT_FLAG) template?.let {
+            MessageUtil.replaceMessage(
+                it,
+                outMessage.fillObj
+            )
+        }
+        else template?.let { MessageUtil.replaceMessageByMap(it, outMessage.fillMap) }
         outMessage.finalMessage = finalMessage
         return finalMessage
     }
