@@ -1,15 +1,12 @@
 package cn.zjiali.robot.service;
 
-import cn.zjiali.robot.annotation.Service;
-import cn.zjiali.robot.config.PluginTemplate;
 import cn.zjiali.robot.constant.PluginCode;
 import cn.zjiali.robot.constant.PluginProperty;
 import cn.zjiali.robot.manager.PluginManager;
-import cn.zjiali.robot.model.response.*;
+import cn.zjiali.robot.model.response.JokeResponse;
+import cn.zjiali.robot.model.response.RobotBaseResponse;
 import cn.zjiali.robot.util.HttpUtil;
 import cn.zjiali.robot.util.JsonUtil;
-import cn.zjiali.robot.util.MessageUtil;
-import cn.zjiali.robot.util.PluginConfigUtil;
 import com.google.gson.reflect.TypeToken;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -22,7 +19,6 @@ import java.util.Map;
  * @author zJiaLi
  * @since 2021-04-08 12:49
  */
-@Service
 @Singleton
 public class MoLiService {
 
