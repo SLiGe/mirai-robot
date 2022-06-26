@@ -1,11 +1,11 @@
 {
   "appEnable": 1,
-  "qq": "xxx",
+  "qq": "2364051402",
   "password": "xxx",
   "serverControl": "1",
-  "serverUser": "",
-  "serverPwd": "",
-  "serverUrl": "",
+  "serverUser": "admin",
+  "serverPwd": "admin123",
+  "serverUrl": "http://localhost:18080/login",
   "plugins": [
     {
       "name": "一言",
@@ -117,45 +117,6 @@
         "gyTemplate": "{title}\n诗曰:{shi_yue}\n诗意:{shi_yi}\n解曰:{jie_yue}\n本签精髓:{bqjs}\n详情请点击:{viewUrl}",
         "ylTemplate": "{title}\n签诗:{qian_shi}\n解签:{jie_qian}\n详情请点击:{viewUrl}",
         "csTemplate": "{title}\n诗曰:{shi_yue}\n吉凶:{ji_xiong}\n详情请点击:{viewUrl}"
-      }
-    },
-    {
-      "name": "观音灵签",
-      "enable": 1,
-      "handler": "cn.zjiali.robot.handler.GyLqMessageEventHandler",
-      "command": "观音灵签",
-      "template": "签号:{number1}\n好坏:{haohua}\n签语:{qianyu}\n诗意解签:{shiyi}\n白话解签:{jieqian}",
-      "templateFlag": "1",
-      "code": "gylq",
-      "ignoreKeyWords": "",
-      "properties": {
-        "url": "https://robot.zjiali.cn/api/queryLq"
-      }
-    },
-    {
-      "name": "月老灵签",
-      "enable": 1,
-      "handler": "cn.zjiali.robot.handler.YlLqMessageEventHandler",
-      "command": "月老灵签",
-      "template": "签号:{number1}\n好坏:{haohua}\n诗意解签:{shiyi}\n解签:{jieqian}\n注释:{zhushi}\n白话浅释:{baihua}",
-      "templateFlag": "1",
-      "code": "yllq",
-      "ignoreKeyWords": "",
-      "properties": {
-        "url": "https://robot.zjiali.cn/api/queryLq"
-      }
-    },
-    {
-      "name": "财神爷灵签",
-      "enable": 1,
-      "handler": "cn.zjiali.robot.handler.CsyLqMessageEventHandler",
-      "command": "财神爷灵签",
-      "template": "签号:{number1}\n签语:{qianyu}\n注释:{zhushi}\n解签:{jieqian}\n解说:{jieshuo}\n结果:{jieguo}\n婚姻:{hunyin}\n交易:{jiaoyi}\n事业:{shiye}",
-      "templateFlag": "1",
-      "code": "csylq",
-      "ignoreKeyWords": "",
-      "properties": {
-        "url": "https://robot.zjiali.cn/api/queryLq"
       }
     },
     {
