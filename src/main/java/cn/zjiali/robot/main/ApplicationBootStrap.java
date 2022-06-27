@@ -57,8 +57,8 @@ public class ApplicationBootStrap {
         genServerToken();
         loadMessageTemplate();
         loadServerConfig();
-        loadCronTask();
         loadWebSocket();
+        loadCronTask();
     }
 
     private void genServerToken() {
