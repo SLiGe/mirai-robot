@@ -15,6 +15,8 @@ import cn.zjiali.robot.util.JsonUtil
 import com.google.inject.Inject
 import com.google.inject.Singleton
 import com.google.inject.name.Named
+import net.mamoe.mirai.contact.getMember
+import net.mamoe.mirai.message.data.AtAll
 
 /**
  * @author zJiaLi
@@ -45,8 +47,7 @@ class WebSocketService {
                 MsgType.SEND_MSG -> {
                     val senderMessageRes = JsonUtil.json2obj(dataJson, SenderMessageRes::class.java)
                     commonLogger.info(
-                        "[WebSocket]====接收QQ:{} ,接收内容:{} ",
-                        senderMessageRes.receiver,
+                        "[WebSocket]====发送内容:{} ",
                         senderMessageRes.sendMessage
                     )
                     if (StrUtil.isBlank(senderMessageRes.sendMessage)) return wsSecurityManager?.encryptMsgData(
@@ -79,12 +80,25 @@ class WebSocketService {
                                 )
                             }
                         }
+
+                        MsgType.SEND_GROUP_PRIVATE_CHAT -> {
+                            robotManager?.bot?.getGroup(senderMessageRes.sendGroup!!.toLong())
+                                ?.getMember(senderMessageRes.receiver!!.toLong())
+                                ?.sendMessage(senderMessageRes.sendMessage!!)
+                        }
+
+                        MsgType.SEND_GROUP_AT_ALL -> {
+                            robotManager?.bot?.getGroup(senderMessageRes.sendGroup!!.toLong())
+                                ?.sendMessage(AtAll.plus(senderMessageRes.sendMessage!!))
+                        }
                     }
                 }
+
                 MsgType.GROUP_ACTION -> {
                     val groupAction = JsonUtil.json2obj(dataJson, GroupAction::class.java)
                     groupActionService!!.doAction(groupAction)
                 }
+
                 MsgType.CONFIG_ACTION -> {
                     serverConfigManager?.pullServerConfig()
                 }
