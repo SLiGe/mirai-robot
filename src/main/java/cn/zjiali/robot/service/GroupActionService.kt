@@ -31,8 +31,10 @@ class GroupActionService {
         val groupNumber = groupAction.groupNumber
         var group: Group? = null
         val bot = robotManager?.bot
-        if (bot?.containsGroup(groupNumber!!) == true && groupAction.actionType != GroupActionType.PULL_GROUP.ordinal) {
-            group = bot.getGroup(groupNumber!!)
+        if (groupAction.actionType != GroupActionType.PULL_GROUP.ordinal) {
+            if (bot?.containsGroup(groupNumber!!) == true) {
+                group = bot.getGroup(groupNumber!!)
+            }
         }
         if (group == null && groupAction.actionType != GroupActionType.PULL_GROUP.ordinal) return
         when (groupAction.actionType) {
