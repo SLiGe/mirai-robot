@@ -17,9 +17,9 @@ public class SimpleMessageEventHandlerModule extends AbstractModule {
     @Override
     protected void configure() {
         if (AppConfig.applicationConfig.getServerControl() == 1) {
-            bind(GlobalMessageHandler.class).annotatedWith(Names.named(ServerGlobalMessageHandler.class.getSimpleName())).to(ServerGlobalMessageHandler.class).in(Singleton.class);
+            bind(GlobalMessageHandler.class).to(ServerGlobalMessageHandler.class).in(Singleton.class);
         } else {
-            bind(GlobalMessageHandler.class).annotatedWith(Names.named(DefaultGlobalMessageHandler.class.getSimpleName())).to(DefaultGlobalMessageHandler.class).in(Singleton.class);
+            bind(GlobalMessageHandler.class).to(DefaultGlobalMessageHandler.class).in(Singleton.class);
         }
 
     }
