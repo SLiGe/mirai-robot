@@ -5,7 +5,7 @@
   "serverControl": "1",
   "serverUser": "admin",
   "serverPwd": "admin123",
-  "serverUrl": "http://localhost:18080/login",
+  "serverUrl": "https://server.zjiali.cn/login",
   "plugins": [
     {
       "name": "一言",
@@ -100,7 +100,7 @@
       "code": "joke",
       "ignoreKeyWords": "",
       "properties": {
-        "url": "http://127.0.0.1:8999/api/queryJoke"
+        "url": "https://robot.zjiali.cn/api/queryJoke"
       }
     },
     {
@@ -113,7 +113,7 @@
       "code": "lq",
       "ignoreKeyWords": "",
       "properties": {
-        "url": "http://127.0.0.1:8999/lq/oneSignPerDay",
+        "url": "https://robot.zjiali.cn/lq/oneSignPerDay",
         "gyTemplate": "{title}\n诗曰:{shi_yue}\n诗意:{shi_yi}\n解曰:{jie_yue}\n本签精髓:{bqjs}\n详情请点击:{viewUrl}",
         "ylTemplate": "{title}\n签诗:{qian_shi}\n解签:{jie_qian}\n详情请点击:{viewUrl}",
         "csTemplate": "{title}\n诗曰:{shi_yue}\n吉凶:{ji_xiong}\n详情请点击:{viewUrl}"
