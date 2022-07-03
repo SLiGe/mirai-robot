@@ -1,5 +1,6 @@
 package cn.zjiali.robot.handler;
 
+import cn.hutool.core.util.StrUtil;
 import cn.zjiali.robot.constant.AppConstants;
 import cn.zjiali.robot.constant.PluginCode;
 import cn.zjiali.robot.constant.PluginProperty;
@@ -42,6 +43,10 @@ public class MoLiMessageEventHandler extends AbstractMessageEventHandler {
                     String sendMsg = moLiService.getCommonChatMessage(groupId, senderId, content);
                     messageBuilder.append(sendMsg);
                 }
+            }
+            String toMessageContent = messageBuilder.toString();
+            if (StrUtil.isBlank(toMessageContent)) {
+                return null;
             }
             Message toMessage = new PlainText(messageBuilder.toString());
             return OutMessage.builder().pluginCode(PluginCode.MOLI).message(toMessage).messageType(AppConstants.MESSAGE_TYPE_PLUGIN).convertFlag(false).build();
