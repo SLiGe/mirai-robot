@@ -24,7 +24,7 @@ import net.mamoe.mirai.message.data.AtAll
  */
 @Singleton
 class WebSocketService {
-    private val commonLogger = CommonLogger(WebSocketService::class.java.simpleName, WebSocketService::class.java)
+    private val commonLogger = CommonLogger(WebSocketService::class.java)
 
     @Inject
     private val robotManager: RobotManager? = null

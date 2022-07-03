@@ -13,7 +13,7 @@ import net.mamoe.mirai.event.events.MessageEvent
 //@Service
 class LogHandlerInterceptor : HandlerInterceptor {
 
-    private val logger: CommonLogger = CommonLogger(javaClass.simpleName, javaClass)
+    private val logger: CommonLogger = CommonLogger(javaClass)
 
     override fun preHandle(messageEvent: MessageEvent?): Boolean {
         logger.debug("处理消息内容: {}", messageEvent?.message?.contentToString())

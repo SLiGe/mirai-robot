@@ -15,6 +15,8 @@ import net.mamoe.mirai.contact.Group
 import net.mamoe.mirai.contact.getMember
 import net.mamoe.mirai.contact.isAdministrator
 import net.mamoe.mirai.containsGroup
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 /**
  *
@@ -26,6 +28,7 @@ class GroupActionService {
 
     @Inject
     private val robotManager: RobotManager? = null
+    private val logger: Logger = LoggerFactory.getLogger(javaClass)
 
     suspend fun doAction(groupAction: GroupAction) {
         val groupNumber = groupAction.groupNumber
@@ -51,6 +54,7 @@ class GroupActionService {
                         )
                     )
                 }
+                logger.debug("执行拉取群组信息操作,群信息数量:{}", groupList.size)
                 postGroup(groupList)
             }
 
@@ -91,6 +95,7 @@ class GroupActionService {
                 )
             }
         }
+        logger.debug("执行拉取群成员信息操作,当前群:{} ,群成员数量:{}", group.id, members.size)
         HttpUtil.post(PropertiesUtil.getApiProperty(ApiUrl.POST_GROUP_MEMBER), JsonUtil.obj2str(members))
     }
 }

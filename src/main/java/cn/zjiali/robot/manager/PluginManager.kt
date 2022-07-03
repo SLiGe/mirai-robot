@@ -7,6 +7,8 @@ import cn.zjiali.robot.util.ObjectUtil
 import cn.zjiali.robot.util.PluginConfigUtil
 import com.google.inject.Inject
 import com.google.inject.Singleton
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import java.util.*
 
 /**
@@ -19,6 +21,7 @@ class PluginManager {
 
     @Inject
     private var serverConfigManager: ServerConfigManager? = null
+    private val logger: Logger = LoggerFactory.getLogger(javaClass)
 
     fun getConfigVal(pluginCode: String, key: String, groupId: Long, senderId: Long): String? {
         if (AppConfig.serverControl() && groupId > 0) {
@@ -109,13 +112,21 @@ class PluginManager {
         groupId: Long,
         senderId: Long
     ): String? {
+        logger.debug(
+            "getConfigVal pluginCode:{},configKey:{},inMap:{},groupId:{},senderId,{}",
+            pluginCode,
+            configKey,
+            inMap,
+            groupId,
+            senderId
+        )
         val groupPluginConfig = serverConfigManager?.getGroupPluginConfig(groupId)
         if (groupPluginConfig.isNullOrEmpty()) return null
         return groupPluginConfig.filter { config -> config.pluginCode.equals(pluginCode) }
             .filter { config -> (config.inMap == 1) == inMap }
             .filter { config -> config.configKey.equals(configKey) }
             .map { config -> config.configValue }
-            .getOrNull(0)!!
+            .getOrNull(0)
     }
 
 }

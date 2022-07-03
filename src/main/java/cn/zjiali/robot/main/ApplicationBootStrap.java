@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
  */
 public class ApplicationBootStrap {
 
-    private final CommonLogger commonLogger = new CommonLogger(ApplicationBootStrap.class.getName(), ApplicationBootStrap.class);
+    private final CommonLogger commonLogger = new CommonLogger(ApplicationBootStrap.class);
 
     private ApplicationBootStrap() {
     }
