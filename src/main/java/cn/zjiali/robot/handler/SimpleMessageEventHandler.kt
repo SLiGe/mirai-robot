@@ -7,6 +7,7 @@ import cn.zjiali.robot.service.MoLiService
 import com.google.inject.Inject
 import net.mamoe.mirai.event.events.FriendMessageEvent
 import net.mamoe.mirai.event.events.GroupMessageEvent
+import net.mamoe.mirai.event.events.MessageEvent
 
 /**
  *
@@ -39,6 +40,11 @@ class JokeMessageEventHandler : AbstractMessageEventHandler() {
         return containCommand(PluginCode.JOKE, msg)
     }
 
+    override fun matchCommand(messageEvent: MessageEvent?): Boolean {
+        return containCommand(PluginCode.JOKE, messageEvent)
+    }
+
+
     override fun code(): String {
         return PluginCode.JOKE
     }
@@ -65,11 +71,15 @@ class SenMessageEventHandler : AbstractMessageEventHandler() {
     }
 
     override fun next(): Boolean {
-        return true
+        return false
     }
 
     override fun matchCommand(msg: String): Boolean {
         return containCommand(PluginCode.ONE_SEN, msg)
+    }
+
+    override fun matchCommand(messageEvent: MessageEvent?): Boolean {
+        return containCommand(PluginCode.ONE_SEN, messageEvent)
     }
 
     override fun code(): String {

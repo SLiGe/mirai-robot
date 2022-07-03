@@ -82,6 +82,10 @@ class SignInMessageEventHandler : AbstractMessageEventHandler() {
         return containCommand(PluginCode.SIGN, msg)
     }
 
+    override fun matchCommand(messageEvent: MessageEvent?): Boolean {
+        return containCommand(PluginCode.SIGN, messageEvent)
+    }
+
     override fun code(): String {
         return PluginCode.SIGN
     }

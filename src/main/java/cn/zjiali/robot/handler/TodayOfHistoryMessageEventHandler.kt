@@ -39,6 +39,10 @@ class TodayOfHistoryMessageEventHandler : AbstractMessageEventHandler() {
         return containCommand(PluginCode.TODAY_HISTORY, msg)
     }
 
+    override fun matchCommand(messageEvent: MessageEvent?): Boolean {
+        return containCommand(PluginCode.TODAY_HISTORY, messageEvent)
+    }
+
     override fun code(): String {
         return PluginCode.TODAY_HISTORY
     }

@@ -15,6 +15,7 @@ import com.google.common.collect.Maps
 import com.google.gson.reflect.TypeToken
 import net.mamoe.mirai.event.events.FriendMessageEvent
 import net.mamoe.mirai.event.events.GroupMessageEvent
+import net.mamoe.mirai.event.events.MessageEvent
 
 /**
  *
@@ -28,7 +29,7 @@ class SpiritSignMessageEventHandler : AbstractMessageEventHandler() {
     }
 
     override fun handleFriendMessageEvent(event: FriendMessageEvent?): OutMessage? {
-        return signPerDay(getMsg(event), event?.sender?.id.toString(), null, AppConstants.MSG_FROM_FRIEND)
+        return signPerDay(getMsg(event), event?.sender?.id.toString(), 0L, AppConstants.MSG_FROM_FRIEND)
     }
 
     override fun next(): Boolean {
@@ -37,6 +38,10 @@ class SpiritSignMessageEventHandler : AbstractMessageEventHandler() {
 
     override fun matchCommand(msg: String?): Boolean {
         return containCommand(PluginCode.LQ, msg)
+    }
+
+    override fun matchCommand(messageEvent: MessageEvent?): Boolean {
+        return containCommand(PluginCode.LQ, messageEvent)
     }
 
     override fun code(): String {

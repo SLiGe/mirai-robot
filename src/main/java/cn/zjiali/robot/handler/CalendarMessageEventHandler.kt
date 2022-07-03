@@ -35,6 +35,10 @@ class CalendarMessageEventHandler : AbstractMessageEventHandler() {
         return containCommand(PluginCode.CALENDAR, msg)
     }
 
+    override fun matchCommand(messageEvent: MessageEvent?): Boolean {
+        return containCommand(PluginCode.CALENDAR, messageEvent)
+    }
+
     override fun code(): String {
         return PluginCode.CALENDAR
     }

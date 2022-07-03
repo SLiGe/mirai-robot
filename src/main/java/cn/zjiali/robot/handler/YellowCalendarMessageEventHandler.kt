@@ -35,6 +35,11 @@ class YellowCalendarMessageEventHandler : AbstractMessageEventHandler() {
         return containCommand(PluginCode.YELLOW_CALENDAR, msg)
     }
 
+    override fun matchCommand(messageEvent: MessageEvent?): Boolean {
+        return containCommand(PluginCode.YELLOW_CALENDAR, messageEvent)
+    }
+
+
     override fun code(): String {
         return PluginCode.YELLOW_CALENDAR
     }

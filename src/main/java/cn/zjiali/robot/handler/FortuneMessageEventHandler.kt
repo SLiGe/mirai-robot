@@ -86,6 +86,10 @@ class FortuneMessageEventHandler : AbstractMessageEventHandler() {
         return containCommand(PluginCode.FORTUNE, msg)
     }
 
+    override fun matchCommand(messageEvent: MessageEvent?): Boolean {
+        return containCommand(PluginCode.FORTUNE, messageEvent)
+    }
+
     override fun code(): String {
         return PluginCode.FORTUNE
     }
