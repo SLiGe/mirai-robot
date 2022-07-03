@@ -72,7 +72,7 @@ public interface MessageEventHandler {
      * @return boolean
      */
     default boolean matchCommand(MessageEvent messageEvent) {
-        return false;
+        return true;
     }
 
     /**
