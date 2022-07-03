@@ -1,6 +1,7 @@
 package cn.zjiali.robot.handler
 
 import cn.hutool.core.collection.CollectionUtil
+import cn.hutool.core.exceptions.ExceptionUtil
 import cn.zjiali.robot.constant.ApiUrl
 import cn.zjiali.robot.constant.AppConstants
 import cn.zjiali.robot.main.OutMessageConvert.Companion.instance
@@ -19,10 +20,14 @@ import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import net.mamoe.mirai.contact.isBotMuted
 import net.mamoe.mirai.event.events.FriendMessageEvent
 import net.mamoe.mirai.event.events.GroupMessageEvent
 import net.mamoe.mirai.event.events.MessageEvent
 import net.mamoe.mirai.message.data.At
+import okhttp3.internal.filterList
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import java.util.stream.Collectors
 
 /**
@@ -34,25 +39,38 @@ import java.util.stream.Collectors
 class ServerGlobalMessageHandler : GlobalMessageHandler {
     @Inject
     private val messageEventHandlers: Set<MessageEventHandler>? = null
+    private val logger: Logger = LoggerFactory.getLogger(javaClass)
 
     @OptIn(DelicateCoroutinesApi::class)
     override fun handleGroupMessageEvent(event: GroupMessageEvent) {
         GlobalScope.launch(Dispatchers.Unconfined) {
-            handleMessage(true, event, null)
+            try {
+                handleMessage(true, event, null)
+            } catch (e: Exception) {
+                logger.error("处理群组消息异常,e:{}", ExceptionUtil.stacktraceToString(e))
+            }
         }
     }
 
     @OptIn(DelicateCoroutinesApi::class)
     override fun handleFriendMessageEvent(event: FriendMessageEvent) {
         GlobalScope.launch(Dispatchers.Unconfined) {
-            handleMessage(false, null, event)
+            try {
+                handleMessage(false, null, event)
+            } catch (e: Exception) {
+                logger.error("处理好友消息异常,e:{}", ExceptionUtil.stacktraceToString(e))
+            }
         }
     }
 
     @OptIn(DelicateCoroutinesApi::class)
     override fun handleOtherMessageEvent(event: MessageEvent) {
         GlobalScope.launch(Dispatchers.Unconfined) {
-            handleMessage(false, null, event)
+            try {
+                handleMessage(false, null, event)
+            } catch (e: Exception) {
+                logger.error("处理其他消息异常,e:{}", ExceptionUtil.stacktraceToString(e))
+            }
         }
 
     }
@@ -62,6 +80,9 @@ class ServerGlobalMessageHandler : GlobalMessageHandler {
         groupMessageEvent: GroupMessageEvent?,
         friendMessageEvent: MessageEvent?
     ) {
+        if (isGroup && groupMessageEvent!!.group.isBotMuted) {
+            return
+        }
         val preHandle = doPreHandle(if (isGroup) groupMessageEvent else friendMessageEvent)
         if (!preHandle) return
         val messageEventHandlerList = filterMessageEventHandlerList(isGroup, groupMessageEvent)
@@ -120,24 +141,26 @@ class ServerGlobalMessageHandler : GlobalMessageHandler {
         isGroup: Boolean,
         groupMessageEvent: GroupMessageEvent?
     ): List<MessageEventHandler> {
-        val messageEventHandlerList = messageEventHandlers!!.toList()
+        var messageEventHandlerList = messageEventHandlers!!.toList()
         if (isGroup) {
             val groupNumber = groupMessageEvent!!.group.id
             val jsonObject = JsonObject()
             jsonObject.addProperty("groupNumber", groupNumber)
             val serverGroupPluginJson =
                 HttpUtil.post(PropertiesUtil.getApiProperty(ApiUrl.QUERY_GROUP_PLUGIN), JsonUtil.obj2str(jsonObject))
+            logger.debug("群组插件配置:{}", serverGroupPluginJson)
             val pluginInfoResponse = JsonUtil.toObjByType<RobotBaseResponse<List<PluginInfo?>>>(
                 serverGroupPluginJson,
                 object : TypeToken<RobotBaseResponse<List<PluginInfo?>?>?>() {}.type
             )
             val serverGroupPluginList = pluginInfoResponse.data
             if (CollectionUtil.isNotEmpty(serverGroupPluginList)) {
-                val pluginCodeSet =
-                    serverGroupPluginList.stream().map { plugin -> plugin!!.pluginCode }.collect(Collectors.toSet())
-                messageEventHandlerList.dropWhile { messageEventHandler: MessageEventHandler ->
+                val unActivePluginCodeSet =
+                    serverGroupPluginList.stream().filter { plugin -> plugin?.activeFlag == "0" }
+                        .map { plugin -> plugin?.pluginCode }.collect(Collectors.toSet())
+                messageEventHandlerList = messageEventHandlerList.filter { messageEventHandler: MessageEventHandler ->
                     val code = messageEventHandler.code()
-                    !pluginCodeSet.contains(code)
+                    !unActivePluginCodeSet.contains(code)
                 }
             }
         }
