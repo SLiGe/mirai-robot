@@ -64,7 +64,7 @@ class GroupActionService {
 
             GroupActionType.MUTE_MEMBER.ordinal -> {
                 val memberNumber = groupAction.memberNumber
-                group?.getMember(memberNumber!!)!!.mute(groupAction.muteTime!!)
+                group?.getMember(memberNumber!!)!!.mute(groupAction.muteTime!! * 60)
             }
 
             GroupActionType.REMOVE_MEMBER.ordinal -> {
