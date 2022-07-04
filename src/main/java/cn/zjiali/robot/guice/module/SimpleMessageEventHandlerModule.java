@@ -6,7 +6,6 @@ import cn.zjiali.robot.handler.GlobalMessageHandler;
 import cn.zjiali.robot.handler.ServerGlobalMessageHandler;
 import com.google.inject.AbstractModule;
 import com.google.inject.Singleton;
-import com.google.inject.name.Names;
 
 /**
  * @author zJiaLi
