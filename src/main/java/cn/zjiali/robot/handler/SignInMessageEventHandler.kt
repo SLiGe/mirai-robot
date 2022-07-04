@@ -52,7 +52,7 @@ class SignInMessageEventHandler : AbstractMessageEventHandler() {
             if (status == 200) {
                 val dataResponse = response.dataResponse
                 return OutMessage.builder().pluginCode(PluginCode.SIGN).convertFlag(true)
-                    .fillFlag(AppConstants.FILL_OUT_MESSAGE_OBJECT_FLAG)
+                    .fillFlag(AppConstants.FILL_OUT_MESSAGE_OBJECT_FLAG).event(event)
                     .templateCode(MsgTemplate.SIGN_TEMPLATE).fillObj(dataResponse).build()
             } else if (status == 203) {
                 return OutMessage.builder().pluginCode(PluginCode.SIGN)
