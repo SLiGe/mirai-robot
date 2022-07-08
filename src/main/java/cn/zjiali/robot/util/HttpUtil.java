@@ -1,12 +1,17 @@
 package cn.zjiali.robot.util;
 
+import cn.zjiali.robot.config.AppConfig;
+import cn.zjiali.robot.manager.ServerTokenManager;
 import com.google.gson.JsonObject;
 import net.mamoe.mirai.utils.MiraiLogger;
 import net.mamoe.mirai.utils.PlatformLogger;
 import okhttp3.*;
 
 import java.io.IOException;
-import java.util.*;
+import java.time.Duration;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 
 /**
  * @author zJiaLi
@@ -16,7 +21,20 @@ public class HttpUtil {
 
     private static final MiraiLogger miraiLogger = new PlatformLogger(HttpUtil.class.getName());
 
-    private static final OkHttpClient okHttpClient = new OkHttpClient();
+    private static final OkHttpClient okHttpClient;
+
+    static {
+        okHttpClient = new OkHttpClient.Builder().addInterceptor(chain -> {
+            Request.Builder requestBuilder = chain.request().newBuilder();
+            requestBuilder.addHeader("Client-Type", "robot");
+            if (!chain.request().url().toString().equals(AppConfig.getApplicationConfig().getServerUrl())) {
+                ServerTokenManager serverTokenManager = GuiceUtil.getBean(ServerTokenManager.class);
+                requestBuilder.addHeader("Authorization", serverTokenManager.serverToken());
+                requestBuilder.addHeader("Cookie", "Admin-Token=" + serverTokenManager.serverToken());
+            }
+            return chain.proceed(requestBuilder.build());
+        }).callTimeout(Duration.ofSeconds(25)).connectTimeout(Duration.ofSeconds(15)).build();
+    }
 
     private static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
     private static final String CONTENT_TYPE = "Content-Type";
@@ -56,8 +74,7 @@ public class HttpUtil {
         miraiLogger.debug("[httpGet]====请求URL: " + url);
         String result = null;
         Request request = new Request.Builder().url(url).build();
-        try {
-            Response response = okHttpClient.newCall(request).execute();
+        try (Response response = okHttpClient.newCall(request).execute()) {
             if (response.body() != null) {
                 result = Objects.requireNonNull(response.body()).string();
             }
@@ -78,12 +95,9 @@ public class HttpUtil {
     public static String post(String url, String data) {
         miraiLogger.debug("[httpPost]====请求URL: " + url);
         RequestBody requestBody = RequestBody.create(data, JSON);
-        Request request = new Request.Builder().url(url)
-                .header("token", "294a4fd5929bf405060d14566a72b18a")
-                .post(requestBody).build();
+        Request request = new Request.Builder().url(url).post(requestBody).build();
         String result = null;
-        try {
-            Response response = okHttpClient.newCall(request).execute();
+        try (Response response = okHttpClient.newCall(request).execute()) {
             if (response.body() != null) {
                 result = Objects.requireNonNull(response.body()).string();
             }
@@ -92,7 +106,6 @@ public class HttpUtil {
         }
         return result;
     }
-
 
 
 }

@@ -23,7 +23,7 @@ import java.util.Scanner;
 public class SysLoginSolver extends LoginSolver {
 
 
-    private static final CommonLogger commonLogger = new CommonLogger(SysLoginSolver.class.getName(), SysLoginSolver.class);
+    private static final CommonLogger commonLogger = new CommonLogger(SysLoginSolver.class);
 
     private static final String VERIFY_CODE_VIEW_URL = "verifyCode.view.url";
 

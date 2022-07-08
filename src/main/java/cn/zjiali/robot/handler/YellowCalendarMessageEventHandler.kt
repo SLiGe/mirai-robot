@@ -7,10 +7,10 @@ import cn.zjiali.robot.model.response.RobotBaseResponse
 import cn.zjiali.robot.model.response.YellowCalendarResponse
 import cn.zjiali.robot.util.HttpUtil
 import cn.zjiali.robot.util.JsonUtil
-import cn.zjiali.robot.util.PluginConfigUtil.getApiURL
 import com.google.gson.reflect.TypeToken
 import net.mamoe.mirai.event.events.FriendMessageEvent
 import net.mamoe.mirai.event.events.GroupMessageEvent
+import net.mamoe.mirai.event.events.MessageEvent
 
 /**
  * 老黄历消息处理器
@@ -20,11 +20,11 @@ import net.mamoe.mirai.event.events.GroupMessageEvent
  */
 class YellowCalendarMessageEventHandler : AbstractMessageEventHandler() {
     override fun handleGroupMessageEvent(event: GroupMessageEvent): OutMessage {
-        return yellowCalendarMessage!!
+        return yellowCalendarMessage(event)!!
     }
 
     override fun handleFriendMessageEvent(event: FriendMessageEvent): OutMessage {
-        return yellowCalendarMessage!!
+        return yellowCalendarMessage(event)!!
     }
 
     override fun next(): Boolean {
@@ -35,21 +35,27 @@ class YellowCalendarMessageEventHandler : AbstractMessageEventHandler() {
         return containCommand(PluginCode.YELLOW_CALENDAR, msg)
     }
 
-    /**
-     * 获取老黄历消息
-     *
-     */
-    private val yellowCalendarMessage: OutMessage?
-        get() {
-            val response = HttpUtil.get(getApiURL(PluginCode.YELLOW_CALENDAR))
-            val type = object : TypeToken<RobotBaseResponse<YellowCalendarResponse?>?>() {}.type
-            val baseResponse = JsonUtil.toObjByType<RobotBaseResponse<YellowCalendarResponse>>(response, type)
-            if (baseResponse.status == 200) {
-                val yellowCalendarResponse = baseResponse.data
-                return OutMessage.builder().convertFlag(true).templateCode(PluginCode.YELLOW_CALENDAR)
-                    .pluginCode(PluginCode.YELLOW_CALENDAR)
-                    .fillObj(yellowCalendarResponse).fillFlag(AppConstants.FILL_OUT_MESSAGE_OBJECT_FLAG).build()
-            }
-            return null
+    override fun matchCommand(messageEvent: MessageEvent?): Boolean {
+        return containCommand(PluginCode.YELLOW_CALENDAR, messageEvent)
+    }
+
+
+    override fun code(): String {
+        return PluginCode.YELLOW_CALENDAR
+    }
+
+    private fun yellowCalendarMessage(event: MessageEvent): OutMessage? {
+        val response = HttpUtil.get(getApiURL(PluginCode.YELLOW_CALENDAR, event))
+        val type = object : TypeToken<RobotBaseResponse<YellowCalendarResponse?>?>() {}.type
+        val baseResponse = JsonUtil.toObjByType<RobotBaseResponse<YellowCalendarResponse>>(response, type)
+        if (baseResponse.success()) {
+            val yellowCalendarResponse = baseResponse.data
+            return OutMessage.builder().convertFlag(true).templateCode(PluginCode.YELLOW_CALENDAR)
+                .pluginCode(PluginCode.YELLOW_CALENDAR)
+                .event(event)
+                .fillObj(yellowCalendarResponse).fillFlag(AppConstants.FILL_OUT_MESSAGE_OBJECT_FLAG).build()
         }
+        return null
+    }
+
 }

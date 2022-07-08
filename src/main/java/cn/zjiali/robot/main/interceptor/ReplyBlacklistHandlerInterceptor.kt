@@ -17,7 +17,7 @@ import java.io.IOException
  * @since 2021-06-14 12:15
  */
 class ReplyBlacklistHandlerInterceptor : HandlerInterceptor {
-    private val commonLogger = CommonLogger(ReplyBlacklistHandlerInterceptor::class.java.simpleName, javaClass)
+    private val commonLogger = CommonLogger(javaClass)
 
     @Inject
     private val dictService: DictService? = null

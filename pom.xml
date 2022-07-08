@@ -17,6 +17,12 @@
             <artifactId>mirai-core-jvm</artifactId>
             <version>2.11.1</version>
         </dependency>
+        <!--在依赖 mirai-core 或 mirai-core-api 的前提下额外添加日志转接模块. 版本号相同-->
+        <dependency>
+            <groupId>net.mamoe</groupId>
+            <artifactId>mirai-logging-log4j2</artifactId>
+            <version>2.11.1</version>
+        </dependency>
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-stdlib-jdk8</artifactId>
@@ -103,6 +109,34 @@
                 </executions>
             </plugin>
             <plugin>
+                <groupId>org.jetbrains.kotlin</groupId>
+                <artifactId>kotlin-maven-plugin</artifactId>
+                <version>${kotlin.version}</version>
+                <configuration>
+                    <args>
+                        <arg>-Xjsr305=strict</arg>
+                        <arg>-opt-in=kotlin.RequiresOptIn</arg>
+                    </args>
+                    <jvmTarget>1.8</jvmTarget><!-- 需要指定jdk的版本号-->
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>compile</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>test-compile</id>
+                        <phase>test-compile</phase>
+                        <goals>
+                            <goal>test-compile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <executions>
@@ -126,27 +160,6 @@
                     <target>8</target>
                     <encoding>UTF-8</encoding>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.jetbrains.kotlin</groupId>
-                <artifactId>kotlin-maven-plugin</artifactId>
-                <version>${kotlin.version}</version>
-                <configuration>
-                    <args>
-                        <arg>-Xjsr305=strict</arg>
-                        <arg>-opt-in=kotlin.RequiresOptIn</arg>
-                    </args>
-                    <jvmTarget>1.8</jvmTarget><!-- 需要指定jdk的版本号-->
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>compile</id>
-                        <phase>process-sources</phase>
-                        <goals>
-                            <goal>compile</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

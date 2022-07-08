@@ -20,7 +20,7 @@ import java.util.Map;
 @Singleton
 public class DefaultWsSecurityManager implements WsSecurityManager {
 
-    private final CommonLogger commonLogger = new CommonLogger(WsSecurityManager.class.getSimpleName(), WsSecurityManager.class);
+    private final CommonLogger commonLogger = new CommonLogger(WsSecurityManager.class);
     private final DictService dictService;
     private final Map<String, Object> queryVerifyKeyParamMap = Maps.newHashMap();
     private final Map<String, Object> queryMessageEncryptKeyParamMap = Maps.newHashMap();

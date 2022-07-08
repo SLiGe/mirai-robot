@@ -21,6 +21,11 @@ object MsgType {
     const val GROUP_ACTION = 2
 
     /**
+     * 配置操作
+     */
+    const val CONFIG_ACTION = 3
+
+    /**
      * 发送好友消息
      */
     const val SEND_FRIEND_MSG = 1
@@ -34,4 +39,14 @@ object MsgType {
      * 发送群组@消息
      */
     const val SEND_GROUP_AT_MSG = 3
+
+    /**
+     * 发送群私聊
+     */
+    const val SEND_GROUP_PRIVATE_CHAT = 4
+
+    /**
+     * 发送群@全体成员
+     */
+    const val SEND_GROUP_AT_ALL = 5
 }

@@ -1,5 +1,10 @@
 package cn.zjiali.robot.model.message;
 
+import cn.zjiali.robot.constant.AppConstants;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+import net.mamoe.mirai.event.events.GroupMessageEvent;
+import net.mamoe.mirai.event.events.MessageEvent;
 import net.mamoe.mirai.message.data.Message;
 
 import java.util.Map;
@@ -9,6 +14,8 @@ import java.util.Objects;
  * @author zJiaLi
  * @since 2021-09-04 11:03
  */
+@ToString
+@EqualsAndHashCode(callSuper = false)
 public class OutMessage {
 
     /**
@@ -55,7 +62,22 @@ public class OutMessage {
      */
     private int messageType;
 
-    OutMessage(String content, String pluginCode, boolean convertFlag, String templateCode, int fillFlag, Map<String, String> fillMap, Object fillObj, String finalMessage, int messageType, Message message) {
+    /**
+     * 群号
+     */
+    private long groupId;
+
+    /**
+     * 发消息人
+     */
+    private long senderId;
+
+    /**
+     * 来源消息类型 1 好友 2 群组
+     */
+    private int fromMsgType;
+
+    OutMessage(String content, String pluginCode, boolean convertFlag, String templateCode, int fillFlag, Map<String, String> fillMap, Object fillObj, String finalMessage, int messageType, Message message, long groupId, long senderId, int fromMsgType) {
         this.content = content;
         this.pluginCode = pluginCode;
         this.convertFlag = convertFlag;
@@ -66,12 +88,38 @@ public class OutMessage {
         this.finalMessage = finalMessage;
         this.messageType = messageType;
         this.message = message;
+        this.groupId = groupId;
+        this.senderId = senderId;
+        this.fromMsgType = fromMsgType;
     }
 
     public static OutMessageBuilder builder() {
         return new OutMessageBuilder();
     }
 
+    public int getFromMsgType() {
+        return fromMsgType;
+    }
+
+    public void setFromMsgType(int fromMsgType) {
+        this.fromMsgType = fromMsgType;
+    }
+
+    public long getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(long groupId) {
+        this.groupId = groupId;
+    }
+
+    public long getSenderId() {
+        return senderId;
+    }
+
+    public void setSenderId(long senderId) {
+        this.senderId = senderId;
+    }
 
     public String getContent() {
         return this.content;
@@ -153,34 +201,6 @@ public class OutMessage {
         this.message = message;
     }
 
-    @Override
-    public String toString() {
-        return "OutMessage{" +
-                "content='" + content + '\'' +
-                ", pluginCode='" + pluginCode + '\'' +
-                ", convertFlag=" + convertFlag +
-                ", templateCode='" + templateCode + '\'' +
-                ", fillFlag=" + fillFlag +
-                ", fillMap=" + fillMap +
-                ", fillObj=" + fillObj +
-                ", finalMessage='" + finalMessage + '\'' +
-                ", message=" + message +
-                ", messageType=" + messageType +
-                '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        OutMessage that = (OutMessage) o;
-        return convertFlag == that.convertFlag && fillFlag == that.fillFlag && messageType == that.messageType && Objects.equals(content, that.content) && Objects.equals(pluginCode, that.pluginCode) && Objects.equals(templateCode, that.templateCode) && Objects.equals(fillMap, that.fillMap) && Objects.equals(fillObj, that.fillObj) && Objects.equals(finalMessage, that.finalMessage) && Objects.equals(message, that.message);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(content, pluginCode, convertFlag, templateCode, fillFlag, fillMap, fillObj, finalMessage, message, messageType);
-    }
 
     public static class OutMessageBuilder {
         private String content;
@@ -195,6 +215,12 @@ public class OutMessage {
         private Message message;
 
         private int messageType = 1;
+
+        private long groupId;
+
+        private long senderId;
+
+        private int fromMsgType;
 
         OutMessageBuilder() {
         }
@@ -249,9 +275,37 @@ public class OutMessage {
             return this;
         }
 
+        public OutMessageBuilder event(MessageEvent event) {
+            if (event instanceof GroupMessageEvent) {
+                this.groupId = ((GroupMessageEvent) event).getGroup().getId();
+            }
+            this.senderId = event.getSender().getId();
+            if (event instanceof GroupMessageEvent) {
+                this.fromMsgType = AppConstants.MSG_FROM_GROUP;
+            } else {
+                this.fromMsgType = AppConstants.MSG_FROM_FRIEND;
+            }
+            return this;
+        }
+
+        public OutMessageBuilder groupId(long groupId) {
+            this.groupId = groupId;
+            return this;
+        }
+
+        public OutMessageBuilder senderId(long senderId) {
+            this.senderId = senderId;
+            return this;
+        }
+
+        public OutMessageBuilder fromMsgType(int fromMsgType) {
+            this.fromMsgType = fromMsgType;
+            return this;
+        }
+
 
         public OutMessage build() {
-            return new OutMessage(content, pluginCode, convertFlag, templateCode, fillFlag, fillMap, fillObj, finalMessage, messageType, message);
+            return new OutMessage(content, pluginCode, convertFlag, templateCode, fillFlag, fillMap, fillObj, finalMessage, messageType, message, groupId, senderId, fromMsgType);
         }
 
         @Override

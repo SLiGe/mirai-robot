@@ -34,7 +34,7 @@ class WebSocketManager {
     @Inject
     @Named("DefaultWsSecurityManager")
     private val wsSecurityManager: WsSecurityManager? = null
-    private val commonLogger = CommonLogger(WebSocketManager::class.java.simpleName, WebSocketManager::class.java)
+    private val commonLogger = CommonLogger(WebSocketManager::class.java)
 
     @Throws(IOException::class)
     fun connect() {

@@ -9,6 +9,11 @@ package cn.zjiali.robot.enums
 enum class GroupActionType {
 
     /**
+     * 拉取群信息
+     */
+    PULL_GROUP,
+
+    /**
      * 拉取成员
      */
     PULL_MEMBER,

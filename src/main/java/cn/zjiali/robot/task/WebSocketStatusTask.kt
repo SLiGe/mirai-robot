@@ -13,16 +13,17 @@ import cn.zjiali.robot.util.GuiceUtil
 class WebSocketStatusTask : Runnable {
 
     override fun run() {
-        val webSocketManager =GuiceUtil.getBean(
+        val webSocketManager = GuiceUtil.getBean(
             WebSocketManager::class.java
         )
         val wsSecurityManager = GuiceUtil.getBean(
+            "DefaultWsSecurityManager",
             WsSecurityManager::class.java
         )
         var session = webSocketManager.getSession(AppConfig.getQQ())
         if (session == null) {
             webSocketManager.connect()
-            session= webSocketManager.getSession(AppConfig.getQQ())
+            session = webSocketManager.getSession(AppConfig.getQQ())
         }
         val sendFlag = session!!.send(wsSecurityManager.encryptMsgData(WsClientRes(200, "存活检测!").toJson()))
         if (!sendFlag) {

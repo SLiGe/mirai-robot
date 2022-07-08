@@ -1,33 +1,34 @@
 package cn.zjiali.robot.util
 
 import cn.hutool.core.text.StrFormatter
-import net.mamoe.mirai.utils.MiraiLogger
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 /**
  * @author zJiaLi
  * @since 2021-07-30 14:51
  */
-class CommonLogger(identity: String?, clz: Class<*>) {
+class CommonLogger(clz: Class<*>) {
 
-    private val miraiLogger: MiraiLogger
+    private val logger:Logger
 
     fun info(message: String?, vararg args: Any?) {
-        miraiLogger.info(StrFormatter.format(message, *args))
+        logger.info(StrFormatter.format(message, *args))
     }
 
     fun debug(message: String?, vararg args: Any?) {
-        miraiLogger.debug(StrFormatter.format(message, *args))
+        logger.debug(StrFormatter.format(message, *args))
     }
 
     fun warning(message: String?, vararg args: Any?) {
-        miraiLogger.warning(StrFormatter.format(message, *args))
+        logger.warn(StrFormatter.format(message, *args))
     }
 
     fun error(message: String?, vararg args: Any?) {
-        miraiLogger.error(StrFormatter.format(message, *args))
+        logger.error(StrFormatter.format(message, *args))
     }
 
     init {
-        miraiLogger = MiraiLogger.Factory.create(clz, identity)
+        logger = LoggerFactory.getLogger(clz)
     }
 }

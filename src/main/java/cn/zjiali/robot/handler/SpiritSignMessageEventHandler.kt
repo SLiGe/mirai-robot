@@ -11,11 +11,11 @@ import cn.zjiali.robot.model.response.RobotBaseResponse
 import cn.zjiali.robot.model.response.SignPerDayRes
 import cn.zjiali.robot.util.HttpUtil
 import cn.zjiali.robot.util.JsonUtil
-import cn.zjiali.robot.util.PluginConfigUtil.getConfigVal
 import com.google.common.collect.Maps
 import com.google.gson.reflect.TypeToken
 import net.mamoe.mirai.event.events.FriendMessageEvent
 import net.mamoe.mirai.event.events.GroupMessageEvent
+import net.mamoe.mirai.event.events.MessageEvent
 
 /**
  *
@@ -25,11 +25,11 @@ import net.mamoe.mirai.event.events.GroupMessageEvent
 class SpiritSignMessageEventHandler : AbstractMessageEventHandler() {
 
     override fun handleGroupMessageEvent(event: GroupMessageEvent?): OutMessage? {
-        return signPerDay(getMsg(event), event?.sender?.id.toString())
+        return signPerDay(getMsg(event), event?.sender?.id.toString(), event!!.group.id, AppConstants.MSG_FROM_GROUP)
     }
 
     override fun handleFriendMessageEvent(event: FriendMessageEvent?): OutMessage? {
-        return signPerDay(getMsg(event), event?.sender?.id.toString())
+        return signPerDay(getMsg(event), event?.sender?.id.toString(), 0L, AppConstants.MSG_FROM_FRIEND)
     }
 
     override fun next(): Boolean {
@@ -40,18 +40,26 @@ class SpiritSignMessageEventHandler : AbstractMessageEventHandler() {
         return containCommand(PluginCode.LQ, msg)
     }
 
-     fun signPerDay(msg: String, qq: String): OutMessage? {
+    override fun matchCommand(messageEvent: MessageEvent?): Boolean {
+        return containCommand(PluginCode.LQ, messageEvent)
+    }
+
+    override fun code(): String {
+        return PluginCode.LQ
+    }
+
+    fun signPerDay(msg: String, qq: String, groupId: Long?, msgFrom: Int): OutMessage? {
         val signType = chooseSignType(msg)
         val paramMap = Maps.newHashMap<String, Any>()
-         if (signType != null) {
-             paramMap["type"] = signType
-         }
+        if (signType != null) {
+            paramMap["type"] = signType
+        }
         paramMap["qq"] = qq
-        val signRes = HttpUtil.post(getConfigVal(PluginCode.LQ, PluginProperty.API_URL), paramMap)
+        val signRes = HttpUtil.post(getConfigVal(PluginCode.LQ, PluginProperty.API_URL, groupId, qq.toLong()), paramMap)
         if (signRes != null) {
             val type = object : TypeToken<RobotBaseResponse<SignPerDayRes?>?>() {}.type
             val robotBaseResponse = JsonUtil.toObjByType<RobotBaseResponse<SignPerDayRes?>?>(signRes, type)
-            if (robotBaseResponse.status == 200) {
+            if (robotBaseResponse.success()) {
                 val signData = robotBaseResponse.data?.signData
                 val messageParamMap = Maps.newHashMap<String, String>()
                 BeanCopier.create<Map<String, String>>(
@@ -63,6 +71,8 @@ class SpiritSignMessageEventHandler : AbstractMessageEventHandler() {
                 messageParamMap["viewUrl"] = robotBaseResponse.data?.viewUrl.toString()
                 return OutMessage.builder().convertFlag(true).templateCode(chooseSignTemplate(msg))
                     .pluginCode(PluginCode.LQ)
+                    .groupId(groupId!!)
+                    .fromMsgType(msgFrom)
                     .fillMap(messageParamMap).fillFlag(AppConstants.FILL_OUT_MESSAGE_MAP_FLAG).build()
             }
         }

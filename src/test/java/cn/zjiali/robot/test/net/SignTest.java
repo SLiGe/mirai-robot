@@ -1,5 +1,7 @@
 package cn.zjiali.robot.test.net;
 
+import cn.zjiali.robot.constant.AppConstants;
+import cn.zjiali.robot.constant.MsgType;
 import cn.zjiali.robot.factory.DefaultBeanFactory;
 import cn.zjiali.robot.factory.ServiceFactory;
 import cn.zjiali.robot.handler.SpiritSignMessageEventHandler;
@@ -47,15 +49,15 @@ public class SignTest {
         WsSecurityManager defaultWsSecurityManager = GuiceUtil.getBean("DefaultWsSecurityManager", WsSecurityManager.class);
         defaultWsSecurityManager.encryptMsgData(new WsClientRes(200, "处理成功!").toJson());
         SpiritSignMessageEventHandler spiritSignMessageEventHandler = new SpiritSignMessageEventHandler();
-        OutMessage gyMessage = spiritSignMessageEventHandler.signPerDay("观音灵签", "357078415");
+        OutMessage gyMessage = spiritSignMessageEventHandler.signPerDay("观音灵签", "357078415", 0L, AppConstants.MSG_FROM_FRIEND);
         String gy = OutMessageConvert.getInstance().convert(gyMessage);
         System.out.println(gy);
         System.out.println();
-        OutMessage ylMessage = spiritSignMessageEventHandler.signPerDay("月老灵签", "357078415");
+        OutMessage ylMessage = spiritSignMessageEventHandler.signPerDay("月老灵签", "357078415", 0L, AppConstants.MSG_FROM_FRIEND);
         String yl = OutMessageConvert.getInstance().convert(ylMessage);
         System.out.println(yl);
         System.out.println();
-        OutMessage csMessage = spiritSignMessageEventHandler.signPerDay("财神灵签", "357078415");
+        OutMessage csMessage = spiritSignMessageEventHandler.signPerDay("财神灵签", "357078415", 0L, AppConstants.MSG_FROM_FRIEND);
         String cs = OutMessageConvert.getInstance().convert(csMessage);
         System.out.println(cs);
     }

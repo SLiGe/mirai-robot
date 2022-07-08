@@ -9,8 +9,11 @@ import cn.zjiali.robot.guice.module.ManagerModule;
 import cn.zjiali.robot.guice.module.MessageHandlerModule;
 import cn.zjiali.robot.guice.module.SimpleMessageEventHandlerModule;
 import cn.zjiali.robot.main.websocket.WebSocketManager;
+import cn.zjiali.robot.manager.ServerConfigManager;
+import cn.zjiali.robot.manager.ServerTokenManager;
 import cn.zjiali.robot.model.ApplicationConfig;
 import cn.zjiali.robot.model.SystemConfig;
+import cn.zjiali.robot.task.WebSocketStatusTask;
 import cn.zjiali.robot.util.*;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -31,7 +34,7 @@ import java.util.stream.Collectors;
  */
 public class ApplicationBootStrap {
 
-    private final CommonLogger commonLogger = new CommonLogger(ApplicationBootStrap.class.getName(), ApplicationBootStrap.class);
+    private final CommonLogger commonLogger = new CommonLogger(ApplicationBootStrap.class);
 
     private ApplicationBootStrap() {
     }
@@ -51,8 +54,15 @@ public class ApplicationBootStrap {
     public void init() throws IOException {
         loadAppConfig();
         initGuiceContext();
+        genServerToken();
         loadMessageTemplate();
+        loadServerConfig();
         loadWebSocket();
+        loadCronTask();
+    }
+
+    private void genServerToken() {
+        GuiceUtil.getBean(ServerTokenManager.class).genServerToken();
     }
 
     private void initGuiceContext() {
@@ -99,9 +109,6 @@ public class ApplicationBootStrap {
             commonLogger.info("[WebSocket]====加载中");
             WebSocketManager webSocketManager = this.injector.getInstance(WebSocketManager.class);
             webSocketManager.connect();
-            //添加定时任务定时确认websocket连接状态
-            CronUtil.setMatchSecond(true);
-            CronUtil.start();
             commonLogger.info("[WebSocket]====加载完成");
         }
 
@@ -135,6 +142,36 @@ public class ApplicationBootStrap {
                 .lines().collect(Collectors.joining(System.lineSeparator()));
         AppConfig.applicationConfig = JsonUtil.json2obj(appConfigJson, ApplicationConfig.class);
         configStream.close();
+    }
+
+    /**
+     * 加载服务端配置
+     */
+    private void loadServerConfig() {
+        if (AppConfig.applicationConfig.serverControl()) {
+            ServerConfigManager serverConfigManager = GuiceUtil.getBean(ServerConfigManager.class);
+            serverConfigManager.pullServerConfig();
+        }
+    }
+
+    /**
+     * 加载定时任务
+     *
+     * @throws IOException e
+     */
+    private void loadCronTask() throws IOException {
+        String webSocketFlag = PropertiesUtil.getApplicationProperty("robot.websocket.flag");
+        if (AppConfig.serverControl() || "1".equals(webSocketFlag)) {
+            CronUtil.setMatchSecond(true);
+            CronUtil.start();
+        }
+        if (AppConfig.serverControl()) {
+            CronUtil.schedule("0 0 0/5 * * ?", (Runnable) () -> GuiceUtil.getBean(ServerTokenManager.class).genServerToken());
+        }
+        if ("1".equals(webSocketFlag)) {
+            //添加定时任务定时确认websocket连接状态
+            CronUtil.schedule("0/10 * * ? * *", new WebSocketStatusTask());
+        }
     }
 
 

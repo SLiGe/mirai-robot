@@ -1,7 +1,11 @@
 {
   "appEnable": 1,
-  "qq": "xxx",
+  "qq": "2364051402",
   "password": "xxx",
+  "serverControl": "1",
+  "serverUser": "admin",
+  "serverPwd": "admin123",
+  "serverUrl": "https://server.zjiali.cn/login",
   "plugins": [
     {
       "name": "一言",
@@ -9,7 +13,7 @@
       "handler": "cn.zjiali.robot.handler.SenMessageEventHandler",
       "command": "一言",
       "template": "",
-      "templateFlag":"0",
+      "templateFlag": "0",
       "code": "oneSen",
       "ignoreKeyWords": "",
       "properties": {
@@ -22,7 +26,7 @@
       "handler": "cn.zjiali.robot.handler.SignInMessageEventHandler",
       "command": "签到,积分查询",
       "template": "",
-      "templateFlag":"2",
+      "templateFlag": "2",
       "code": "sign",
       "ignoreKeyWords": "",
       "properties": {
@@ -38,7 +42,7 @@
       "handler": "cn.zjiali.robot.handler.FortuneMessageEventHandler",
       "command": "运势",
       "template": "\uD83C\uDF13您的今日运势为: {fortuneSummary}\n\uD83C\uDF1F星指数: {luckyStar}\n\uD83D\uDCD7签文: {signText}\n\uD83D\uDCDD解签: {unSignText}",
-      "templateFlag":"1",
+      "templateFlag": "1",
       "code": "fortune",
       "ignoreKeyWords": "",
       "properties": {
@@ -53,7 +57,7 @@
       "handler": "cn.zjiali.robot.handler.YellowCalendarMessageEventHandler",
       "command": "老黄历",
       "template": "今日老黄历:\n阳历:{yangli}\n阴历:{yinli}\n五行:{wuxing}\n冲煞:{chongsha}\n彭祖百忌:{baiji}\n吉神宜趋:{jishen}\n宜:{yi}\n凶神宜忌:{xiongshen}\n忌:{ji}",
-      "templateFlag":"1",
+      "templateFlag": "1",
       "code": "yellowCalendar",
       "ignoreKeyWords": "",
       "properties": {
@@ -66,7 +70,7 @@
       "handler": "cn.zjiali.robot.handler.CalendarMessageEventHandler",
       "command": "万年历",
       "template": "今日万年历:\n假日:{holiday}\n忌:{avoid}\n属相:{animalsYear}\n假日描述:{desc}\n周几:{weekday}\n宜:{suit}\n纪年:{lunarYear}\n农历:{lunar}\n具体日期:{date}",
-      "templateFlag":"1",
+      "templateFlag": "1",
       "code": "calendar",
       "ignoreKeyWords": "",
       "properties": {
@@ -79,7 +83,7 @@
       "handler": "cn.zjiali.robot.handler.TodayOfHistoryMessageEventHandler",
       "command": "历史上的今天",
       "template": "",
-      "templateFlag":"0",
+      "templateFlag": "0",
       "code": "todayHistory",
       "ignoreKeyWords": "",
       "properties": {
@@ -92,11 +96,11 @@
       "handler": "cn.zjiali.robot.handler.JokeMessageEventHandler",
       "command": "笑话",
       "template": "",
-      "templateFlag":"0",
+      "templateFlag": "0",
       "code": "joke",
       "ignoreKeyWords": "",
       "properties": {
-        "url": "http://127.0.0.1:8999/api/queryJoke"
+        "url": "https://robot.zjiali.cn/api/queryJoke"
       }
     },
     {
@@ -105,53 +109,14 @@
       "handler": "cn.zjiali.robot.handler.SpiritSignMessageEventHandler",
       "command": "观音灵签,月老灵签,财神灵签",
       "template": "",
-      "templateFlag":"2",
+      "templateFlag": "2",
       "code": "lq",
       "ignoreKeyWords": "",
       "properties": {
-        "url": "http://127.0.0.1:8999/lq/oneSignPerDay",
+        "url": "https://robot.zjiali.cn/lq/oneSignPerDay",
         "gyTemplate": "{title}\n诗曰:{shi_yue}\n诗意:{shi_yi}\n解曰:{jie_yue}\n本签精髓:{bqjs}\n详情请点击:{viewUrl}",
         "ylTemplate": "{title}\n签诗:{qian_shi}\n解签:{jie_qian}\n详情请点击:{viewUrl}",
         "csTemplate": "{title}\n诗曰:{shi_yue}\n吉凶:{ji_xiong}\n详情请点击:{viewUrl}"
-      }
-    },
-    {
-      "name": "观音灵签",
-      "enable": 1,
-      "handler": "cn.zjiali.robot.handler.GyLqMessageEventHandler",
-      "command": "观音灵签",
-      "template": "签号:{number1}\n好坏:{haohua}\n签语:{qianyu}\n诗意解签:{shiyi}\n白话解签:{jieqian}",
-      "templateFlag":"1",
-      "code": "gylq",
-      "ignoreKeyWords": "",
-      "properties": {
-        "url": "https://robot.zjiali.cn/api/queryLq"
-      }
-    },
-    {
-      "name": "月老灵签",
-      "enable": 1,
-      "handler": "cn.zjiali.robot.handler.YlLqMessageEventHandler",
-      "command": "月老灵签",
-      "template": "签号:{number1}\n好坏:{haohua}\n诗意解签:{shiyi}\n解签:{jieqian}\n注释:{zhushi}\n白话浅释:{baihua}",
-      "templateFlag":"1",
-      "code": "yllq",
-      "ignoreKeyWords": "",
-      "properties": {
-        "url": "https://robot.zjiali.cn/api/queryLq"
-      }
-    },
-    {
-      "name": "财神爷灵签",
-      "enable": 1,
-      "handler": "cn.zjiali.robot.handler.CsyLqMessageEventHandler",
-      "command": "财神爷灵签",
-      "template": "签号:{number1}\n签语:{qianyu}\n注释:{zhushi}\n解签:{jieqian}\n解说:{jieshuo}\n结果:{jieguo}\n婚姻:{hunyin}\n交易:{jiaoyi}\n事业:{shiye}",
-      "templateFlag":"1",
-      "code": "csylq",
-      "ignoreKeyWords": "",
-      "properties": {
-        "url": "https://robot.zjiali.cn/api/queryLq"
       }
     },
     {
@@ -160,7 +125,7 @@
       "handler": "cn.zjiali.robot.handler.RequestSongMessageEventHandler",
       "command": "点歌",
       "template": "",
-      "templateFlag":"0",
+      "templateFlag": "0",
       "code": "request_song",
       "ignoreKeyWords": "",
       "properties": {
@@ -171,7 +136,7 @@
       "name": "茉莉聊天",
       "enable": 1,
       "handler": "cn.zjiali.robot.handler.MoLiMessageEventHandler",
-      "templateFlag":"0",
+      "templateFlag": "0",
       "code": "MOLI",
       "ignoreKeyWords": "天气,ip,@qq,@lol,@sfz,@sjh,@cy,笑话,观音灵签,月老灵签,财神爷灵签",
       "properties": {
