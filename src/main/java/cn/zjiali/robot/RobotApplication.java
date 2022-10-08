@@ -44,12 +44,13 @@ public class RobotApplication {
 
     public static void main(String[] args) {
         init();
-        long qq = Long.parseLong(AppConfig.applicationConfig.getQq());
+        long qq = Long.parseLong(Objects.requireNonNull(AppConfig.applicationConfig.getQq()));
         String password = AppConfig.applicationConfig.getPassword();
+        assert password != null;
         Bot bot = BotFactory.INSTANCE.newBot(qq, password, new BotConfiguration() {
             {
                 //加载设备信息
-                loadDeviceInfoJson(Objects.requireNonNull(DeviceUtil.getDeviceInfoJson(AppConfig.applicationConfig.getQq())));
+                //loadDeviceInfoJson(Objects.requireNonNull(DeviceUtil.getDeviceInfoJson(AppConfig.applicationConfig.getQq())));
                 //设置登录解决器
                 setLoginSolver(GuiceUtil.getBean(SysLoginSolver.class));
                 // 选择协议

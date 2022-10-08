@@ -41,5 +41,6 @@ object DeviceUtil {
     fun main(args: Array<String>) {
         val res = JokeResponse()
         res.content = "aaa"
+        println(JSONObject(DeviceInfo.random()).toString())
     }
 }
