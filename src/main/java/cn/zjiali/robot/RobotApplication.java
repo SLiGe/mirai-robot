@@ -93,6 +93,11 @@ public class RobotApplication {
                     return (BotConfiguration.MiraiProtocol.ANDROID_PAD);
                 case "2":
                     return (BotConfiguration.MiraiProtocol.ANDROID_WATCH);
+                case "3":
+                    return (BotConfiguration.MiraiProtocol.IPAD);
+                case "4":
+                    return (BotConfiguration.MiraiProtocol.MACOS);
+
             }
         }
         return (BotConfiguration.MiraiProtocol.ANDROID_PHONE);
