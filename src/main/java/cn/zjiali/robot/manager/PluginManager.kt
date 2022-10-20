@@ -1,11 +1,15 @@
 package cn.zjiali.robot.manager
 
 import cn.zjiali.robot.config.AppConfig
+import cn.zjiali.robot.config.Plugin
 import cn.zjiali.robot.constant.ApiUrl
 import cn.zjiali.robot.constant.ConfigKey
 import cn.zjiali.robot.constant.PluginProperty
+import cn.zjiali.robot.model.response.RobotBaseResponse
+import cn.zjiali.robot.model.server.PluginInfo
 import cn.zjiali.robot.util.*
 import com.google.gson.JsonObject
+import com.google.gson.reflect.TypeToken
 import com.google.inject.Inject
 import com.google.inject.Singleton
 import org.slf4j.Logger
@@ -133,9 +137,40 @@ class PluginManager {
     /**
      * 刷新插件
      */
-    fun refreshPlugin(): Unit {
+    fun refreshPlugin() {
         val pluginInfoJson = HttpUtil.post(PropertiesUtil.getApiProperty(ApiUrl.QUERY_PLUGIN_INFO), JsonObject())
+        if (pluginInfoJson.isNotEmpty()) {
+            val response = JsonUtil.toObjByType<RobotBaseResponse<List<PluginInfo?>>>(
+                pluginInfoJson,
+                object : TypeToken<RobotBaseResponse<List<PluginInfo?>?>?>() {}.type
+            )
+            if (response.data.isNotEmpty()) {
+                val pluginList = response.data.map {
+                    val plugin = Plugin()
+                    plugin.code = it?.pluginCode
+                    plugin.name = it?.pluginNane
+                    plugin.handler = it?.pluginClass
+                    val properties = HashMap<String, String>()
+                    it?.pluginConfigList!!.forEach { pluginConfig ->
+                        run {
+                            val configKey = pluginConfig.configKey
+                            val configValue = pluginConfig.configValue
+                            when (configKey) {
+                                "command" -> plugin.command = configValue
+                                "enable" -> plugin.enable = configValue.toInt()
+                                "templateFlag" -> plugin.templateFlag = configValue
+                                "template" -> plugin.template = configValue
+                            }
+                            properties[configKey] = configValue
+                        }
+                    }
+                    plugin.properties = properties
+                    plugin
+                }
+                AppConfig.getApplicationConfig().plugins = pluginList
+            }
 
+        }
     }
 
 }
