@@ -26,4 +26,9 @@ object ApiUrl {
      * 提交群信息
      */
     const val POST_GROUP_INFO = "post.group.url"
+
+    /**
+     * 查询插件信息
+     */
+    const val QUERY_PLUGIN_INFO = "query.plugin.info.url"
 }

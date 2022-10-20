@@ -1,10 +1,11 @@
 package cn.zjiali.robot.manager
 
 import cn.zjiali.robot.config.AppConfig
+import cn.zjiali.robot.constant.ApiUrl
 import cn.zjiali.robot.constant.ConfigKey
 import cn.zjiali.robot.constant.PluginProperty
-import cn.zjiali.robot.util.ObjectUtil
-import cn.zjiali.robot.util.PluginConfigUtil
+import cn.zjiali.robot.util.*
+import com.google.gson.JsonObject
 import com.google.inject.Inject
 import com.google.inject.Singleton
 import org.slf4j.Logger
@@ -127,6 +128,14 @@ class PluginManager {
             .filter { config -> config.configKey.equals(configKey) }
             .map { config -> config.configValue }
             .getOrNull(0)
+    }
+
+    /**
+     * 刷新插件
+     */
+    fun refreshPlugin(): Unit {
+        val pluginInfoJson = HttpUtil.post(PropertiesUtil.getApiProperty(ApiUrl.QUERY_PLUGIN_INFO), JsonObject())
+
     }
 
 }
