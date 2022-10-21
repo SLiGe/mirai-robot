@@ -8,6 +8,7 @@ import cn.zjiali.robot.guice.module.HandlerInterceptorModule;
 import cn.zjiali.robot.guice.module.ManagerModule;
 import cn.zjiali.robot.guice.module.MessageHandlerModule;
 import cn.zjiali.robot.guice.module.SimpleMessageEventHandlerModule;
+import cn.zjiali.robot.handler.MessageEventHandler;
 import cn.zjiali.robot.main.websocket.WebSocketManager;
 import cn.zjiali.robot.manager.ServerConfigManager;
 import cn.zjiali.robot.manager.ServerTokenManager;
@@ -17,6 +18,8 @@ import cn.zjiali.robot.task.WebSocketStatusTask;
 import cn.zjiali.robot.util.*;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.google.inject.internal.GuiceInternal;
+import com.google.inject.util.Modules;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
