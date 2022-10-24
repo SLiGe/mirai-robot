@@ -4,22 +4,23 @@ import cn.hutool.cron.CronUtil;
 import cn.zjiali.robot.config.AppConfig;
 import cn.zjiali.robot.config.Plugin;
 import cn.zjiali.robot.config.PluginTemplate;
+import cn.zjiali.robot.constant.Constants;
 import cn.zjiali.robot.guice.module.HandlerInterceptorModule;
 import cn.zjiali.robot.guice.module.ManagerModule;
 import cn.zjiali.robot.guice.module.MessageHandlerModule;
 import cn.zjiali.robot.guice.module.SimpleMessageEventHandlerModule;
-import cn.zjiali.robot.handler.MessageEventHandler;
 import cn.zjiali.robot.main.websocket.WebSocketManager;
 import cn.zjiali.robot.manager.ServerConfigManager;
 import cn.zjiali.robot.manager.ServerTokenManager;
 import cn.zjiali.robot.model.ApplicationConfig;
 import cn.zjiali.robot.model.SystemConfig;
 import cn.zjiali.robot.task.WebSocketStatusTask;
-import cn.zjiali.robot.util.*;
+import cn.zjiali.robot.util.CommonLogger;
+import cn.zjiali.robot.util.GuiceUtil;
+import cn.zjiali.robot.util.JsonUtil;
+import cn.zjiali.robot.util.PropertiesUtil;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.google.inject.internal.GuiceInternal;
-import com.google.inject.util.Modules;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -70,6 +71,7 @@ public class ApplicationBootStrap {
 
     private void initGuiceContext() {
         this.injector = Guice.createInjector(new ManagerModule(), new MessageHandlerModule(), new SimpleMessageEventHandlerModule(), new HandlerInterceptorModule());
+        injector.createChildInjector(new ManagerModule());
     }
 
     /**
@@ -85,7 +87,7 @@ public class ApplicationBootStrap {
         Map<String, List<String>> messageTemplateMap = systemConfig.getMessageTemplates();
         PluginTemplate pluginTemplate = PluginTemplate.getInstance();
         List<Plugin> plugins = AppConfig.getApplicationConfig().getPlugins();
-        Objects.requireNonNull(plugins).stream().filter(plugin -> !"0".equals(plugin.getTemplateFlag()))
+        Objects.requireNonNull(plugins).stream().filter(plugin -> !Constants.N.equals(plugin.getTemplateFlag()))
                 .forEach(plugin -> {
                     if ("1".equals(plugin.getTemplateFlag())) {
                         String template = plugin.getTemplate();
@@ -108,7 +110,7 @@ public class ApplicationBootStrap {
      */
     private void loadWebSocket() throws IOException {
         String webSocketFlag = PropertiesUtil.getApplicationProperty("robot.websocket.flag");
-        if ("1".equals(webSocketFlag)) {
+        if (Constants.Y.equals(webSocketFlag)) {
             commonLogger.info("[WebSocket]====加载中");
             WebSocketManager webSocketManager = this.injector.getInstance(WebSocketManager.class);
             webSocketManager.connect();
@@ -164,14 +166,14 @@ public class ApplicationBootStrap {
      */
     private void loadCronTask() throws IOException {
         String webSocketFlag = PropertiesUtil.getApplicationProperty("robot.websocket.flag");
-        if (AppConfig.serverControl() || "1".equals(webSocketFlag)) {
+        if (AppConfig.serverControl() || Constants.Y.equals(webSocketFlag)) {
             CronUtil.setMatchSecond(true);
             CronUtil.start();
         }
         if (AppConfig.serverControl()) {
             CronUtil.schedule("0 0 0/5 * * ?", (Runnable) () -> GuiceUtil.getBean(ServerTokenManager.class).genServerToken());
         }
-        if ("1".equals(webSocketFlag)) {
+        if (Constants.Y.equals(webSocketFlag)) {
             //添加定时任务定时确认websocket连接状态
             CronUtil.schedule("0/10 * * ? * *", new WebSocketStatusTask());
         }
