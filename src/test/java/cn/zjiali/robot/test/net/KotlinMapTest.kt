@@ -1,6 +1,10 @@
 package cn.zjiali.robot.test.net
 
+import cn.zjiali.robot.handler.MoLiMessageEventHandler
+import cn.zjiali.robot.handler.ServerGlobalMessageHandler
+import com.google.inject.Inject
 import org.junit.Test
+import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl
 
 /**
  *
@@ -29,5 +33,19 @@ class KotlinMapTest {
         }
 
         println(list.filterNot { s -> s === "two" })
+
+        injectClassField(ServerGlobalMessageHandler())
     }
+
+    private fun injectClassField(obj: Any) {
+        obj.javaClass.declaredFields.forEach {
+            if (it.isAnnotationPresent(Inject::class.java)) {
+                if (it.type == Set::class.java){
+
+                    println(11)
+                }
+            }
+        }
+    }
+    inline fun <reified T : Any> classOfList(list: List<T>) = T::class
 }

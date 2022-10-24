@@ -29,7 +29,7 @@ public class MessageHandlerModule extends AbstractModule {
                 try {
                     messageEventHandlerMultiBinder.addBinding()
                             .to((Class<? extends MessageEventHandler>) Class.forName(plugin.getHandler()))
-                            .in(Singleton.class);;
+                            .in(Singleton.class);
                     log.info("[loadAppConfig]====加载 [{}] 成功！", plugin.getName());
                 } catch (ClassNotFoundException e) {
                     throw new RuntimeException(e);

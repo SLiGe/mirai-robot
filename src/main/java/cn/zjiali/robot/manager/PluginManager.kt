@@ -5,6 +5,7 @@ import cn.zjiali.robot.config.Plugin
 import cn.zjiali.robot.constant.ApiUrl
 import cn.zjiali.robot.constant.ConfigKey
 import cn.zjiali.robot.constant.PluginProperty
+import cn.zjiali.robot.handler.MessageEventHandler
 import cn.zjiali.robot.model.response.RobotBaseResponse
 import cn.zjiali.robot.model.server.PluginInfo
 import cn.zjiali.robot.util.*
@@ -14,6 +15,7 @@ import com.google.inject.Inject
 import com.google.inject.Singleton
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl
 import java.util.*
 
 /**
@@ -145,11 +147,15 @@ class PluginManager {
                 object : TypeToken<RobotBaseResponse<List<PluginInfo?>?>?>() {}.type
             )
             if (response.data.isNotEmpty()) {
+                val msgHandlers = AppConfig.getMsgHandlers()
                 val pluginList = response.data.map {
                     val plugin = Plugin()
                     plugin.code = it?.pluginCode
                     plugin.name = it?.pluginNane
                     plugin.handler = it?.pluginClass
+                    val pluginHandler = Class.forName(plugin.handler).newInstance()
+                    injectClassField(pluginHandler)
+                    msgHandlers.add((pluginHandler as MessageEventHandler?))
                     val properties = HashMap<String, String>()
                     it?.pluginConfigList!!.forEach { pluginConfig ->
                         run {
@@ -169,7 +175,35 @@ class PluginManager {
                 }
                 AppConfig.getApplicationConfig().plugins = pluginList
             }
+        }
+    }
 
+    fun injectClassField(obj: Any) {
+        obj.javaClass.declaredFields.forEach {
+            if (it.isAnnotationPresent(Inject::class.java)) {
+                it.isAccessible = true
+                when (it.type) {
+                    List::class.java -> {
+                        it.set(
+                            obj,
+                            GuiceUtil.getMultiBean((it.genericType as ParameterizedTypeImpl).actualTypeArguments[0].javaClass)
+                        )
+                    }
+
+                    Set::class.java -> {
+                        val list =
+                            GuiceUtil.getMultiBean((it.genericType as ParameterizedTypeImpl).actualTypeArguments[0].javaClass)
+                        it.set(
+                            obj,
+                            list.toSet()
+                        )
+                    }
+
+                    else -> {
+                        it.set(obj, GuiceUtil.getBean(it.type))
+                    }
+                }
+            }
         }
     }
 

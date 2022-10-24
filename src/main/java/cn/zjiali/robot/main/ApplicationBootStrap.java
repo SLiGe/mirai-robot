@@ -10,6 +10,7 @@ import cn.zjiali.robot.guice.module.ManagerModule;
 import cn.zjiali.robot.guice.module.MessageHandlerModule;
 import cn.zjiali.robot.guice.module.SimpleMessageEventHandlerModule;
 import cn.zjiali.robot.main.websocket.WebSocketManager;
+import cn.zjiali.robot.manager.PluginManager;
 import cn.zjiali.robot.manager.ServerConfigManager;
 import cn.zjiali.robot.manager.ServerTokenManager;
 import cn.zjiali.robot.model.ApplicationConfig;
@@ -59,10 +60,16 @@ public class ApplicationBootStrap {
         loadAppConfig();
         initGuiceContext();
         genServerToken();
+        refreshPlugin();
         loadMessageTemplate();
         loadServerConfig();
         loadWebSocket();
         loadCronTask();
+    }
+
+    private void refreshPlugin() {
+        PluginManager pluginManager = this.injector.getInstance(PluginManager.class);
+        pluginManager.refreshPlugin();
     }
 
     private void genServerToken() {
@@ -71,7 +78,6 @@ public class ApplicationBootStrap {
 
     private void initGuiceContext() {
         this.injector = Guice.createInjector(new ManagerModule(), new MessageHandlerModule(), new SimpleMessageEventHandlerModule(), new HandlerInterceptorModule());
-        injector.createChildInjector(new ManagerModule());
     }
 
     /**
