@@ -2,8 +2,10 @@ package cn.zjiali.robot.handler
 
 import cn.hutool.core.collection.CollectionUtil
 import cn.hutool.core.exceptions.ExceptionUtil
+import cn.zjiali.robot.config.AppConfig
 import cn.zjiali.robot.constant.ApiUrl
 import cn.zjiali.robot.constant.AppConstants
+import cn.zjiali.robot.constant.Constants
 import cn.zjiali.robot.main.OutMessageConvert.Companion.instance
 import cn.zjiali.robot.model.message.OutMessage
 import cn.zjiali.robot.model.response.RobotBaseResponse
@@ -15,7 +17,6 @@ import cn.zjiali.robot.util.PropertiesUtil
 import com.google.common.collect.Lists
 import com.google.gson.JsonObject
 import com.google.gson.reflect.TypeToken
-import com.google.inject.Inject
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -36,8 +37,6 @@ import java.util.stream.Collectors
  * @since 2020-10-29 21:20
  */
 class ServerGlobalMessageHandler : GlobalMessageHandler {
-    @Inject
-    private val messageEventHandlers: Set<MessageEventHandler>? = null
     private val logger: Logger = LoggerFactory.getLogger(javaClass)
 
     @OptIn(DelicateCoroutinesApi::class)
@@ -140,7 +139,7 @@ class ServerGlobalMessageHandler : GlobalMessageHandler {
         isGroup: Boolean,
         groupMessageEvent: GroupMessageEvent?
     ): List<MessageEventHandler> {
-        var messageEventHandlerList = messageEventHandlers!!.toList()
+        var messageEventHandlerList = AppConfig.msgMessageEventHandlers
         if (isGroup) {
             val groupNumber = groupMessageEvent!!.group.id
             val jsonObject = JsonObject()
@@ -155,7 +154,7 @@ class ServerGlobalMessageHandler : GlobalMessageHandler {
             val serverGroupPluginList = pluginInfoResponse.data
             if (CollectionUtil.isNotEmpty(serverGroupPluginList)) {
                 val unActivePluginCodeSet =
-                    serverGroupPluginList.stream().filter { plugin -> plugin?.activeFlag == "0" }
+                    serverGroupPluginList.stream().filter { plugin -> plugin?.activeFlag == Constants.N }
                         .map { plugin -> plugin?.pluginCode }.collect(Collectors.toSet())
                 messageEventHandlerList = messageEventHandlerList.filter { messageEventHandler: MessageEventHandler ->
                     val code = messageEventHandler.code()

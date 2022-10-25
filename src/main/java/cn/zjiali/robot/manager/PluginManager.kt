@@ -148,6 +148,7 @@ class PluginManager {
             )
             if (response.data.isNotEmpty()) {
                 val msgHandlers = AppConfig.getMsgHandlers()
+                msgHandlers.clear()
                 val pluginList = response.data.map {
                     val plugin = Plugin()
                     plugin.code = it?.pluginCode
