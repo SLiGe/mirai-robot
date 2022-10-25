@@ -7,7 +7,6 @@ import cn.zjiali.robot.config.PluginTemplate;
 import cn.zjiali.robot.constant.Constants;
 import cn.zjiali.robot.guice.module.HandlerInterceptorModule;
 import cn.zjiali.robot.guice.module.ManagerModule;
-import cn.zjiali.robot.guice.module.MessageHandlerModule;
 import cn.zjiali.robot.guice.module.SimpleMessageEventHandlerModule;
 import cn.zjiali.robot.main.websocket.WebSocketManager;
 import cn.zjiali.robot.manager.PluginManager;
@@ -77,7 +76,7 @@ public class ApplicationBootStrap {
     }
 
     private void initGuiceContext() {
-        this.injector = Guice.createInjector(new ManagerModule(), new MessageHandlerModule(), new SimpleMessageEventHandlerModule(), new HandlerInterceptorModule());
+        this.injector = Guice.createInjector(new ManagerModule(), new SimpleMessageEventHandlerModule(), new HandlerInterceptorModule());
     }
 
     /**

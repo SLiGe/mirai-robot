@@ -3,6 +3,7 @@ package cn.zjiali.robot.service
 import cn.hutool.core.util.StrUtil
 import cn.zjiali.robot.config.AppConfig
 import cn.zjiali.robot.constant.MsgType
+import cn.zjiali.robot.manager.PluginManager
 import cn.zjiali.robot.manager.RobotManager
 import cn.zjiali.robot.manager.ServerConfigManager
 import cn.zjiali.robot.manager.WsSecurityManager
@@ -38,6 +39,9 @@ class WebSocketService {
 
     @Inject
     private val serverConfigManager: ServerConfigManager? = null
+
+    @Inject
+    private val pluginManager: PluginManager? = null
 
     suspend fun handleWsResult(wsResult: WsResult): String {
         val robotQQ = wsResult.robotQQ
@@ -101,6 +105,10 @@ class WebSocketService {
 
                 MsgType.CONFIG_ACTION -> {
                     serverConfigManager?.pullServerConfig()
+                }
+
+                MsgType.REFRESH_PLUGIN_ACTION -> {
+                    pluginManager?.refreshPlugin()
                 }
             }
         }

@@ -26,6 +26,11 @@ object MsgType {
     const val CONFIG_ACTION = 3
 
     /**
+     * 刷新插件操作
+     */
+    const val REFRESH_PLUGIN_ACTION = 4
+
+    /**
      * 发送好友消息
      */
     const val SEND_FRIEND_MSG = 1
