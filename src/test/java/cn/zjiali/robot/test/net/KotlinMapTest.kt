@@ -1,10 +1,8 @@
 package cn.zjiali.robot.test.net
 
-import cn.zjiali.robot.handler.MoLiMessageEventHandler
 import cn.zjiali.robot.handler.ServerGlobalMessageHandler
 import com.google.inject.Inject
 import org.junit.Test
-import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl
 
 /**
  *

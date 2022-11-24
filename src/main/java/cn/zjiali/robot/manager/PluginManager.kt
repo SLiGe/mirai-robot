@@ -1,5 +1,6 @@
 package cn.zjiali.robot.manager
 
+import cn.hutool.core.lang.ParameterizedTypeImpl
 import cn.zjiali.robot.config.AppConfig
 import cn.zjiali.robot.config.Plugin
 import cn.zjiali.robot.constant.ApiUrl
@@ -15,7 +16,6 @@ import com.google.inject.Inject
 import com.google.inject.Singleton
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl
 import java.util.*
 
 /**
@@ -140,7 +140,7 @@ class PluginManager {
      * 刷新插件
      */
     fun refreshPlugin() {
-        val pluginInfoJson = HttpUtil.post(PropertiesUtil.getApiProperty(ApiUrl.QUERY_PLUGIN_INFO), JsonObject())
+        val pluginInfoJson = HttpUtil.get(PropertiesUtil.getApiProperty(ApiUrl.QUERY_PLUGIN_INFO))
         if (pluginInfoJson.isNotEmpty()) {
             val response = JsonUtil.toObjByType<RobotBaseResponse<List<PluginInfo?>>>(
                 pluginInfoJson,
