@@ -17,6 +17,7 @@ import net.mamoe.mirai.event.events.*;
 import net.mamoe.mirai.utils.*;
 
 import java.io.File;
+import java.nio.file.Files;
 import java.util.Objects;
 
 
@@ -51,11 +52,14 @@ public class RobotApplication {
             {
                 //加载设备信息
                 //loadDeviceInfoJson(Objects.requireNonNull(DeviceUtil.getDeviceInfoJson(AppConfig.applicationConfig.getQq())));
+//                randomDeviceInfo();
                 //设置登录解决器
                 setLoginSolver(GuiceUtil.getBean(SysLoginSolver.class));
                 // 选择协议
                 setProtocol(switchProtocol());
                 setCacheDir(new File("/cache"));
+                setWorkingDir(new File(System.getProperty("robot.workdir")));
+                fileBasedDeviceInfo(System.getProperty("robot.workdir") + "/deviceInfo.json");
             }
         });
 
