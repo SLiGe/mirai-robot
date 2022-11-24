@@ -154,7 +154,7 @@ class ServerGlobalMessageHandler : GlobalMessageHandler {
             val serverGroupPluginList = pluginInfoResponse.data
             if (CollectionUtil.isNotEmpty(serverGroupPluginList)) {
                 val unActivePluginCodeSet =
-                    serverGroupPluginList.stream().filter { plugin -> plugin?.activeFlag == Constants.N }
+                    serverGroupPluginList.stream().filter { plugin -> plugin?.pluginStatus == Constants.N }
                         .map { plugin -> plugin?.pluginCode }.collect(Collectors.toSet())
                 messageEventHandlerList = messageEventHandlerList.filter { messageEventHandler: MessageEventHandler ->
                     val code = messageEventHandler.code()

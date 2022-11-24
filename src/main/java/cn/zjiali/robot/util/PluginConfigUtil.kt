@@ -33,6 +33,7 @@ object PluginConfigUtil {
 
     @JvmStatic
     fun getTemplate(pluginCode: String, templateCode: String?): String {
+        //TODO fix
         val plugin = getPlugin(pluginCode)
         return if ("1" == plugin.templateFlag)
             getPlugin(pluginCode).template.orEmpty()

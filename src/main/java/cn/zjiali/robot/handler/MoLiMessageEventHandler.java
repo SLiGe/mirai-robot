@@ -85,7 +85,7 @@ public class MoLiMessageEventHandler extends AbstractMessageEventHandler {
         if (messageEvent instanceof GroupMessageEvent) {
             long groupId = ((GroupMessageEvent) messageEvent).getGroup().getId();
             long senderId = messageEvent.getSender().getId();
-            ArrayList<String> ignoreWords = pluginManager.getIgnoreWords(PluginCode.MOLI, groupId, senderId);
+            ArrayList<String> ignoreWords = pluginManager().getIgnoreWords(PluginCode.MOLI, groupId, senderId);
             return ignoreWords.contains(msg);
         }
         return ignore(msg);

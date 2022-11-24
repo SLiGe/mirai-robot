@@ -8,7 +8,7 @@ package cn.zjiali.robot.model.server
 data class PluginInfo(
     val pluginNane: String,
     val pluginCode: String,
-    val activeFlag: String,
+    val pluginStatus: String,
     val pluginClass: String,
     val pluginConfigList: MutableList<PluginConfig>
 )

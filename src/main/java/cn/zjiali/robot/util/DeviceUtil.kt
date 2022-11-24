@@ -4,10 +4,8 @@ import cn.hutool.core.io.file.FileReader
 import cn.hutool.core.io.file.FileWriter
 import cn.hutool.json.JSONObject
 import cn.zjiali.robot.model.response.JokeResponse
-import net.mamoe.mirai.utils.DeviceInfo
+import xyz.cssxsh.mirai.device.MiraiDeviceGenerator
 import java.io.File
-import kotlin.random.Random
-import kotlin.random.asJavaRandom
 
 /**
  * 设备信息工具类
@@ -24,13 +22,13 @@ object DeviceUtil {
     @JvmStatic
     fun getDeviceInfoJson(qq: String): String? {
         // 设备信息文件
-        val file = File("deviceInfo-$qq.json")
+        val file = File(System.getProperty("robot.workdir") + "/deviceInfo-$qq.json")
         val deviceInfoJson: String?
         if (file.exists()) {
             val fileReader = FileReader(file)
             deviceInfoJson = fileReader.readString()
         } else {
-            deviceInfoJson = JSONObject(DeviceInfo.random()).toString()
+            deviceInfoJson = JSONObject(MiraiDeviceGenerator().generate()).toString()
             val fileWriter = FileWriter(file)
             fileWriter.write(deviceInfoJson)
         }
@@ -41,6 +39,6 @@ object DeviceUtil {
     fun main(args: Array<String>) {
         val res = JokeResponse()
         res.content = "aaa"
-        println(JSONObject(DeviceInfo.random()).toString())
+        println(JSONObject(MiraiDeviceGenerator().generate()).toString())
     }
 }

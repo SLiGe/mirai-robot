@@ -4,6 +4,7 @@ import cn.zjiali.robot.factory.MessageFactory;
 import cn.zjiali.robot.factory.ServiceFactory;
 import cn.zjiali.robot.main.ApplicationBootStrap;
 import cn.zjiali.robot.main.interceptor.ReplyBlacklistHandlerInterceptor;
+import cn.zjiali.robot.manager.PluginManager;
 import cn.zjiali.robot.model.response.SignInDataResponse;
 import cn.zjiali.robot.service.MoLiService;
 import cn.zjiali.robot.service.SignInService;
@@ -39,6 +40,8 @@ public class SignInTest {
         SignInDataResponse signInDataResponse = signInService.doSignIn("357078415", "123456", 1);
         SignInDataResponse signInData = signInService.getSignInData("357078415", "123456", 1);
         String fortuneMsg = MessageFactory.getFortuneMsg(357078415L, 123456L, 1);
+        PluginManager pluginManager = GuiceUtil.getBean(PluginManager.class);
+        String sign = pluginManager.getCommand("sign", 357078, 357078415L);
         System.out.println(fortuneMsg);
         Thread.currentThread().join();
     }

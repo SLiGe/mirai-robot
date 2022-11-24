@@ -6,18 +6,18 @@ import cn.zjiali.robot.handler.GlobalMessageHandler;
 import cn.zjiali.robot.main.ApplicationBootStrap;
 import cn.zjiali.robot.main.system.SysLoginSolver;
 import cn.zjiali.robot.manager.RobotManager;
-import cn.zjiali.robot.util.DeviceUtil;
 import cn.zjiali.robot.util.GuiceUtil;
 import cn.zjiali.robot.util.ObjectUtil;
 import kotlin.Unit;
+import kotlinx.serialization.json.Json;
 import net.mamoe.mirai.Bot;
 import net.mamoe.mirai.BotFactory;
-import net.mamoe.mirai.event.*;
+import net.mamoe.mirai.event.EventChannel;
 import net.mamoe.mirai.event.events.*;
 import net.mamoe.mirai.utils.*;
+import xyz.cssxsh.mirai.device.MiraiDeviceGenerator;
 
 import java.io.File;
-import java.nio.file.Files;
 import java.util.Objects;
 
 
@@ -51,18 +51,18 @@ public class RobotApplication {
         Bot bot = BotFactory.INSTANCE.newBot(qq, password, new BotConfiguration() {
             {
                 //加载设备信息
-                //loadDeviceInfoJson(Objects.requireNonNull(DeviceUtil.getDeviceInfoJson(AppConfig.applicationConfig.getQq())));
-//                randomDeviceInfo();
+//                loadDeviceInfoJson(Objects.requireNonNull(DeviceUtil.getDeviceInfoJson(AppConfig.applicationConfig.getQq())));
                 //设置登录解决器
                 setLoginSolver(GuiceUtil.getBean(SysLoginSolver.class));
                 // 选择协议
                 setProtocol(switchProtocol());
                 setCacheDir(new File("/cache"));
                 setWorkingDir(new File(System.getProperty("robot.workdir")));
-                fileBasedDeviceInfo(System.getProperty("robot.workdir") + "/deviceInfo.json");
+//                fileBasedDeviceInfo(System.getProperty("robot.workdir") + "/deviceInfo.json");
             }
         });
-
+        DeviceInfo deviceInfo = new MiraiDeviceGenerator().load(bot);
+        bot.getConfiguration().loadDeviceInfoJson(DeviceInfoManager.INSTANCE.serialize(deviceInfo, Json.Default));
         bot.login();
         EventChannel<BotEvent> eventChannel = bot.getEventChannel();
         // 创建监听
