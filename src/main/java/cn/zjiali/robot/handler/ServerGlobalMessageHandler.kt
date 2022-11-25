@@ -91,7 +91,7 @@ class ServerGlobalMessageHandler : GlobalMessageHandler {
                 var outMessage: OutMessage?
                 if (isGroup) {
                     outMessage = messageEventHandler.handleGroupMessageEvent(groupMessageEvent)
-                    if (outMessage == null) continue
+                    if (outMessage == null || outMessage.isEmpty) continue
                     val messageType = outMessage.messageType
                     if (messageType == AppConstants.MESSAGE_TYPE_HANDLER) {
                         val message = instance.convert(outMessage)
@@ -107,7 +107,7 @@ class ServerGlobalMessageHandler : GlobalMessageHandler {
                     }
                 } else {
                     outMessage = messageEventHandler.handleFriendMessageEvent(friendMessageEvent as FriendMessageEvent?)
-                    if (outMessage == null) continue
+                    if (outMessage == null || outMessage.isEmpty) continue
                     val messageType = outMessage.messageType
                     if (messageType == AppConstants.MESSAGE_TYPE_HANDLER) {
                         val message = instance.convert(outMessage)
@@ -154,7 +154,7 @@ class ServerGlobalMessageHandler : GlobalMessageHandler {
             val serverGroupPluginList = pluginInfoResponse.data
             if (CollectionUtil.isNotEmpty(serverGroupPluginList)) {
                 val unActivePluginCodeSet =
-                    serverGroupPluginList.stream().filter { plugin -> plugin?.pluginStatus == Constants.N }
+                    serverGroupPluginList!!.stream().filter { plugin -> plugin?.pluginStatus == Constants.N }
                         .map { plugin -> plugin?.pluginCode }.collect(Collectors.toSet())
                 messageEventHandlerList = messageEventHandlerList.filter { messageEventHandler: MessageEventHandler ->
                     val code = messageEventHandler.code()

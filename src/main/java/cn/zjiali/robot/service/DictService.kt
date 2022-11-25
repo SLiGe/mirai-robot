@@ -34,6 +34,6 @@ class DictService {
         val serverJson = HttpUtil.get(dictUrl, paramMap)
         val type = object : TypeToken<RobotBaseResponse<JsonObject?>?>() {}.type
         val dictResponse = JsonUtil.toObjByType<RobotBaseResponse<JsonObject>>(serverJson, type)
-        return dictResponse.data["val"].asString
+        return dictResponse.data?.get("val")!!.asString
     }
 }

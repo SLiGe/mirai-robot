@@ -51,7 +51,7 @@ public class DefaultGlobalMessageHandler implements GlobalMessageHandler {
                 OutMessage outMessage;
                 if (isGroup) {
                     outMessage = messageEventHandler.handleGroupMessageEvent(groupMessageEvent);
-                    if (outMessage == null) continue;
+                    if (outMessage == null || outMessage.isEmpty()) continue;
                     int messageType = outMessage.getMessageType();
                     if (messageType == AppConstants.MESSAGE_TYPE_HANDLER) {
                         String message = OutMessageConvert.getInstance().convert(outMessage);
@@ -64,7 +64,7 @@ public class DefaultGlobalMessageHandler implements GlobalMessageHandler {
                     }
                 } else {
                     outMessage = messageEventHandler.handleFriendMessageEvent((FriendMessageEvent) friendMessageEvent);
-                    if (outMessage == null) continue;
+                    if (outMessage == null || outMessage.isEmpty()) continue;
                     int messageType = outMessage.getMessageType();
                     if (messageType == AppConstants.MESSAGE_TYPE_HANDLER) {
                         String message = OutMessageConvert.getInstance().convert(outMessage);

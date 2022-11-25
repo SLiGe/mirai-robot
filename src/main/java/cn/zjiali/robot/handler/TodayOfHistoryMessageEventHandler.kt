@@ -58,7 +58,7 @@ class TodayOfHistoryMessageEventHandler : AbstractMessageEventHandler() {
                 val todayOnHistoryResponseResult = todayOnHistoryResponse.data
                 if (!ObjectUtil.isNullOrEmpty(todayOnHistoryResponseResult)) {
                     val stringBuilder = StringBuilder()
-                    for (item in todayOnHistoryResponseResult) {
+                    for (item in todayOnHistoryResponseResult!!) {
                         stringBuilder.append(item.happenDate).append("\n").append(item.title)
                     }
                     return stringBuilder.toString()

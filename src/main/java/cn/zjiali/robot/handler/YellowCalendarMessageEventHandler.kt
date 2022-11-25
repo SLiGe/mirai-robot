@@ -55,7 +55,7 @@ class YellowCalendarMessageEventHandler : AbstractMessageEventHandler() {
                 .event(event)
                 .fillObj(yellowCalendarResponse).fillFlag(AppConstants.FILL_OUT_MESSAGE_OBJECT_FLAG).build()
         }
-        return null
+        return OutMessage.empty()
     }
 
 }

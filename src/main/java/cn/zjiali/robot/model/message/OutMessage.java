@@ -77,6 +77,8 @@ public class OutMessage {
      */
     private int fromMsgType;
 
+    private boolean empty;
+
     OutMessage(String content, String pluginCode, boolean convertFlag, String templateCode, int fillFlag, Map<String, String> fillMap, Object fillObj, String finalMessage, int messageType, Message message, long groupId, long senderId, int fromMsgType) {
         this.content = content;
         this.pluginCode = pluginCode;
@@ -93,8 +95,26 @@ public class OutMessage {
         this.fromMsgType = fromMsgType;
     }
 
+    public OutMessage() {
+
+    }
+
     public static OutMessageBuilder builder() {
         return new OutMessageBuilder();
+    }
+
+    public static OutMessage empty() {
+        OutMessage outMessage = new OutMessage();
+        outMessage.setEmpty(Boolean.TRUE);
+        return outMessage;
+    }
+
+    public boolean isEmpty() {
+        return empty;
+    }
+
+    public void setEmpty(boolean empty) {
+        this.empty = empty;
     }
 
     public int getFromMsgType() {

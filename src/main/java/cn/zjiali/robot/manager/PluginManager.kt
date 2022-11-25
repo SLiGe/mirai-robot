@@ -5,15 +5,19 @@ import cn.zjiali.robot.config.AppConfig
 import cn.zjiali.robot.config.Plugin
 import cn.zjiali.robot.constant.ApiUrl
 import cn.zjiali.robot.constant.ConfigKey
+import cn.zjiali.robot.constant.Constants
 import cn.zjiali.robot.constant.PluginProperty
 import cn.zjiali.robot.handler.MessageEventHandler
 import cn.zjiali.robot.model.response.RobotBaseResponse
+import cn.zjiali.robot.model.response.ServerResponse
 import cn.zjiali.robot.model.server.PluginInfo
 import cn.zjiali.robot.util.*
-import com.google.gson.JsonObject
 import com.google.gson.reflect.TypeToken
 import com.google.inject.Inject
 import com.google.inject.Singleton
+import kotlinx.serialization.DeserializationStrategy
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.util.*
@@ -136,29 +140,29 @@ class PluginManager {
             .getOrNull(0)
     }
 
+    private val json = Json { ignoreUnknownKeys = true }
+
     /**
      * 刷新插件
      */
     fun refreshPlugin() {
         val pluginInfoJson = HttpUtil.get(PropertiesUtil.getApiProperty(ApiUrl.QUERY_PLUGIN_INFO))
         if (pluginInfoJson.isNotEmpty()) {
-            val response = JsonUtil.toObjByType<RobotBaseResponse<List<PluginInfo?>>>(
-                pluginInfoJson,
-                object : TypeToken<RobotBaseResponse<List<PluginInfo?>?>?>() {}.type
-            )
-            if (response.data.isNotEmpty()) {
+            val response =
+                json.decodeFromString<ServerResponse<MutableList<PluginInfo>>>(pluginInfoJson)
+            if (response.data!!.isNotEmpty()) {
                 val msgHandlers = AppConfig.getMsgHandlers()
                 msgHandlers.clear()
-                val pluginList = response.data.map {
+                val pluginList = response.data!!.map {
                     val plugin = Plugin()
-                    plugin.code = it?.pluginCode
-                    plugin.name = it?.pluginNane
-                    plugin.handler = it?.pluginClass
+                    plugin.code = it.pluginCode
+                    plugin.name = it.pluginNane
+                    plugin.handler = it.pluginClass
                     val pluginHandler = Class.forName(plugin.handler).newInstance()
                     injectClassField(pluginHandler)
                     msgHandlers.add((pluginHandler as MessageEventHandler?))
                     val properties = HashMap<String, String>()
-                    it?.pluginConfigList!!.forEach { pluginConfig ->
+                    it.pluginConfigList.forEach { pluginConfig ->
                         run {
                             val configKey = pluginConfig.configKey
                             val configValue = pluginConfig.configValue
@@ -171,11 +175,18 @@ class PluginManager {
                             properties[configKey] = configValue
                         }
                     }
+                    fillDefaultNullFieldVal(plugin)
                     plugin.properties = properties
                     plugin
                 }
                 AppConfig.getApplicationConfig().plugins = pluginList
             }
+        }
+    }
+
+    private fun fillDefaultNullFieldVal(plugin: Plugin) {
+        if (plugin.templateFlag.isNullOrBlank()) {
+            plugin.templateFlag = Constants.N
         }
     }
 

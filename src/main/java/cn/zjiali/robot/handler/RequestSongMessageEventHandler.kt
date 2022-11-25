@@ -21,14 +21,14 @@ import net.mamoe.mirai.message.data.*
  * @since 2021-04-04 11:02
  */
 class RequestSongMessageEventHandler : AbstractMessageEventHandler() {
-    override fun handleGroupMessageEvent(event: GroupMessageEvent): OutMessage {
+    override fun handleGroupMessageEvent(event: GroupMessageEvent): OutMessage? {
         val songName = event.message.content.replace(getCommand(PluginCode.REQUEST_SONG, event), "").trim()
-        return requestSong(songName, event)!!
+        return requestSong(songName, event)
     }
 
-    override fun handleFriendMessageEvent(event: FriendMessageEvent): OutMessage {
+    override fun handleFriendMessageEvent(event: FriendMessageEvent): OutMessage? {
         val songName = event.message.content.replace(getCommand(PluginCode.REQUEST_SONG, event), "").trim()
-        return requestSong(songName, event)!!
+        return requestSong(songName, event)
     }
 
     override fun next(): Boolean {
@@ -58,7 +58,7 @@ class RequestSongMessageEventHandler : AbstractMessageEventHandler() {
         val baseResponse = JsonUtil.toObjByType<RobotBaseResponse<RequestSongResponse>>(response, type)
         if (baseResponse.success()) {
             val songResponse = baseResponse.data
-            val musicInfo = songResponse.musicInfo
+            val musicInfo = songResponse!!.musicInfo
             val musicShare = MusicShare(
                 MusicKind.QQMusic,
                 musicInfo.title,
@@ -73,7 +73,7 @@ class RequestSongMessageEventHandler : AbstractMessageEventHandler() {
                 .pluginCode(PluginCode.REQUEST_SONG)
                 .build()
         }
-        return null
+        return OutMessage.empty()
     }
 
 }

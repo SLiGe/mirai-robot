@@ -52,7 +52,7 @@ class FortuneMessageEventHandler : AbstractMessageEventHandler() {
             return null
         }
         val responseData = robotBaseResponse.data
-        val dataStatus = responseData.status
+        val dataStatus = responseData!!.status
         if (dataStatus == 201) {
             return null // already get fortune
         }
@@ -64,7 +64,7 @@ class FortuneMessageEventHandler : AbstractMessageEventHandler() {
                 .fillFlag(AppConstants.FILL_OUT_MESSAGE_OBJECT_FLAG)
                 .fillObj(dataResponse).build()
         }
-        return null
+        return OutMessage.empty()
     }
 
     override fun handleGroupMessageEvent(event: GroupMessageEvent): OutMessage {

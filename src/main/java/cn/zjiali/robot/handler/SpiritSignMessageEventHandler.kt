@@ -76,7 +76,7 @@ class SpiritSignMessageEventHandler : AbstractMessageEventHandler() {
                     .fillMap(messageParamMap).fillFlag(AppConstants.FILL_OUT_MESSAGE_MAP_FLAG).build()
             }
         }
-        return null
+        return OutMessage.empty()
     }
 
     private fun chooseSignTemplate(msg: String): String? {
