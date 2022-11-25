@@ -3,7 +3,9 @@ package cn.zjiali.robot.util
 import cn.hutool.core.io.file.FileReader
 import cn.hutool.core.io.file.FileWriter
 import cn.hutool.json.JSONObject
+import cn.zjiali.robot.constant.Constants
 import cn.zjiali.robot.model.response.JokeResponse
+import kotlinx.serialization.encodeToString
 import xyz.cssxsh.mirai.device.MiraiDeviceGenerator
 import java.io.File
 
@@ -28,7 +30,7 @@ object DeviceUtil {
             val fileReader = FileReader(file)
             deviceInfoJson = fileReader.readString()
         } else {
-            deviceInfoJson = JSONObject(MiraiDeviceGenerator().generate()).toString()
+            deviceInfoJson = Constants.JSON.encodeToString(MiraiDeviceGenerator().generate())
             val fileWriter = FileWriter(file)
             fileWriter.write(deviceInfoJson)
         }

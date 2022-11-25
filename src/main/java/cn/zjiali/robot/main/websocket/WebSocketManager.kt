@@ -38,14 +38,10 @@ class WebSocketManager {
 
     @Throws(IOException::class)
     fun connect() {
-        val okHttpClient: OkHttpClient = OkHttpClient.Builder()
-            .pingInterval(20, TimeUnit.SECONDS)
-            .build()
+        val okHttpClient: OkHttpClient = OkHttpClient.Builder().pingInterval(20, TimeUnit.SECONDS).build()
         val webSocketUrl = PropertiesUtil.getApplicationProperty("robot.websocket.url")
-        val request: Request = Request.Builder().url(webSocketUrl)
-            .header("robotQQ", AppConfig.getQQ())
-            .header("ws-token", wsSecurityManager!!.genWsToken(AppConfig.getQQ()))
-            .build()
+        val request: Request = Request.Builder().url(webSocketUrl).header("robotQQ", AppConfig.getQQ())
+            .header("ws-token", wsSecurityManager!!.genWsToken(AppConfig.getQQ())).build()
         val webSocket = okHttpClient.newWebSocket(request, RobotWebSocketListener())
         webSocket.send(
             wsSecurityManager.encryptMsgData(WsClientRes(200, "连接成功!").toJson())
@@ -74,8 +70,7 @@ class WebSocketManager {
     }
 
     fun putSession(webSocket: WebSocket?) {
-        webSocketClientMap[AppConfig.getQQ()] =
-            WebSocketClient(AppConfig.getQQ(), webSocket)
+        webSocketClientMap[AppConfig.getQQ()] = WebSocketClient(AppConfig.getQQ(), webSocket)
     }
 
     fun removeSession() {

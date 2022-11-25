@@ -6,8 +6,6 @@ import cn.zjiali.robot.util.*;
 import com.google.gson.JsonObject;
 import kotlin.coroutines.Continuation;
 import net.mamoe.mirai.Bot;
-import net.mamoe.mirai.utils.DeviceVerificationRequests;
-import net.mamoe.mirai.utils.DeviceVerificationResult;
 import net.mamoe.mirai.utils.LoginSolver;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

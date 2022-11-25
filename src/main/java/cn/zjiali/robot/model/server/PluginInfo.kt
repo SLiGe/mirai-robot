@@ -10,12 +10,12 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 data class PluginInfo(
-    @SerialName(value = "pluginNane")
-    val pluginNane: String,
+    @SerialName(value = "pluginName")
+    val pluginName: String,
     @SerialName(value = "pluginCode")
     val pluginCode: String,
     @SerialName(value = "pluginStatus")
-    val pluginStatus: String,
+    val pluginStatus: Int,
     @SerialName(value = "pluginClass")
     val pluginClass: String,
     @SerialName(value = "pluginConfigList")

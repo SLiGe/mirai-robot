@@ -8,14 +8,11 @@ import cn.zjiali.robot.constant.ConfigKey
 import cn.zjiali.robot.constant.Constants
 import cn.zjiali.robot.constant.PluginProperty
 import cn.zjiali.robot.handler.MessageEventHandler
-import cn.zjiali.robot.model.response.RobotBaseResponse
 import cn.zjiali.robot.model.response.ServerResponse
 import cn.zjiali.robot.model.server.PluginInfo
 import cn.zjiali.robot.util.*
-import com.google.gson.reflect.TypeToken
 import com.google.inject.Inject
 import com.google.inject.Singleton
-import kotlinx.serialization.DeserializationStrategy
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import org.slf4j.Logger
@@ -156,7 +153,7 @@ class PluginManager {
                 val pluginList = response.data!!.map {
                     val plugin = Plugin()
                     plugin.code = it.pluginCode
-                    plugin.name = it.pluginNane
+                    plugin.name = it.pluginName
                     plugin.handler = it.pluginClass
                     val pluginHandler = Class.forName(plugin.handler).newInstance()
                     injectClassField(pluginHandler)
