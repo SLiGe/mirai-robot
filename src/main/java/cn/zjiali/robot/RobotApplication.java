@@ -10,14 +10,11 @@ import cn.zjiali.robot.util.CommonLogger;
 import cn.zjiali.robot.util.GuiceUtil;
 import cn.zjiali.robot.util.ObjectUtil;
 import kotlin.Unit;
-import kotlinx.serialization.json.Json;
 import net.mamoe.mirai.Bot;
 import net.mamoe.mirai.BotFactory;
 import net.mamoe.mirai.event.EventChannel;
 import net.mamoe.mirai.event.events.*;
 import net.mamoe.mirai.utils.BotConfiguration;
-import net.mamoe.mirai.utils.DeviceInfo;
-import net.mamoe.mirai.utils.DeviceInfoManager;
 import xyz.cssxsh.mirai.device.MiraiDeviceGenerator;
 
 import java.io.File;
@@ -59,10 +56,9 @@ public class RobotApplication {
                 setProtocol(switchProtocol());
                 setCacheDir(new File("/cache"));
                 setWorkingDir(new File(System.getProperty("robot.workdir")));
+                loadDeviceInfoJson(new MiraiDeviceGenerator().text(System.getProperty("robot.workdir")));
             }
         });
-        DeviceInfo deviceInfo = new MiraiDeviceGenerator().load(bot);
-        bot.getConfiguration().loadDeviceInfoJson(DeviceInfoManager.INSTANCE.serialize(deviceInfo, Json.Default));
         bot.login();
         EventChannel<BotEvent> eventChannel = bot.getEventChannel();
         // 创建监听
