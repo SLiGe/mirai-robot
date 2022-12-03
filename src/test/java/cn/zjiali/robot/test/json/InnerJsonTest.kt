@@ -1,8 +1,10 @@
 package cn.zjiali.robot.test.json
 
+import cn.zjiali.robot.config.AppConfig
 import cn.zjiali.robot.constant.Constants
 import cn.zjiali.robot.model.response.ServerResponse
 import cn.zjiali.robot.model.server.PluginInfo
+import cn.zjiali.robot.util.JsonUtil
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -29,6 +31,14 @@ class InnerJsonTest {
             json1.decodeFromString<ServerResponse<MutableList<PluginInfo>>>(json)
         println(response)
 
+    }
+
+    @Test
+    fun testMapJson() {
+        val param = HashMap<String, Any>()
+        param["robot"] = "357078415"
+        val encodeToString = JsonUtil.obj2str(param)
+        println(encodeToString)
     }
 
 }

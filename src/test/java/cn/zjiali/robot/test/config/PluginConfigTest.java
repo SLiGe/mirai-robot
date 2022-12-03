@@ -25,6 +25,7 @@ public class PluginConfigTest {
 
         pluginManager.injectClassField(new ServerGlobalMessageHandler());
         String command = pluginManager.getConfigVal(PluginCode.ONE_SEN, "command", 859744199L, 357078415L);
+        pluginManager.refreshPlugin();
         System.out.println(command);
     }
 }
