@@ -10,6 +10,7 @@ import com.google.inject.name.Named
 import net.mamoe.mirai.event.events.FriendMessageEvent
 import net.mamoe.mirai.event.events.GroupMessageEvent
 import net.mamoe.mirai.event.events.MessageEvent
+import net.mamoe.mirai.message.data.At
 
 /**
  * @author zJiaLi
@@ -31,14 +32,21 @@ class PushMessageHandlerInterceptor : HandlerInterceptor {
             val messageBody = HashMap<String, Any>()
             if (messageEvent is FriendMessageEvent) {
                 param["msgType"] = 1
+                messageBody["content"] = messageEvent.message.contentToString()
             } else if (messageEvent is GroupMessageEvent) {
+                messageBody["content"] = messageEvent.message.contentToString()
                 param["msgType"] = 2
                 messageBody["group"] = messageEvent.group.id
                 messageBody["groupName"] = messageEvent.group.name
+                for (singleMessage in messageEvent.message) {
+                    if (singleMessage is At) {
+                        messageBody["atFlag"] = "1"
+                        messageBody["content"] = singleMessage.contentToString()
+                    }
+                }
             }
             messageBody["qq"] = messageEvent.sender.id
             messageBody["nickName"] = messageEvent.sender.nick
-            messageBody["content"] = messageEvent.message.contentToString()
             param["messageBody"] = messageBody
             val requestJson = JsonUtil.obj2str(param)
             val session = webSocketManager?.getSession(AppConfig.getQQ())
