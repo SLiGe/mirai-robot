@@ -102,7 +102,11 @@
         </repository>
         <repository>
             <id>releases-repo</id>
+            <name>releases-repo</name>
             <url>http://192.168.0.100:18086/repository/maven-releases/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
         </repository>
     </repositories>
 
