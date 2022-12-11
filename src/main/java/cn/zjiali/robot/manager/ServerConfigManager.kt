@@ -25,7 +25,7 @@ import kotlin.concurrent.withLock
 class ServerConfigManager {
 
     private var cache: Cache<String, List<GroupPluginConfig>> = CacheBuilder.newBuilder()
-        .expireAfterWrite(5, TimeUnit.MINUTES)
+        .expireAfterWrite(12, TimeUnit.HOURS)
         .build()
 
     private val lock: Lock = ReentrantLock()

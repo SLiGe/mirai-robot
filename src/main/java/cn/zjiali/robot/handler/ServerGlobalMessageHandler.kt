@@ -9,6 +9,7 @@ import cn.zjiali.robot.constant.Constants
 import cn.zjiali.robot.main.OutMessageConvert.Companion.instance
 import cn.zjiali.robot.model.message.OutMessage
 import cn.zjiali.robot.model.response.RobotBaseResponse
+import cn.zjiali.robot.model.server.GroupPluginInfo
 import cn.zjiali.robot.model.server.PluginInfo
 import cn.zjiali.robot.util.HttpUtil
 import cn.zjiali.robot.util.ObjectUtil
@@ -144,7 +145,7 @@ class ServerGlobalMessageHandler : GlobalMessageHandler {
             )
             logger.debug("群组插件配置:{}", serverGroupPluginJson)
             val pluginInfoResponse =
-                Constants.JSON.decodeFromString<RobotBaseResponse<List<PluginInfo>>>(serverGroupPluginJson)
+                Constants.JSON.decodeFromString<RobotBaseResponse<List<GroupPluginInfo>>>(serverGroupPluginJson)
             val serverGroupPluginList = pluginInfoResponse.data
             if (CollectionUtil.isNotEmpty(serverGroupPluginList)) {
                 val unActivePluginCodeSet =

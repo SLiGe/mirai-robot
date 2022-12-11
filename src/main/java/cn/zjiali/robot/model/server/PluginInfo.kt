@@ -31,3 +31,13 @@ data class PluginConfig(
     @SerialName(value = "inMap")
     val inMap: String
 )
+
+@Serializable
+data class GroupPluginInfo(
+    @SerialName(value = "pluginCode")
+    val pluginCode: String,
+    @SerialName(value = "pluginStatus")
+    val pluginStatus: Int,
+)
+
+
