@@ -8,6 +8,7 @@ import net.mamoe.mirai.utils.PlatformLogger;
 import okhttp3.*;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.time.Duration;
 import java.util.Map;
 import java.util.Objects;
@@ -82,6 +83,17 @@ public class HttpUtil {
             e.printStackTrace();
         }
         return result;
+    }
+
+    public static InputStream fileStream(String url) {
+        miraiLogger.debug("[httpGet]====请求URL: " + url);
+        Request request = new Request.Builder().url(url).build();
+        try (Response response = okHttpClient.newCall(request).execute()) {
+            return Objects.requireNonNull(response.body()).byteStream();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public static String post(String url, JsonObject data) {

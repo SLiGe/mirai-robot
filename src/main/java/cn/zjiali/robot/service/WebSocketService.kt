@@ -51,22 +51,30 @@ class WebSocketService {
                 MsgType.SEND_MSG -> {
                     val senderMessageRes = JsonUtil.json2obj(dataJson, SenderMessageRes::class.java)
                     commonLogger.info(
-                        "[WebSocket]====发送内容:{} ",
-                        senderMessageRes.sendMessage
+                        "[WebSocket]====发送内容:{} ", senderMessageRes.sendMessage
                     )
                     if (StrUtil.isBlank(senderMessageRes.sendMessage)) return wsSecurityManager?.encryptMsgData(
                         WsClientRes(
-                            404,
-                            "消息体为空!"
+                            404, "消息体为空!"
                         ).toJson()
                     )!!
+                    val contentType = senderMessageRes.contentType
                     when (senderMessageRes.sendFlag) {
                         MsgType.SEND_FRIEND_MSG -> {
-                            senderMessageRes.receiverList!!.forEach {
-                                robotManager!!.sendFriendMessage(
-                                    it.toLong(),
-                                    senderMessageRes.sendMessage
-                                )
+                            if (MsgType.CONTENT_TYPE_IMG == contentType) {
+                                senderMessageRes.receiverList!!.forEach {
+                                    robotManager!!.sendFriendImage(
+                                        it.toLong(), senderMessageRes.sendMessage
+                                    )
+
+                                }
+                            } else {
+                                senderMessageRes.receiverList!!.forEach {
+                                    robotManager!!.sendFriendMessage(
+                                        it.toLong(), senderMessageRes.sendMessage
+                                    )
+
+                                }
                             }
                         }
 
@@ -77,12 +85,23 @@ class WebSocketService {
                         )
 
                         MsgType.SEND_GROUP_MSG -> {
-                            senderMessageRes.sendGroupList!!.forEach {
-                                robotManager!!.sendGroupMessage(
-                                    it.toLong(),
-                                    senderMessageRes.sendMessage
-                                )
+                            if (MsgType.CONTENT_TYPE_IMG == contentType) {
+                                senderMessageRes.receiverList!!.forEach {
+                                    robotManager!!.sendGroupImage(
+                                        it.toLong(), senderMessageRes.sendMessage
+                                    )
+
+                                }
+                            } else {
+                                senderMessageRes.receiverList!!.forEach {
+                                    senderMessageRes.sendGroupList!!.forEach {
+                                        robotManager!!.sendGroupMessage(
+                                            it.toLong(), senderMessageRes.sendMessage
+                                        )
+                                    }
+                                }
                             }
+
                         }
 
                         MsgType.SEND_GROUP_PRIVATE_CHAT -> {

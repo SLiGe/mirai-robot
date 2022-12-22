@@ -16,6 +16,11 @@ class SenderMessageRes {
     var sender: String? = null
 
     /**
+     * 消息内容类型 text img
+     */
+    var contentType: String? = null
+
+    /**
      * 发送消息
      */
     var sendMessage: String? = null

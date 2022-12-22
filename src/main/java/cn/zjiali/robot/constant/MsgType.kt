@@ -54,4 +54,14 @@ object MsgType {
      * 发送群@全体成员
      */
     const val SEND_GROUP_AT_ALL = 5
+
+    /**
+     * 文本消息
+     */
+    const val CONTENT_TYPE_TEXT = "text"
+
+    /**
+     * 图片消息
+     */
+    const val CONTENT_TYPE_IMG = "img"
 }
