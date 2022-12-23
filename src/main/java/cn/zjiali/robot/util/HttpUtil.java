@@ -85,11 +85,11 @@ public class HttpUtil {
         return result;
     }
 
-    public static InputStream fileStream(String url) {
+    public static byte[] fileBytes(String url) {
         miraiLogger.debug("[httpGet]====请求URL: " + url);
         Request request = new Request.Builder().url(url).build();
         try (Response response = okHttpClient.newCall(request).execute()) {
-            return Objects.requireNonNull(response.body()).byteStream();
+            return Objects.requireNonNull(response.body()).bytes();
         } catch (Exception e) {
             e.printStackTrace();
         }

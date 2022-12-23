@@ -20,7 +20,7 @@ import java.util.concurrent.TimeUnit
 class DictService {
 
     private var cache: Cache<String, String> = CacheBuilder.newBuilder()
-        .expireAfterWrite(5, TimeUnit.MINUTES)
+        .expireAfterWrite(6, TimeUnit.HOURS)
         .build()
 
     @Throws(IOException::class)

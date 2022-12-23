@@ -59,12 +59,13 @@ class WebSocketService {
                         ).toJson()
                     )!!
                     val contentType = senderMessageRes.contentType
+                    val extendData = senderMessageRes.extendData
                     when (senderMessageRes.sendFlag) {
                         MsgType.SEND_FRIEND_MSG -> {
                             if (MsgType.CONTENT_TYPE_IMG == contentType) {
                                 senderMessageRes.receiverList!!.forEach {
                                     robotManager!!.sendFriendImage(
-                                        it.toLong(), senderMessageRes.sendMessage
+                                        it.toLong(), extendData?.get("fileName")!!, senderMessageRes.sendMessage
                                     )
 
                                 }
@@ -88,12 +89,12 @@ class WebSocketService {
                             if (MsgType.CONTENT_TYPE_IMG == contentType) {
                                 senderMessageRes.receiverList!!.forEach {
                                     robotManager!!.sendGroupImage(
-                                        it.toLong(), senderMessageRes.sendMessage
+                                        it.toLong(), extendData?.get("fileName")!!, senderMessageRes.sendMessage
                                     )
 
                                 }
                             } else {
-                                senderMessageRes.receiverList!!.forEach {
+                                senderMessageRes.receiverList!!.forEach { _ ->
                                     senderMessageRes.sendGroupList!!.forEach {
                                         robotManager!!.sendGroupMessage(
                                             it.toLong(), senderMessageRes.sendMessage

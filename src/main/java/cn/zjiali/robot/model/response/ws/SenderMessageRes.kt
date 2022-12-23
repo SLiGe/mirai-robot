@@ -45,4 +45,9 @@ class SenderMessageRes {
      * 接收人集合
      */
     var receiverList: List<String>? = null
+
+    /**
+     * 拓展数据
+     */
+    var extendData: MutableMap<String, String>? = null
 }
