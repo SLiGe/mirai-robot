@@ -180,7 +180,7 @@ public class ApplicationBootStrap {
         }
         if (Constants.Y.equals(webSocketFlag)) {
             //添加定时任务定时确认websocket连接状态
-            CronUtil.schedule("0/10 * * ? * *", new WebSocketStatusTask());
+            CronUtil.schedule("* 0/5 * ? * *", new WebSocketStatusTask());
         }
     }
 
