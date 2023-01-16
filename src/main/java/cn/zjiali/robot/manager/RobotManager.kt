@@ -1,5 +1,7 @@
 package cn.zjiali.robot.manager
 
+import cn.hutool.core.lang.UUID
+import cn.zjiali.robot.util.CommonLogger
 import cn.zjiali.robot.util.HttpUtil
 import com.google.inject.Singleton
 import kotlinx.coroutines.Dispatchers
@@ -13,7 +15,6 @@ import java.io.InputStream
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.StandardOpenOption
-import kotlin.io.path.inputStream
 
 /**
  * @author zJiaLi
@@ -23,6 +24,7 @@ import kotlin.io.path.inputStream
 class RobotManager {
     var bot: Bot? = null
         private set
+    private val logger = CommonLogger(RobotManager::class.java)
 
     fun init(bot: Bot?) {
         this.bot = bot
@@ -41,13 +43,17 @@ class RobotManager {
     }
 
     suspend fun sendFriendImage(qq: Long, imageName: String, imgUrl: String?) {
-        val tempFile = Path.of(System.getProperty("robot.workdir"), "tempDir", "bqb", imageName)
+        val finalImageName = UUID.randomUUID().toString() + imageName.substring(imageName.lastIndexOf("."))
+        val tempFile = Path.of(System.getProperty("robot.workdir"), "tempDir", "bqb", finalImageName)
+        val imageStream = imageStream(tempFile, imgUrl)
+        val friend = bot!!.getFriend(qq)
         try {
-            val friend = bot!!.getFriend(qq)
-            val imageStream = imageStream(tempFile, imgUrl)
             friend?.sendImage(imageStream)
+        } catch (e: Exception) {
+            e.printStackTrace()
         } finally {
             withContext(Dispatchers.IO) {
+                imageStream.close()
                 Files.delete(tempFile)
             }
         }
@@ -59,13 +65,18 @@ class RobotManager {
     }
 
     suspend fun sendGroupImage(groupId: Long, imageName: String, imgUrl: String?) {
-        val tempFile = Path.of(System.getProperty("robot.workdir"), "tempDir", "bqb", imageName)
-        val group = bot!!.getGroup(groupId)
+        val finalImageName = UUID.randomUUID().toString() + imageName.substring(imageName.lastIndexOf("."))
+        val tempFile = Path.of(System.getProperty("robot.workdir"), "tempDir", "bqb", finalImageName)
         val imageStream = imageStream(tempFile, imgUrl)
+        val group = bot!!.getGroup(groupId)
         try {
             group?.sendImage(imageStream)
+            logger.debug("发送群图片成功,文件路径:{}", tempFile)
+        } catch (e: Exception) {
+            e.printStackTrace()
         } finally {
             withContext(Dispatchers.IO) {
+                imageStream.close()
                 Files.delete(tempFile)
             }
         }
@@ -73,7 +84,8 @@ class RobotManager {
 
     private fun imageStream(imagePath: Path, imgUrl: String?): InputStream {
         val fileBytes = HttpUtil.fileBytes(imgUrl)
-        return Files.write(imagePath, fileBytes, StandardOpenOption.CREATE_NEW).inputStream()
+        Files.write(imagePath, fileBytes, StandardOpenOption.CREATE_NEW)
+        return Files.newInputStream(imagePath, StandardOpenOption.READ)
     }
 
     suspend fun sendGroupAtMessage(qq: Long, groupId: Long, message: String?) {
