@@ -10,6 +10,7 @@ import okhttp3.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.Duration;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -24,11 +25,15 @@ public class HttpUtil {
 
     private static final OkHttpClient okHttpClient;
 
+    private static final List<String> ignoreAuthUrls = List.of("https://server.zjiali.cn");
+
     static {
         okHttpClient = new OkHttpClient.Builder().addInterceptor(chain -> {
             Request.Builder requestBuilder = chain.request().newBuilder();
             requestBuilder.addHeader("Client-Type", "robot");
-            if (!chain.request().url().toString().equals(AppConfig.getApplicationConfig().getServerUrl())) {
+            String url = chain.request().url().toString();
+            boolean requireAuth = ignoreAuthUrls.stream().anyMatch(url::contains);
+            if (!url.equals(AppConfig.getApplicationConfig().getServerUrl()) && requireAuth) {
                 ServerTokenManager serverTokenManager = GuiceUtil.getBean(ServerTokenManager.class);
                 requestBuilder.addHeader("Authorization", serverTokenManager.serverToken());
                 requestBuilder.addHeader("Cookie", "Admin-Token=" + serverTokenManager.serverToken());
