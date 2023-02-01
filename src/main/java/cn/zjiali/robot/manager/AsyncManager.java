@@ -55,6 +55,10 @@ public class AsyncManager {
         scheduledExecutorService.schedule(task, OPERATE_DELAY_TIME, TimeUnit.MILLISECONDS);
     }
 
+    public void execute(long operateDelay, Runnable r) {
+        scheduledExecutorService.schedule(r, operateDelay, TimeUnit.SECONDS);
+    }
+
     /**
      * 执行任务
      *
