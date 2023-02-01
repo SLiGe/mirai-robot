@@ -15,7 +15,7 @@ import net.mamoe.mirai.BotFactory;
 import net.mamoe.mirai.event.EventChannel;
 import net.mamoe.mirai.event.events.*;
 import net.mamoe.mirai.utils.BotConfiguration;
-import xyz.cssxsh.mirai.device.MiraiDeviceGenerator;
+import net.mamoe.mirai.utils.LoggerAdapters;
 
 import java.io.File;
 import java.util.Objects;
@@ -44,6 +44,7 @@ public class RobotApplication {
     }
 
     public static void main(String[] args) {
+        LoggerAdapters.useLog4j2();
         init();
         long qq = Long.parseLong(Objects.requireNonNull(AppConfig.applicationConfig.getQq()));
         String password = AppConfig.applicationConfig.getPassword();
@@ -56,7 +57,8 @@ public class RobotApplication {
                 setProtocol(switchProtocol());
                 setCacheDir(new File("/cache"));
                 setWorkingDir(new File(System.getProperty("robot.workdir")));
-                loadDeviceInfoJson(new MiraiDeviceGenerator().text(System.getProperty("robot.workdir")));
+//                loadDeviceInfoJson(new MiraiDeviceGenerator().text(System.getProperty("robot.workdir")));
+                fileBasedDeviceInfo("device.json");
             }
         });
         bot.login();
