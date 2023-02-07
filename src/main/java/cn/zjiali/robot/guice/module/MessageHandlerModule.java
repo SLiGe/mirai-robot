@@ -3,7 +3,6 @@ package cn.zjiali.robot.guice.module;
 import cn.zjiali.robot.config.AppConfig;
 import cn.zjiali.robot.config.Plugin;
 import cn.zjiali.robot.handler.*;
-import cn.zjiali.robot.util.CommonLogger;
 import com.google.inject.AbstractModule;
 import com.google.inject.Singleton;
 import com.google.inject.multibindings.Multibinder;

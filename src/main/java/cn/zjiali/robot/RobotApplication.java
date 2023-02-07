@@ -55,9 +55,8 @@ public class RobotApplication {
                 setLoginSolver(GuiceUtil.getBean(SysLoginSolver.class));
                 // 选择协议
                 setProtocol(switchProtocol());
-                setCacheDir(new File("/cache"));
+                setCacheDir(new File(System.getProperty("robot.workdir") + "/cache"));
                 setWorkingDir(new File(System.getProperty("robot.workdir")));
-//                loadDeviceInfoJson(new MiraiDeviceGenerator().text(System.getProperty("robot.workdir")));
                 fileBasedDeviceInfo("device.json");
             }
         });
