@@ -5,11 +5,16 @@ import cn.zjiali.robot.annotation.Service;
 import cn.zjiali.robot.util.*;
 import com.google.gson.JsonObject;
 import kotlin.coroutines.Continuation;
+import kotlin.coroutines.CoroutineContext;
+import kotlin.coroutines.EmptyCoroutineContext;
 import net.mamoe.mirai.Bot;
+import net.mamoe.mirai.utils.DeviceVerificationRequests;
+import net.mamoe.mirai.utils.DeviceVerificationResult;
 import net.mamoe.mirai.utils.LoginSolver;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Objects;
 import java.util.Scanner;
 
 
@@ -63,12 +68,43 @@ public class SysLoginSolver extends LoginSolver {
 
     @Nullable
     @Override
-    public Object onSolveUnsafeDeviceLoginVerify(@NotNull Bot bot, @NotNull String s, @NotNull Continuation<? super String> continuation) {
-        commonLogger.warning("需要进行账户安全认证");
-        commonLogger.warning("该账户有[设备锁]/[不常用登录地点]/[不常用设备登录]的问题");
-        commonLogger.warning("请将该链接在浏览器中打开并完成认证, 成功后在控制台输入任意字符");
-        commonLogger.warning(s);
-        return userVerify();
+    public Object onSolveDeviceVerification(@NotNull Bot bot, @NotNull DeviceVerificationRequests requests, @NotNull Continuation<? super DeviceVerificationResult> $completion) {
+        DeviceVerificationRequests.FallbackRequest fallback = requests.getFallback();
+        if (Objects.nonNull(fallback)) {
+            String url = fallback.getUrl();
+            commonLogger.warning("需要进行账户安全认证");
+            commonLogger.warning("该账户有[设备锁]/[不常用登录地点]/[不常用设备登录]的问题");
+            commonLogger.warning("请将该链接在浏览器中打开并完成认证, 成功后在控制台输入任意字符");
+            commonLogger.warning(url);
+            userVerify();
+        }
+        DeviceVerificationRequests.SmsRequest smsRequest = requests.getSms();
+        if (Objects.nonNull(smsRequest)) {
+            commonLogger.warning("需要进行短信验证:{},{}", smsRequest.getPhoneNumber(), smsRequest.getCountryCode());
+            commonLogger.warning("输入send进行发送验证码消息");
+            String code = null;
+            while (true) {
+                code = new Scanner(System.in).nextLine();
+                if ("send".equals(code)) {
+                    smsRequest.requestSms(new Continuation<>() {
+                        @NotNull
+                        @Override
+                        public CoroutineContext getContext() {
+                            return EmptyCoroutineContext.INSTANCE;
+                        }
+
+                        @Override
+                        public void resumeWith(@NotNull Object o) {
+                            commonLogger.info("验证结果: {}", o);
+                        }
+                    });
+                } else {
+                    return smsRequest.solved(code);
+                }
+            }
+
+        }
+        throw new RuntimeException("登录失败!");
     }
 
     private String userVerify() {
