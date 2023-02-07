@@ -51,7 +51,7 @@ class PushMessageHandlerInterceptor : HandlerInterceptor {
             val requestJson = JsonUtil.obj2str(param)
             val session = webSocketManager?.getSession(AppConfig.getQQ())
             session!!.send(wsSecurityManager!!.encryptMsgData(requestJson))
-            logger.debug("send websocket:{}", requestJson)
+            logger.info("send websocket:{}", requestJson)
         }
         return super.preHandle(messageEvent)
     }
