@@ -3,7 +3,7 @@ package cn.zjiali.robot.test.grpc;
 import cn.zjiali.robot.guice.provider.RpcManagedChannelProvider;
 import cn.zjiali.robot.guice.provider.RpcServiceProvider;
 import cn.zjiali.robot.main.ApplicationBootStrap;
-import cn.zjiali.robot.util.ConfigService;
+import cn.zjiali.robot.service.ConfigService;
 import cn.zjiali.robot.util.GuiceUtil;
 import cn.zjiali.server.grpc.api.ConfigGrpc;
 import cn.zjiali.server.grpc.api.GetConfigRequest;
@@ -48,6 +48,7 @@ public class GrpcTest {
         for (int i = 0; i < 10; i++) {
             String config = configService.getConfig("robot.reply.blacklist");
             System.out.println(config);
+
             Thread.sleep(30000);
         }
     }

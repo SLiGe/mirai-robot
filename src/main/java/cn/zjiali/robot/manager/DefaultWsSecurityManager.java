@@ -4,7 +4,7 @@ import cn.hutool.crypto.SecureUtil;
 import cn.hutool.crypto.symmetric.AES;
 import cn.zjiali.robot.constant.CacheKey;
 import cn.zjiali.robot.util.CommonLogger;
-import cn.zjiali.robot.util.ConfigService;
+import cn.zjiali.robot.service.ConfigService;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import lombok.SneakyThrows;

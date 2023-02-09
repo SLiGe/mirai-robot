@@ -1,4 +1,4 @@
-package cn.zjiali.robot.util
+package cn.zjiali.robot.service
 
 import cn.zjiali.server.grpc.api.ConfigGrpc
 import cn.zjiali.server.grpc.api.GetConfigRequest

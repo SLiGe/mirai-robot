@@ -2,7 +2,7 @@ package cn.zjiali.robot.main.interceptor
 
 import cn.zjiali.robot.constant.CacheKey
 import cn.zjiali.robot.util.CommonLogger
-import cn.zjiali.robot.util.ConfigService
+import cn.zjiali.robot.service.ConfigService
 import cn.zjiali.robot.util.PropertiesUtil
 import com.google.inject.Inject
 import net.mamoe.mirai.event.events.MessageEvent
