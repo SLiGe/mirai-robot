@@ -26,8 +26,8 @@ public class HttpFileTest {
     public void testStreamFile() throws IOException {
         OkHttpClient okHttpClient = new OkHttpClient.Builder().build();
 
-        byte[] inputStream = fileStream("https://api.zjiali.cn/file/preview/0f629af226074f9498af0f8c17c954a0", okHttpClient);
-        Files.write(Paths.get("abc.jpeg"), inputStream, StandardOpenOption.CREATE);
+        byte[] inputStream = fileStream("https://file.alapi.cn/60s/202212281672160403.png", okHttpClient);
+        Files.write(Paths.get("202212281672160403.png"), inputStream, StandardOpenOption.CREATE);
     }
 
     public static byte[] fileStream(String url, OkHttpClient okHttpClient) {

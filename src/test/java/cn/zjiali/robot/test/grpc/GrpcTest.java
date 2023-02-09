@@ -42,10 +42,13 @@ public class GrpcTest {
     }
 
     @Test
-    public void testRobotEnv() throws IOException {
+    public void testRobotEnv() throws IOException, InterruptedException {
         ApplicationBootStrap.getInstance().init();
         ConfigService configService = GuiceUtil.getBean(ConfigService.class);
-        String config = configService.getConfig("robot.reply.blacklist");
-        System.out.println(config);
+        for (int i = 0; i < 10; i++) {
+            String config = configService.getConfig("robot.reply.blacklist");
+            System.out.println(config);
+            Thread.sleep(30000);
+        }
     }
 }

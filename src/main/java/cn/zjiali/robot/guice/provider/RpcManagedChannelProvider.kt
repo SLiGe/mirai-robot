@@ -1,5 +1,6 @@
 package cn.zjiali.robot.guice.provider
 
+import cn.zjiali.robot.util.PropertiesUtil
 import com.google.inject.Binder
 import com.google.inject.Module
 import com.google.inject.Provides
@@ -13,10 +14,13 @@ import io.grpc.ManagedChannelBuilder
  */
 class RpcManagedChannelProvider : Module {
     override fun configure(binder: Binder) {}
+
     @Provides
     @Singleton
     fun managedChannel(): ManagedChannel {
-        return ManagedChannelBuilder.forAddress("localhost", 18090)
+        val host = PropertiesUtil.getApplicationProperty("grpc.host")
+        val port = PropertiesUtil.getApplicationProperty("grpc.port")
+        return ManagedChannelBuilder.forAddress(host, port.toInt())
             .usePlaintext()
             .build()
     }
