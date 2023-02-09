@@ -9,6 +9,7 @@ import cn.zjiali.robot.manager.RobotManager;
 import cn.zjiali.robot.util.CommonLogger;
 import cn.zjiali.robot.util.GuiceUtil;
 import cn.zjiali.robot.util.ObjectUtil;
+import io.grpc.ManagedChannel;
 import kotlin.Unit;
 import net.mamoe.mirai.Bot;
 import net.mamoe.mirai.BotFactory;
@@ -76,6 +77,12 @@ public class RobotApplication {
         eventChannel.subscribeAlways(StrangerMessageEvent.class, globalMessageHandler::handleOtherMessageEvent);
         eventChannel.subscribeAlways(NewFriendRequestEvent.class, NewFriendRequestEvent::accept);
         eventChannel.subscribeAlways(GroupTempMessageEvent.class, globalMessageHandler::handleOtherMessageEvent);
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            ManagedChannel managedChannel = GuiceUtil.getBean(ManagedChannel.class);
+            if (managedChannel != null) {
+                managedChannel.shutdown();
+            }
+        }));
         bot.join(); // 阻塞当前线程直到 bot 离线
     }
 
