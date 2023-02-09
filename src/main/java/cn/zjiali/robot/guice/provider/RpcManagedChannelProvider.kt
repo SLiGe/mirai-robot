@@ -21,6 +21,7 @@ class RpcManagedChannelProvider : Module {
         val host = PropertiesUtil.getApplicationProperty("grpc.host")
         val port = PropertiesUtil.getApplicationProperty("grpc.port")
         return ManagedChannelBuilder.forAddress(host, port.toInt())
+            .keepAliveWithoutCalls(true)
             .usePlaintext()
             .build()
     }
