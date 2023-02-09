@@ -8,9 +8,9 @@ package cn.zjiali.robot.constant
  */
 object CacheKey {
 
-    const val MESSAGE_ENCRYPT_KEY = "MESSAGE_ENCRYPT_KEY"
+    const val MESSAGE_ENCRYPT_KEY = "robot.websocket.message.encrypt"
 
-    const val WS_VERIFY_KEY = "WS_VERIFY_KEY"
+    const val WS_VERIFY_KEY = "robot.websocket.connect.verify"
 
-    const val REPLY_BLACK_LIST_KEY = "REPLY_BLACK_LIST_KEY"
+    const val REPLY_BLACK_LIST_KEY = "robot.reply.blacklist"
 }
