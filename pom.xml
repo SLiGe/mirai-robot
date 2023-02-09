@@ -131,6 +131,15 @@
 
     <build>
         <finalName>mirai-robot</finalName>
+        <resources>
+            <resource>
+                <targetPath>lib/</targetPath>
+                <directory>${project.basedir}/src/main/resources/lib/</directory>
+                <includes>
+                    <include>**/*.jar</include>
+                </includes>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
