@@ -1,0 +1,12 @@
+#NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
+#Thu Feb 09 16:25:03 CST 2023
+https\://repo.maven.apache.org/maven2/.lastUpdated=1675931066077
+https\://jcenter.bintray.com/.error=
+file\://E\:\\DevProject\\Java\\github\\mirai-robot/src/main/resources/lib/.error=
+@127.0.0.1\:7890>c0577307c2cc3e0b8cb98d67d884e72577cc0162@default-releases-repo-http\://121.4.161.239\:18078/repository/maven-releases/.lastUpdated=1675930766349
+file\://E\:\\DevProject\\Java\\github\\mirai-robot/src/main/resources/lib/.lastUpdated=1675931065185
+file\://E\:\\DevProject\\Java\\github\\mirai-robot/src/main/resources/repo/.error=
+https\://jcenter.bintray.com/.lastUpdated=1675931065176
+https\://repo.maven.apache.org/maven2/.error=
+http\://121.4.161.239\:18078/repository/maven-releases/.error=Could not transfer artifact cn.zjiali.server.grpc.api\:server-grpc-api\:pom\:3.8.2 from/to releases-repo (http\://121.4.161.239\:18078/repository/maven-releases/)\: transfer failed for http\://121.4.161.239\:18078/repository/maven-releases/cn/zjiali/server/grpc/api/server-grpc-api/3.8.2/server-grpc-api-3.8.2.pom, status\: 502 Bad Gateway, proxy\: ProxyInfo{host\='127.0.0.1', userName\='null', port\=7890, type\='http', nonProxyHosts\='null'}
+file\://E\:\\DevProject\\Java\\github\\mirai-robot/src/main/resources/repo/.lastUpdated=1675931103195

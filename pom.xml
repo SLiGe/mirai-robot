@@ -92,8 +92,6 @@
             <groupId>cn.zjiali.server.grpc.api</groupId>
             <artifactId>server-grpc-api</artifactId>
             <version>3.8.2</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/src/main/resources/lib/server-grpc-api-3.8.2.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>io.grpc</groupId>
@@ -119,27 +117,32 @@
             <id>jcenter</id>
             <url>https://jcenter.bintray.com/</url>
         </repository>
-        <repository>
+       <!-- <repository>
             <id>releases-repo</id>
             <name>releases-repo</name>
             <url>http://121.4.161.239:18078/repository/maven-releases/</url>
             <releases>
                 <enabled>true</enabled>
             </releases>
+        </repository>-->
+
+        <repository>
+            <id>repo</id>
+            <releases>
+                <enabled>true</enabled>
+                <checksumPolicy>ignore</checksumPolicy>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <url>file://${project.basedir}/src/main/resources/repo</url>
         </repository>
+
     </repositories>
+
 
     <build>
         <finalName>mirai-robot</finalName>
-        <resources>
-            <resource>
-                <targetPath>lib/</targetPath>
-                <directory>${project.basedir}/src/main/resources/lib/</directory>
-                <includes>
-                    <include>**/*.jar</include>
-                </includes>
-            </resource>
-        </resources>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
