@@ -15,11 +15,10 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
+import io.grpc.netty.shaded.io.grpc.netty.NettyChannelBuilder;
 import kotlin.coroutines.CoroutineContext;
 import kotlin.jvm.functions.Function2;
 import net.mamoe.mirai.event.events.FriendMessageEvent;
-import net.mamoe.mirai.internal.contact.FriendImpl;
-import net.mamoe.mirai.internal.contact.info.FriendInfoImpl;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.junit.Test;
@@ -35,7 +34,8 @@ public class GrpcTest {
 
     @Test
     public void testConfig(){
-        ManagedChannel channel = ManagedChannelBuilder.forAddress("192.168.0.100", 18090)
+
+        ManagedChannel channel = NettyChannelBuilder.forTarget("121.4.161.239:18090")
                 .usePlaintext()
                 .build();
         GetConfigResponse configResponse = ConfigGrpc.newBlockingStub(channel).getConfig(GetConfigRequest.newBuilder()
