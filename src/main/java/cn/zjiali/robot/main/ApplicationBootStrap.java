@@ -136,9 +136,10 @@ public class ApplicationBootStrap {
     private void loadAppConfig() throws IOException {
         InputStream configStream = null;
         String systemConfigFileLocal = System.getProperty("application.config.file.local");
+        String serverEnv = System.getProperty("server.env");
         // 是否启用本地配置文件
         String localConfigFileFlag = PropertiesUtil.getProperty("application.properties", "application.config.file.local");
-        if ("true".equals(localConfigFileFlag) || "true".equals(systemConfigFileLocal)) {
+        if (("true".equals(localConfigFileFlag) || "true".equals(systemConfigFileLocal)) && !"dev".equals(serverEnv)) {
             String configFilePath = System.getProperty("application.config.file");
             File configFile = new File(configFilePath);
             if (configFile.exists()) {

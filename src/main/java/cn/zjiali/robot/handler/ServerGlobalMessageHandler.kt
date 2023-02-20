@@ -3,24 +3,18 @@ package cn.zjiali.robot.handler
 import cn.hutool.core.collection.CollectionUtil
 import cn.hutool.core.exceptions.ExceptionUtil
 import cn.zjiali.robot.config.AppConfig
-import cn.zjiali.robot.constant.ApiUrl
 import cn.zjiali.robot.constant.AppConstants
-import cn.zjiali.robot.constant.Constants
 import cn.zjiali.robot.main.OutMessageConvert.Companion.instance
 import cn.zjiali.robot.model.message.OutMessage
-import cn.zjiali.robot.model.response.RobotBaseResponse
-import cn.zjiali.robot.model.server.GroupPluginInfo
-import cn.zjiali.robot.model.server.PluginInfo
-import cn.zjiali.robot.util.HttpUtil
 import cn.zjiali.robot.util.ObjectUtil
-import cn.zjiali.robot.util.PropertiesUtil
+import cn.zjiali.server.grpc.api.group.GetPluginRequest
+import cn.zjiali.server.grpc.api.group.GroupPluginGrpc.GroupPluginBlockingStub
 import com.google.common.collect.Lists
+import com.google.inject.Inject
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.encodeToString
 import net.mamoe.mirai.contact.isBotMuted
 import net.mamoe.mirai.event.events.FriendMessageEvent
 import net.mamoe.mirai.event.events.GroupMessageEvent
@@ -38,6 +32,9 @@ import java.util.stream.Collectors
  */
 class ServerGlobalMessageHandler : GlobalMessageHandler {
     private val logger: Logger = LoggerFactory.getLogger(javaClass)
+
+    @Inject
+    private val groupPluginBlockingStub: GroupPluginBlockingStub? = null
 
     @OptIn(DelicateCoroutinesApi::class)
     override fun handleGroupMessageEvent(event: GroupMessageEvent) {
@@ -139,14 +136,10 @@ class ServerGlobalMessageHandler : GlobalMessageHandler {
         var messageEventHandlerList = AppConfig.msgMessageEventHandlers
         if (isGroup) {
             val groupNumber = groupMessageEvent!!.group.id
-            val jsonObject = mapOf("groupNumber" to groupNumber)
-            val serverGroupPluginJson = HttpUtil.post(
-                PropertiesUtil.getApiProperty(ApiUrl.QUERY_GROUP_PLUGIN), Constants.JSON.encodeToString(jsonObject)
-            )
-            logger.debug("群组插件配置:{}", serverGroupPluginJson)
             val pluginInfoResponse =
-                Constants.JSON.decodeFromString<RobotBaseResponse<List<GroupPluginInfo>>>(serverGroupPluginJson)
-            val serverGroupPluginList = pluginInfoResponse.data
+                groupPluginBlockingStub!!.getPlugin(GetPluginRequest.newBuilder().setGroupNumber(groupNumber).build())
+            logger.debug("群组插件配置:{}", pluginInfoResponse)
+            val serverGroupPluginList = pluginInfoResponse.pluginList
             if (CollectionUtil.isNotEmpty(serverGroupPluginList)) {
                 val unActivePluginCodeSet =
                     serverGroupPluginList!!.stream().filter { plugin -> plugin?.pluginStatus == 0 }

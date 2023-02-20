@@ -35,9 +35,10 @@ public class RobotApplication {
 
     private static void init() {
         logger.info("====初始化配置中====");
+        long startInitTime = System.currentTimeMillis();
         try {
             ApplicationBootStrap.getInstance().init();
-            logger.info("====初始化配置完成====");
+            logger.info("====初始化配置完成==== 共耗时: {} ms ", (System.currentTimeMillis() - startInitTime));
             logger.info("⭐⭐⭐⭐⭐⭐GitHub: https://github.com/SLiGe/mirai-robot ⭐⭐⭐⭐⭐⭐");
         } catch (Exception e) {
             logger.error("====初始化配置出错,e: " + e.getMessage());

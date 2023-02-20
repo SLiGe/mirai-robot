@@ -1,5 +1,0 @@
-#NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
-#Thu Feb 09 16:34:18 CST 2023
-server-grpc-api-3.8.2.jar>repo=
-server-grpc-api-3.8.2.jar>=
-server-grpc-api-3.8.2.pom>=
