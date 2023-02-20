@@ -12,7 +12,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * 处理器基类
+ * 处理器基类,自行开发插件请继承此类
  *
  * @author zJiaLi
  * @since 2021-04-08 21:11
