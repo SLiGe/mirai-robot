@@ -117,8 +117,8 @@
         </repository>
         <repository>
             <id>public</id>
-            <name>aliyun nexus</name>
-            <url>http://121.4.161.239:18078/repository/maven-public/</url>
+            <name>nexus</name>
+            <url>https://nexus.fanlisky.cn/repository/maven-public/</url>
             <releases>
                 <enabled>true</enabled>
             </releases>
@@ -128,8 +128,8 @@
     <pluginRepositories>
         <pluginRepository>
             <id>public</id>
-            <name>aliyun nexus</name>
-            <url>http://121.4.161.239:18078/repository/maven-public/</url>
+            <name>nexus</name>
+            <url>https://nexus.fanlisky.cn/repository/maven-public/</url>
             <releases>
                 <enabled>true</enabled>
             </releases>
