@@ -4,7 +4,6 @@ import cn.zjiali.robot.constant.AppConstants;
 import cn.zjiali.robot.manager.PluginManager;
 import cn.zjiali.robot.util.GuiceUtil;
 import cn.zjiali.robot.util.PluginConfigUtil;
-import com.google.inject.Inject;
 import net.mamoe.mirai.event.events.GroupMessageEvent;
 import net.mamoe.mirai.event.events.MessageEvent;
 

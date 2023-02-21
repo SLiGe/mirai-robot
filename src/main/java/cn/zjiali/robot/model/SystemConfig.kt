@@ -1,7 +1,5 @@
 package cn.zjiali.robot.model
 
-import lombok.Data
-
 /**
  * 系统配置
  *

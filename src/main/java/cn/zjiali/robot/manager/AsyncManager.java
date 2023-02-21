@@ -17,6 +17,11 @@ import java.util.concurrent.TimeUnit;
 public class AsyncManager {
 
     private static final ScheduledExecutorService scheduledExecutorService;
+    /**
+     * 操作延迟10毫秒
+     */
+    private static final int OPERATE_DELAY_TIME = 10;
+    private static final AsyncManager me = new AsyncManager();
 
     static {
         scheduledExecutorService = new ScheduledThreadPoolExecutor(Runtime.getRuntime().availableProcessors(),
@@ -30,17 +35,10 @@ public class AsyncManager {
     }
 
     /**
-     * 操作延迟10毫秒
-     */
-    private static final int OPERATE_DELAY_TIME = 10;
-
-    /**
      * 单例模式
      */
     private AsyncManager() {
     }
-
-    private static final AsyncManager me = new AsyncManager();
 
     public static AsyncManager me() {
         return me;

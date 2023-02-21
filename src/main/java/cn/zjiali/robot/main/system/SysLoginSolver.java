@@ -1,7 +1,6 @@
 package cn.zjiali.robot.main.system;
 
 import cn.hutool.core.codec.Base64;
-import cn.zjiali.robot.annotation.Service;
 import cn.zjiali.robot.util.*;
 import com.google.gson.JsonObject;
 import kotlin.coroutines.Continuation;
@@ -24,7 +23,6 @@ import java.util.Scanner;
  * @author zJiaLi
  * @since 2021-04-17 15:06
  */
-@Service
 public class SysLoginSolver extends LoginSolver {
 
 

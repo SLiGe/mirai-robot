@@ -21,7 +21,7 @@ open class FortuneResponse {
         if (if (`this$message` == null) `other$message` != null else `this$message` != `other$message`) return false
         val `this$dataResponse`: Any? = dataResponse
         val `other$dataResponse`: Any? = other.dataResponse
-        return if (if (`this$dataResponse` == null) `other$dataResponse` != null else `this$dataResponse` != `other$dataResponse`) false else true
+        return !if (`this$dataResponse` == null) `other$dataResponse` != null else `this$dataResponse` != `other$dataResponse`
     }
 
     protected fun canEqual(other: Any?): Boolean {

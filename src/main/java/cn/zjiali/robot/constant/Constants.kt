@@ -8,8 +8,14 @@ import kotlinx.serialization.json.Json
  */
 object Constants {
 
+    /**
+     * 是
+     */
     const val Y = "1"
 
+    /**
+     * 否
+     */
     const val N = "0"
 
     val JSON = Json {

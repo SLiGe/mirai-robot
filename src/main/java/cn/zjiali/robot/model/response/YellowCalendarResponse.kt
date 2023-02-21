@@ -12,24 +12,32 @@ class YellowCalendarResponse {
 
     @SerializedName("yangli")
     var yangli: String? = null
+
     @SerializedName("yinli")
     var yinli: String? = null
+
     @SerializedName("wuxing")
     var wuxing: String? = null
+
     @SerializedName("chongsha")
     var chongsha: String? = null
+
     @SerializedName("baiji")
     var baiji: String? = null
+
     @SerializedName("jishen")
     var jishen: String? = null
+
     @SerializedName("yi")
     var yi: String? = null
+
     @SerializedName("xiongshen")
     var xiongshen: String? = null
+
     @SerializedName("ji")
     var ji: String? = null
 
-    constructor() {}
+    constructor()
     constructor(
         yangli: String?,
         yinli: String?,

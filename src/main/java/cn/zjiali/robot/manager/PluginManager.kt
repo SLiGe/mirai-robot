@@ -54,7 +54,7 @@ class PluginManager {
         else return PluginConfigUtil.getTemplate(pluginCode)
     }
 
-    fun getTemplate(pluginCode: String, templateCode: String?, groupId: Long, senderId: Long): String? {
+    fun getTemplate(pluginCode: String, templateCode: String?, groupId: Long, senderId: Long): String {
         if (AppConfig.serverControl() && groupId > 0) {
             val templateFlag =
                 Optional.ofNullable(getConfigVal(pluginCode, ConfigKey.TEMPLATE_FLAG, false, groupId, senderId))

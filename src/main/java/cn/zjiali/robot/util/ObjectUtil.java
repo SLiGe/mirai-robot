@@ -32,8 +32,7 @@ public class ObjectUtil {
         if (obj instanceof Map)
             return ((Map) obj).isEmpty();
 
-        if (obj instanceof Object[]) {
-            Object[] object = (Object[]) obj;
+        if (obj instanceof Object[] object) {
             if (object.length == 0) {
                 return true;
             }
@@ -49,7 +48,7 @@ public class ObjectUtil {
         return false;
     }
 
-    public static boolean isNotNullOrEmpty(Object obj){
+    public static boolean isNotNullOrEmpty(Object obj) {
         return !isNullOrEmpty(obj);
     }
 }

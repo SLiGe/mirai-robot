@@ -4,7 +4,9 @@ import cn.hutool.core.collection.CollectionUtil;
 import cn.zjiali.robot.main.interceptor.HandlerInterceptor;
 import cn.zjiali.robot.model.message.OutMessage;
 import cn.zjiali.robot.util.GuiceUtil;
-import net.mamoe.mirai.event.events.*;
+import net.mamoe.mirai.event.events.FriendMessageEvent;
+import net.mamoe.mirai.event.events.GroupMessageEvent;
+import net.mamoe.mirai.event.events.MessageEvent;
 
 import java.util.List;
 

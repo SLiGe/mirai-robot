@@ -11,7 +11,12 @@ import java.util.Map;
  */
 public class PluginTemplate {
 
+    private final static PluginTemplate instance = new PluginTemplate();
     private final Map<String, String> templateMap = new HashMap<>();
+
+    public static PluginTemplate getInstance() {
+        return instance;
+    }
 
     public void putTemplate(String templateCode, String templateText) {
         this.templateMap.put(templateCode, templateText);
@@ -19,13 +24,6 @@ public class PluginTemplate {
 
     public String getTemplate(String templateCode) {
         return this.templateMap.get(templateCode);
-    }
-
-    
-    private final static PluginTemplate instance = new PluginTemplate();
-
-    public static PluginTemplate getInstance() {
-        return instance;
     }
 
 }

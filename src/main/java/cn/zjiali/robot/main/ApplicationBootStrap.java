@@ -1,6 +1,7 @@
 package cn.zjiali.robot.main;
 
 import cn.hutool.cron.CronUtil;
+import cn.zjiali.robot.RobotApplication;
 import cn.zjiali.robot.config.AppConfig;
 import cn.zjiali.robot.config.Plugin;
 import cn.zjiali.robot.config.PluginTemplate;
@@ -16,7 +17,6 @@ import cn.zjiali.robot.manager.ServerConfigManager;
 import cn.zjiali.robot.manager.ServerTokenManager;
 import cn.zjiali.robot.model.ApplicationConfig;
 import cn.zjiali.robot.model.SystemConfig;
-import cn.zjiali.robot.task.WebSocketStatusTask;
 import cn.zjiali.robot.util.CommonLogger;
 import cn.zjiali.robot.util.GuiceUtil;
 import cn.zjiali.robot.util.JsonUtil;
@@ -40,14 +40,12 @@ import java.util.stream.Collectors;
  */
 public class ApplicationBootStrap {
 
+    private static final ApplicationBootStrap applicationBootStrap = new ApplicationBootStrap();
     private final CommonLogger commonLogger = new CommonLogger(ApplicationBootStrap.class);
+    private Injector injector;
 
     private ApplicationBootStrap() {
     }
-
-    private static final ApplicationBootStrap applicationBootStrap = new ApplicationBootStrap();
-
-    private Injector injector;
 
     public static ApplicationBootStrap getInstance() {
         return applicationBootStrap;
@@ -64,8 +62,15 @@ public class ApplicationBootStrap {
         refreshPlugin();
         loadMessageTemplate();
         loadServerConfig();
-        loadWebSocket();
-        loadCronTask();
+        new Thread(() -> {
+            try {
+                RobotApplication.initLatch.await();
+                loadWebSocket();
+                loadCronTask();
+            } catch (IOException | InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }).start();
     }
 
     private void refreshPlugin() {
@@ -182,10 +187,6 @@ public class ApplicationBootStrap {
         }
         if (AppConfig.serverControl()) {
             CronUtil.schedule("0 0 0/5 * * ?", (Runnable) () -> GuiceUtil.getBean(ServerTokenManager.class).genServerToken());
-        }
-        if (Constants.Y.equals(webSocketFlag)) {
-            //添加定时任务定时确认websocket连接状态
-            CronUtil.schedule("* 0/5 * ? * *", new WebSocketStatusTask());
         }
     }
 

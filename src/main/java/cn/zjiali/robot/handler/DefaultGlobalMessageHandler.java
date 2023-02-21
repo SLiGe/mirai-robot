@@ -6,7 +6,9 @@ import cn.zjiali.robot.model.message.OutMessage;
 import cn.zjiali.robot.util.ObjectUtil;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
-import net.mamoe.mirai.event.events.*;
+import net.mamoe.mirai.event.events.FriendMessageEvent;
+import net.mamoe.mirai.event.events.GroupMessageEvent;
+import net.mamoe.mirai.event.events.MessageEvent;
 import net.mamoe.mirai.message.data.At;
 
 import java.util.ArrayList;

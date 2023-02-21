@@ -44,6 +44,7 @@ object PluginProperty {
      * 群内消息是否艾特才发言
      */
     const val CHAT_GROUP_AT: String = "chatGroupAt"
+
     /**
      * 是否自用茉莉机器人API 建议否
      */
@@ -58,14 +59,17 @@ object PluginProperty {
      * 茉莉机器人API参数 -> key
      */
     const val MOLI_API_KEY = "apiKey"
+
     /**
      * 茉莉机器人API参数 -> 密钥
      */
     const val MOLI_API_SECRET = "apiSecret"
+
     /**
      * 机器人聊天地址 -> 请勿修改
      */
     const val Z_URL_CHAT = "zUrlChat"
+
     /**
      * 灵签地址 -> 请勿修改
      */
