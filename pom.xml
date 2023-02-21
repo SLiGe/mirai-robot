@@ -116,16 +116,14 @@
             <id>jcenter</id>
             <url>https://jcenter.bintray.com/</url>
         </repository>
-       <!-- <repository>
-            <id>releases-repo</id>
-            <name>releases-repo</name>
-            <url>http://121.4.161.239:18078/repository/maven-releases/</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-        </repository>-->
-
+        <repository>
+            <id>nexus</id>
+            <name>nexus</name>
+            <url>http://121.4.161.239:18078/repository/maven-public/</url>
+        </repository>
     </repositories>
+
+
 
 
     <build>
