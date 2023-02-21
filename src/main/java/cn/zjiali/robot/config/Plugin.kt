@@ -1,7 +1,5 @@
 package cn.zjiali.robot.config
 
-import java.util.HashMap
-
 /**
  * @author zJiaLi
  * @since 2021-08-12 16:53

@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory
  */
 class CommonLogger(clz: Class<*>) {
 
-    private val logger:Logger
+    private val logger: Logger
 
     fun info(message: String?, vararg args: Any?) {
         logger.info(StrFormatter.format(message, *args))

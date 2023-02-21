@@ -23,12 +23,12 @@ class TodayOnHistoryResponse {
     /**
      * 日期
      */
-     val day: String? = null
+    val day: String? = null
 
     /**
      * 事件日期
      */
-     val happenDate: String? = null
+    val happenDate: String? = null
 
     /**
      * 事件标题
@@ -38,5 +38,5 @@ class TodayOnHistoryResponse {
     /**
      * 事件id,即下一接口中所用的e_id
      */
-     val eid: String? = null
+    val eid: String? = null
 }

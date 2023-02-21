@@ -5,6 +5,6 @@ package cn.zjiali.robot.model.response
  * @since 2022-01-31 17:20
  */
 class SignPerDayRes {
-     val signData: Any? = null
-     val viewUrl: String? = null
+    val signData: Any? = null
+    val viewUrl: String? = null
 }

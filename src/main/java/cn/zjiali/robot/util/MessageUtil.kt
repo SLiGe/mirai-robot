@@ -3,7 +3,6 @@ package cn.zjiali.robot.util
 import cn.hutool.core.util.ReflectUtil
 import cn.hutool.core.util.StrUtil
 import com.google.common.collect.Lists
-import java.lang.StringBuilder
 import java.lang.reflect.Field
 import java.util.stream.Collectors
 

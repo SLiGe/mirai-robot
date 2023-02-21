@@ -1,7 +1,7 @@
 package cn.zjiali.robot.config;
 
-import cn.zjiali.robot.model.ApplicationConfig;
 import cn.zjiali.robot.handler.MessageEventHandler;
+import cn.zjiali.robot.model.ApplicationConfig;
 
 import java.util.ArrayList;
 import java.util.List;

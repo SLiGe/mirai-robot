@@ -11,13 +11,15 @@ import kotlinx.serialization.Serializable
 class RobotBaseResponse<T> {
     @SerialName(value = "status")
     var status = 0
+
     @SerialName(value = "message")
     var message: String? = null
+
     @SerialName(value = "data")
     var data: T? = null
         private set
 
-    constructor() {}
+    constructor()
     constructor(status: Int, message: String?, data: T) {
         this.status = status
         this.message = message

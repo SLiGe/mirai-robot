@@ -1,7 +1,5 @@
 package cn.zjiali.robot.main.interceptor
 
-import kotlin.Throws
-import java.lang.Exception
 import cn.zjiali.robot.model.message.OutMessage
 import net.mamoe.mirai.event.events.MessageEvent
 

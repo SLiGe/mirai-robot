@@ -1,7 +1,6 @@
 package cn.zjiali.robot.test.net;
 
 import cn.zjiali.robot.factory.MessageFactory;
-import cn.zjiali.robot.factory.ServiceFactory;
 import cn.zjiali.robot.main.ApplicationBootStrap;
 import cn.zjiali.robot.main.interceptor.ReplyBlacklistHandlerInterceptor;
 import cn.zjiali.robot.manager.PluginManager;
@@ -10,7 +9,6 @@ import cn.zjiali.robot.service.MoLiService;
 import cn.zjiali.robot.service.SignInService;
 import cn.zjiali.robot.util.GuiceUtil;
 import cn.zjiali.robot.util.PropertiesUtil;
-import net.mamoe.mirai.event.events.FriendMessageEvent;
 import org.junit.Test;
 
 import java.io.IOException;

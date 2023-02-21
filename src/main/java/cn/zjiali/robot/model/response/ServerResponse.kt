@@ -19,7 +19,7 @@ class ServerResponse<T> {
     var data: T? = null
         private set
 
-    constructor() {}
+    constructor()
     constructor(code: Int, msg: String?, data: T) {
         this.code = code
         this.msg = msg

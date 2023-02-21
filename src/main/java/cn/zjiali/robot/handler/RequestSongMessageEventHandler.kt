@@ -12,7 +12,9 @@ import com.google.gson.reflect.TypeToken
 import net.mamoe.mirai.event.events.FriendMessageEvent
 import net.mamoe.mirai.event.events.GroupMessageEvent
 import net.mamoe.mirai.event.events.MessageEvent
-import net.mamoe.mirai.message.data.*
+import net.mamoe.mirai.message.data.MusicKind
+import net.mamoe.mirai.message.data.MusicShare
+import net.mamoe.mirai.message.data.content
 
 /**
  * 万年历处理器

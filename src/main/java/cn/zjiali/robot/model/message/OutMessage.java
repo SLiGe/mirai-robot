@@ -8,7 +8,6 @@ import net.mamoe.mirai.event.events.MessageEvent;
 import net.mamoe.mirai.message.data.Message;
 
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * @author zJiaLi
@@ -145,60 +144,60 @@ public class OutMessage {
         return this.content;
     }
 
-    public String getPluginCode() {
-        return this.pluginCode;
-    }
-
-    public boolean isConvertFlag() {
-        return this.convertFlag;
-    }
-
-    public String getTemplateCode() {
-        return this.templateCode;
-    }
-
-    public int getFillFlag() {
-        return this.fillFlag;
-    }
-
-    public Map<String, String> getFillMap() {
-        return this.fillMap;
-    }
-
-    public Object getFillObj() {
-        return this.fillObj;
-    }
-
-    public String getFinalMessage() {
-        return this.finalMessage;
-    }
-
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public String getPluginCode() {
+        return this.pluginCode;
     }
 
     public void setPluginCode(String pluginCode) {
         this.pluginCode = pluginCode;
     }
 
+    public boolean isConvertFlag() {
+        return this.convertFlag;
+    }
+
     public void setConvertFlag(boolean convertFlag) {
         this.convertFlag = convertFlag;
+    }
+
+    public String getTemplateCode() {
+        return this.templateCode;
     }
 
     public void setTemplateCode(String templateCode) {
         this.templateCode = templateCode;
     }
 
+    public int getFillFlag() {
+        return this.fillFlag;
+    }
+
     public void setFillFlag(int fillFlag) {
         this.fillFlag = fillFlag;
+    }
+
+    public Map<String, String> getFillMap() {
+        return this.fillMap;
     }
 
     public void setFillMap(Map<String, String> fillMap) {
         this.fillMap = fillMap;
     }
 
+    public Object getFillObj() {
+        return this.fillObj;
+    }
+
     public void setFillObj(Object fillObj) {
         this.fillObj = fillObj;
+    }
+
+    public String getFinalMessage() {
+        return this.finalMessage;
     }
 
     public void setFinalMessage(String finalMessage) {

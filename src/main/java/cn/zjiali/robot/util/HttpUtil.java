@@ -8,7 +8,6 @@ import net.mamoe.mirai.utils.PlatformLogger;
 import okhttp3.*;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.time.Duration;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +25,8 @@ public class HttpUtil {
     private static final OkHttpClient okHttpClient;
 
     private static final List<String> ignoreAuthUrls = List.of("https://server.zjiali.cn");
+    private static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+    private static final String CONTENT_TYPE = "Content-Type";
 
     static {
         okHttpClient = new OkHttpClient.Builder().addInterceptor(chain -> {
@@ -41,9 +42,6 @@ public class HttpUtil {
             return chain.proceed(requestBuilder.build());
         }).callTimeout(Duration.ofSeconds(25)).connectTimeout(Duration.ofSeconds(15)).build();
     }
-
-    private static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-    private static final String CONTENT_TYPE = "Content-Type";
 
     /**
      * get请求

@@ -13,14 +13,12 @@ import java.util.concurrent.ConcurrentHashMap;
  * @since 2021-04-17 10:18
  */
 public class PropertiesUtil {
+    private final static String application_properties = "application.properties";
+    private final static String api_properties = "api.properties";
+    private static final Map<String, Properties> propertiesMap = new ConcurrentHashMap<>();
+
     private PropertiesUtil() {
     }
-
-    private final static String application_properties = "application.properties";
-
-    private final static String api_properties = "api.properties";
-
-    private static final Map<String, Properties> propertiesMap = new ConcurrentHashMap<>();
 
     /**
      * 获取配置内容

@@ -37,8 +37,7 @@ public class MoLiMessageEventHandler extends AbstractMessageEventHandler {
             MessageChain message = event.getMessage();
             StringBuilder messageBuilder = new StringBuilder();
             for (SingleMessage singleMessage : message) {
-                if (singleMessage instanceof At) {
-                    At at = (At) singleMessage;
+                if (singleMessage instanceof At at) {
                     String content = at.contentToString();
                     String sendMsg = moLiService.getCommonChatMessage(groupId, senderId, content);
                     messageBuilder.append(sendMsg);

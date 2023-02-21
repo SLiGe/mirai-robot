@@ -19,15 +19,31 @@ public class RequestSongResponse {
      */
     private MusicInfo musicInfo;
 
-    public static class MusicInfo{
-        public  String title;
-        public  String desc;
-        public  String purl;
-        public  String murl;
-        public  String jurl;
-        public  String source;
-        public  String icon;
-        public  long appid;
+    public String getMusicMessage() {
+        return musicMessage;
+    }
+
+    public void setMusicMessage(String musicMessage) {
+        this.musicMessage = musicMessage;
+    }
+
+    public MusicInfo getMusicInfo() {
+        return musicInfo;
+    }
+
+    public void setMusicInfo(MusicInfo musicInfo) {
+        this.musicInfo = musicInfo;
+    }
+
+    public static class MusicInfo {
+        public String title;
+        public String desc;
+        public String purl;
+        public String murl;
+        public String jurl;
+        public String source;
+        public String icon;
+        public long appid;
         public Map<String, String> properties;
 
         public String getTitle() {
@@ -101,21 +117,5 @@ public class RequestSongResponse {
         public void setProperties(Map<String, String> properties) {
             this.properties = properties;
         }
-    }
-
-    public String getMusicMessage() {
-        return musicMessage;
-    }
-
-    public void setMusicMessage(String musicMessage) {
-        this.musicMessage = musicMessage;
-    }
-
-    public MusicInfo getMusicInfo() {
-        return musicInfo;
-    }
-
-    public void setMusicInfo(MusicInfo musicInfo) {
-        this.musicInfo = musicInfo;
     }
 }

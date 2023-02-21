@@ -1,14 +1,11 @@
 package cn.zjiali.robot.main.websocket
 
-import java.util.concurrent.ConcurrentHashMap
-import cn.zjiali.robot.service.WebSocketService
-import cn.zjiali.robot.util.CommonLogger
-import kotlin.Throws
-import java.io.IOException
 import cn.zjiali.robot.config.AppConfig
 import cn.zjiali.robot.manager.WsSecurityManager
 import cn.zjiali.robot.model.response.ws.WsClientRes
 import cn.zjiali.robot.model.response.ws.WsResult
+import cn.zjiali.robot.service.WebSocketService
+import cn.zjiali.robot.util.CommonLogger
 import cn.zjiali.robot.util.JsonUtil
 import cn.zjiali.robot.util.PropertiesUtil
 import com.google.inject.Inject
@@ -18,6 +15,8 @@ import kotlinx.coroutines.*
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.WebSocket
+import java.io.IOException
+import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.TimeUnit
 
 /**

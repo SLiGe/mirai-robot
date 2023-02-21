@@ -1,9 +1,6 @@
 package cn.zjiali.robot.test.net;
 
 import cn.zjiali.robot.constant.AppConstants;
-import cn.zjiali.robot.constant.MsgType;
-import cn.zjiali.robot.factory.DefaultBeanFactory;
-import cn.zjiali.robot.factory.ServiceFactory;
 import cn.zjiali.robot.handler.SpiritSignMessageEventHandler;
 import cn.zjiali.robot.main.ApplicationBootStrap;
 import cn.zjiali.robot.main.OutMessageConvert;
