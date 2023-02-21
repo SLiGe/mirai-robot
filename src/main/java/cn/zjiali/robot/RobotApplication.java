@@ -20,6 +20,7 @@ import net.mamoe.mirai.utils.LoggerAdapters;
 
 import java.io.File;
 import java.util.Objects;
+import java.util.concurrent.CountDownLatch;
 
 
 /**
@@ -31,6 +32,7 @@ import java.util.Objects;
 @Application(basePackages = {"cn.zjiali.robot.service", "cn.zjiali.robot.main", "cn.zjiali.robot.manager"})
 public class RobotApplication {
 
+    public static final CountDownLatch initLatch = new CountDownLatch(1);
     private static final CommonLogger logger = new CommonLogger(RobotApplication.class);
 
     private static void init() {
@@ -63,6 +65,7 @@ public class RobotApplication {
             }
         });
         bot.login();
+        initLatch.countDown();
         EventChannel<BotEvent> eventChannel = bot.getEventChannel();
         // 创建监听
         eventChannel.exceptionHandler(e -> {

@@ -1,6 +1,7 @@
 package cn.zjiali.robot.main;
 
 import cn.hutool.cron.CronUtil;
+import cn.zjiali.robot.RobotApplication;
 import cn.zjiali.robot.config.AppConfig;
 import cn.zjiali.robot.config.Plugin;
 import cn.zjiali.robot.config.PluginTemplate;
@@ -40,14 +41,12 @@ import java.util.stream.Collectors;
  */
 public class ApplicationBootStrap {
 
+    private static final ApplicationBootStrap applicationBootStrap = new ApplicationBootStrap();
     private final CommonLogger commonLogger = new CommonLogger(ApplicationBootStrap.class);
+    private Injector injector;
 
     private ApplicationBootStrap() {
     }
-
-    private static final ApplicationBootStrap applicationBootStrap = new ApplicationBootStrap();
-
-    private Injector injector;
 
     public static ApplicationBootStrap getInstance() {
         return applicationBootStrap;
@@ -64,8 +63,15 @@ public class ApplicationBootStrap {
         refreshPlugin();
         loadMessageTemplate();
         loadServerConfig();
-        loadWebSocket();
-        loadCronTask();
+        new Thread(() -> {
+            try {
+                RobotApplication.initLatch.await();
+                loadWebSocket();
+                loadCronTask();
+            } catch (IOException | InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }).start();
     }
 
     private void refreshPlugin() {
