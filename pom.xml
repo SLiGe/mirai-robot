@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>cn.zjiali</groupId>
@@ -8,6 +9,9 @@
     <description>Mirai机器人开发框架</description>
 
     <properties>
+        <kotlin.version>1.7.20</kotlin.version>
+        <log4j-version>2.19.0</log4j-version>
+        <grpc.version>1.52.1</grpc.version>
         <kotlin.version>1.7.10</kotlin.version>
     </properties>
 
@@ -15,7 +19,7 @@
         <dependency>
             <groupId>net.mamoe</groupId>
             <artifactId>mirai-core-jvm</artifactId>
-            <version>2.12.2</version>
+            <version>2.13.4</version>
         </dependency>
         <!--在依赖 mirai-core 或 mirai-core-api 的前提下额外添加日志转接模块. 版本号相同-->
         <dependency>
@@ -24,8 +28,29 @@
             <version>2.12.2</version>
         </dependency>
         <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <version>${log4j-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>${log4j-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-slf4j-impl</artifactId>
+            <version>${log4j-version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-stdlib-jdk8</artifactId>
+            <version>${kotlin.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-reflect</artifactId>
             <version>${kotlin.version}</version>
         </dependency>
         <dependency>
@@ -36,7 +61,7 @@
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
-            <version>2.9.0</version>
+            <version>2.10</version>
         </dependency>
         <dependency>
             <groupId>com.google.guava</groupId>
@@ -46,7 +71,7 @@
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>
-            <version>5.8.5</version>
+            <version>5.8.11</version>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -64,6 +89,26 @@
             <artifactId>guice</artifactId>
             <version>5.1.0</version>
         </dependency>
+        <dependency>
+            <groupId>cn.zjiali.server.grpc.api</groupId>
+            <artifactId>server-grpc-api</artifactId>
+            <version>3.8.2</version>
+        </dependency>
+        <dependency>
+            <groupId>io.grpc</groupId>
+            <artifactId>grpc-netty-shaded</artifactId>
+            <version>${grpc.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.grpc</groupId>
+            <artifactId>grpc-protobuf</artifactId>
+            <version>${grpc.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.grpc</groupId>
+            <artifactId>grpc-stub</artifactId>
+            <version>${grpc.version}</version>
+        </dependency>
     </dependencies>
 
     <repositories>
@@ -71,7 +116,31 @@
             <id>jcenter</id>
             <url>https://jcenter.bintray.com/</url>
         </repository>
+        <repository>
+            <id>public</id>
+            <name>nexus</name>
+            <url>https://nexus.fanlisky.cn/repository/maven-public/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </repository>
     </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>public</id>
+            <name>nexus</name>
+            <url>https://nexus.fanlisky.cn/repository/maven-public/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
+
+
 
     <build>
         <finalName>mirai-robot</finalName>
@@ -88,6 +157,7 @@
                                 <exclude>META-INF/*.SF</exclude>
                                 <exclude>META-INF/*.DSA</exclude>
                                 <exclude>META-INF/*.RSA</exclude>
+                                <exclude>log4j2-test.xml</exclude>
                             </excludes>
                         </filter>
                     </filters>
@@ -100,9 +170,11 @@
                         </goals>
                         <configuration>
                             <transformers>
-                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                <transformer
+                                        implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                     <mainClass>cn.zjiali.robot.RobotApplication</mainClass>
                                 </transformer>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
                             </transformers>
                         </configuration>
                     </execution>
@@ -115,9 +187,10 @@
                 <configuration>
                     <args>
                         <arg>-Xjsr305=strict</arg>
-                        <arg>-opt-in=kotlin.RequiresOptIn</arg>
                     </args>
-                    <jvmTarget>1.8</jvmTarget><!-- 需要指定jdk的版本号-->
+                    <compilerPlugins>
+                        <plugin>kotlinx-serialization</plugin>
+                    </compilerPlugins>
                 </configuration>
                 <executions>
                     <execution>
@@ -135,10 +208,23 @@
                         </goals>
                     </execution>
                 </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.jetbrains.kotlin</groupId>
+                        <artifactId>kotlin-maven-allopen</artifactId>
+                        <version>${kotlin.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.jetbrains.kotlin</groupId>
+                        <artifactId>kotlin-maven-serialization</artifactId>
+                        <version>${kotlin.version}</version>
+                    </dependency>
+                </dependencies>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.10.1</version>
                 <executions>
                     <execution>
                         <id>compile</id>
@@ -156,14 +242,15 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <source>8</source>
-                    <target>8</target>
+                    <source>17</source>
+                    <target>17</target>
                     <encoding>UTF-8</encoding>
                 </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.22.2</version>
                 <configuration>
                     <skipTests>true</skipTests>
                 </configuration>

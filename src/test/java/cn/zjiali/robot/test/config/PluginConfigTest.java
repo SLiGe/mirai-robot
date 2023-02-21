@@ -1,6 +1,7 @@
 package cn.zjiali.robot.test.config;
 
 import cn.zjiali.robot.constant.PluginCode;
+import cn.zjiali.robot.handler.ServerGlobalMessageHandler;
 import cn.zjiali.robot.main.ApplicationBootStrap;
 import cn.zjiali.robot.main.interceptor.ReplyBlacklistHandlerInterceptor;
 import cn.zjiali.robot.manager.PluginManager;
@@ -20,7 +21,11 @@ public class PluginConfigTest {
     public void testGetPluginConfig() throws IOException {
         ApplicationBootStrap.getInstance().init();
         PluginManager pluginManager = GuiceUtil.getBean(PluginManager.class);
+
+
+        pluginManager.injectClassField(new ServerGlobalMessageHandler());
         String command = pluginManager.getConfigVal(PluginCode.ONE_SEN, "command", 859744199L, 357078415L);
+        pluginManager.refreshPlugin();
         System.out.println(command);
     }
 }

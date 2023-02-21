@@ -20,7 +20,7 @@ import java.util.concurrent.TimeUnit
 class DictService {
 
     private var cache: Cache<String, String> = CacheBuilder.newBuilder()
-        .expireAfterWrite(5, TimeUnit.MINUTES)
+        .expireAfterWrite(6, TimeUnit.HOURS)
         .build()
 
     @Throws(IOException::class)
@@ -34,6 +34,6 @@ class DictService {
         val serverJson = HttpUtil.get(dictUrl, paramMap)
         val type = object : TypeToken<RobotBaseResponse<JsonObject?>?>() {}.type
         val dictResponse = JsonUtil.toObjByType<RobotBaseResponse<JsonObject>>(serverJson, type)
-        return dictResponse.data["val"].asString
+        return dictResponse.data?.get("val")!!.asString
     }
 }

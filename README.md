@@ -1,12 +1,12 @@
 # Mirai-Robot
 
-    mirai-robot机器人插件,基于mirai机器人协议,依赖`mirai-core-jvm`
+    mirai-robot机器人,基于mirai机器人协议,依赖`mirai-core-jvm`
 # 服务接口
 接口文档地址: [ApiDoc]<https://robot.zjiali.cn/> , 可自行开发对应插件
 
 # 如何使用
 
-- 安装[OpenJDK8]<https://adoptopenjdk.net/?variant=openjdk8&jvmVariant=hotspot>,使用其他版本jdk可能会出现未知异常
+- 安装[OpenJDK17]<https://adoptopenjdk.net/?variant=openjdk8&jvmVariant=hotspot>,使用其他版本jdk可能会出现未知异常
 - 在application.properties修改环境参数``application.profile``为dev或其他自定义环境
 - 参照 **Config.md** 配置application.properties
 - 修改application-{dev}.json
@@ -193,13 +193,19 @@
 
 - 消息模板中{}里的字段可在`src\main\java\cn\zjiali\robot\entity\response` 中查看各插件对应的实体
 - 开发新插件需要实现`AbstractMessageEventHandler`,可参照现有插件
-- 进入到项目目录,执行``mvn clean package``
+- 进入到项目目录,执行``mvn clean kotlin:compile package -f pom.xml``
 
-- 启动参数 ,在启动命令后追加即可,如: `java -jar -Drobot.protocol=0`
-    - application.config.file 配置文件地址
-    - robot.protocol 协议选择使用协议(0 - Android 手机, 1 - Android 平板, 2 - Android 手表)
+- 启动参数:
+```shell
+-Dmirai.slider.captcha.supported #支持验证码
+-Drobot.protocol=1  #协议选择(0 - Android 手机, 1 - Android 平板, 2 - Android 手表, 3 - IPAD, 4 - MACOS)
+-Drobot.qq=2364051402  #机器人QQ
+-Dapplication.config.file=/home/2364051402/application-dev.json #本地配置文件地址
+-Drobot.workdir=/home/2364051402 #工作文件夹
+```
 
 - 执行 `java -jar -Drobot.protocol=0 -Dapplication.config.file=G:\application-dev-3333.json mirai-robot.jar`
+
 
 # 鸣谢
 

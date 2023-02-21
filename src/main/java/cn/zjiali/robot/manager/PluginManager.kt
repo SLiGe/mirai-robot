@@ -1,12 +1,20 @@
 package cn.zjiali.robot.manager
 
+import cn.hutool.core.lang.ParameterizedTypeImpl
 import cn.zjiali.robot.config.AppConfig
+import cn.zjiali.robot.config.Plugin
+import cn.zjiali.robot.constant.ApiUrl
 import cn.zjiali.robot.constant.ConfigKey
+import cn.zjiali.robot.constant.Constants
 import cn.zjiali.robot.constant.PluginProperty
-import cn.zjiali.robot.util.ObjectUtil
-import cn.zjiali.robot.util.PluginConfigUtil
+import cn.zjiali.robot.handler.MessageEventHandler
+import cn.zjiali.robot.model.response.ServerResponse
+import cn.zjiali.robot.model.server.PluginInfo
+import cn.zjiali.robot.util.*
 import com.google.inject.Inject
 import com.google.inject.Singleton
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.util.*
@@ -127,6 +135,85 @@ class PluginManager {
             .filter { config -> config.configKey.equals(configKey) }
             .map { config -> config.configValue }
             .getOrNull(0)
+    }
+
+    private val json = Json { ignoreUnknownKeys = true }
+
+    /**
+     * 刷新插件
+     */
+    fun refreshPlugin() {
+        val pluginInfoJson = HttpUtil.get(PropertiesUtil.getApiProperty(ApiUrl.QUERY_PLUGIN_INFO))
+        if (pluginInfoJson.isNotEmpty()) {
+            val response =
+                json.decodeFromString<ServerResponse<MutableList<PluginInfo>>>(pluginInfoJson)
+            if (response.data!!.isNotEmpty()) {
+                val msgHandlers = AppConfig.getMsgHandlers()
+                msgHandlers.clear()
+                val pluginList = response.data!!.map {
+                    val plugin = Plugin()
+                    plugin.code = it.pluginCode
+                    plugin.name = it.pluginName
+                    plugin.handler = it.pluginClass
+                    val pluginHandler = Class.forName(plugin.handler).newInstance()
+                    injectClassField(pluginHandler)
+                    msgHandlers.add((pluginHandler as MessageEventHandler?))
+                    val properties = HashMap<String, String>()
+                    it.pluginConfigList.forEach { pluginConfig ->
+                        run {
+                            val configKey = pluginConfig.configKey
+                            val configValue = pluginConfig.configValue
+                            when (configKey) {
+                                "command" -> plugin.command = configValue
+                                "enable" -> plugin.enable = configValue.toInt()
+                                "templateFlag" -> plugin.templateFlag = configValue
+                                "template" -> plugin.template = configValue
+                            }
+                            properties[configKey] = configValue
+                        }
+                    }
+                    fillDefaultNullFieldVal(plugin)
+                    plugin.properties = properties
+                    plugin
+                }
+                AppConfig.getApplicationConfig().plugins = pluginList
+            }
+        }
+    }
+
+    private fun fillDefaultNullFieldVal(plugin: Plugin) {
+        if (plugin.templateFlag.isNullOrBlank()) {
+            plugin.templateFlag = Constants.N
+        }
+    }
+
+    fun injectClassField(obj: Any) {
+        obj.javaClass.declaredFields.forEach {
+            if (it.isAnnotationPresent(Inject::class.java)) {
+                it.isAccessible = true
+                when (it.type) {
+                    List::class.java -> {
+                        it.set(
+                            obj,
+                            GuiceUtil.getMultiBean((it.genericType as ParameterizedTypeImpl).actualTypeArguments[0].javaClass)
+                        )
+                    }
+
+                    Set::class.java -> {
+                        val list =
+                            GuiceUtil.getMultiBean((it.genericType as ParameterizedTypeImpl).actualTypeArguments[0].javaClass)
+                        it.set(
+                            obj,
+                            list.toSet()
+                        )
+                    }
+
+                    else -> {
+                        it.set(obj, GuiceUtil.getBean(it.type))
+                    }
+                }
+            }
+        }
     }
 
 }

@@ -47,7 +47,7 @@ class SignInService {
             return null
         }
         val signInDataResponse = robotBaseResponse.data
-        if (signInDataResponse.status == 203) {
+        if (signInDataResponse!!.status == 203) {
             return signInDataResponse
         }
         signInDataResponse.dataResponse?.getPoints = point

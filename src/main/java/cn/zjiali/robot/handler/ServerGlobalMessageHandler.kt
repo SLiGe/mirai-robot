@@ -2,19 +2,14 @@ package cn.zjiali.robot.handler
 
 import cn.hutool.core.collection.CollectionUtil
 import cn.hutool.core.exceptions.ExceptionUtil
-import cn.zjiali.robot.constant.ApiUrl
+import cn.zjiali.robot.config.AppConfig
 import cn.zjiali.robot.constant.AppConstants
 import cn.zjiali.robot.main.OutMessageConvert.Companion.instance
 import cn.zjiali.robot.model.message.OutMessage
-import cn.zjiali.robot.model.response.RobotBaseResponse
-import cn.zjiali.robot.model.server.PluginInfo
-import cn.zjiali.robot.util.HttpUtil
-import cn.zjiali.robot.util.JsonUtil
 import cn.zjiali.robot.util.ObjectUtil
-import cn.zjiali.robot.util.PropertiesUtil
+import cn.zjiali.server.grpc.api.group.GetPluginRequest
+import cn.zjiali.server.grpc.api.group.GroupPluginGrpc.GroupPluginBlockingStub
 import com.google.common.collect.Lists
-import com.google.gson.JsonObject
-import com.google.gson.reflect.TypeToken
 import com.google.inject.Inject
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
@@ -25,7 +20,6 @@ import net.mamoe.mirai.event.events.FriendMessageEvent
 import net.mamoe.mirai.event.events.GroupMessageEvent
 import net.mamoe.mirai.event.events.MessageEvent
 import net.mamoe.mirai.message.data.At
-import okhttp3.internal.filterList
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.util.stream.Collectors
@@ -37,9 +31,10 @@ import java.util.stream.Collectors
  * @since 2020-10-29 21:20
  */
 class ServerGlobalMessageHandler : GlobalMessageHandler {
-    @Inject
-    private val messageEventHandlers: Set<MessageEventHandler>? = null
     private val logger: Logger = LoggerFactory.getLogger(javaClass)
+
+    @Inject
+    private val groupPluginBlockingStub: GroupPluginBlockingStub? = null
 
     @OptIn(DelicateCoroutinesApi::class)
     override fun handleGroupMessageEvent(event: GroupMessageEvent) {
@@ -76,9 +71,7 @@ class ServerGlobalMessageHandler : GlobalMessageHandler {
     }
 
     private suspend fun handleMessage(
-        isGroup: Boolean,
-        groupMessageEvent: GroupMessageEvent?,
-        friendMessageEvent: MessageEvent?
+        isGroup: Boolean, groupMessageEvent: GroupMessageEvent?, friendMessageEvent: MessageEvent?
     ) {
         if (isGroup && groupMessageEvent!!.group.isBotMuted) {
             return
@@ -93,7 +86,7 @@ class ServerGlobalMessageHandler : GlobalMessageHandler {
                 var outMessage: OutMessage?
                 if (isGroup) {
                     outMessage = messageEventHandler.handleGroupMessageEvent(groupMessageEvent)
-                    if (outMessage == null) continue
+                    if (outMessage == null || outMessage.isEmpty) continue
                     val messageType = outMessage.messageType
                     if (messageType == AppConstants.MESSAGE_TYPE_HANDLER) {
                         val message = instance.convert(outMessage)
@@ -109,7 +102,7 @@ class ServerGlobalMessageHandler : GlobalMessageHandler {
                     }
                 } else {
                     outMessage = messageEventHandler.handleFriendMessageEvent(friendMessageEvent as FriendMessageEvent?)
-                    if (outMessage == null) continue
+                    if (outMessage == null || outMessage.isEmpty) continue
                     val messageType = outMessage.messageType
                     if (messageType == AppConstants.MESSAGE_TYPE_HANDLER) {
                         val message = instance.convert(outMessage)
@@ -138,25 +131,18 @@ class ServerGlobalMessageHandler : GlobalMessageHandler {
      * @return 消息处理器
      */
     private fun filterMessageEventHandlerList(
-        isGroup: Boolean,
-        groupMessageEvent: GroupMessageEvent?
+        isGroup: Boolean, groupMessageEvent: GroupMessageEvent?
     ): List<MessageEventHandler> {
-        var messageEventHandlerList = messageEventHandlers!!.toList()
+        var messageEventHandlerList = AppConfig.msgMessageEventHandlers
         if (isGroup) {
             val groupNumber = groupMessageEvent!!.group.id
-            val jsonObject = JsonObject()
-            jsonObject.addProperty("groupNumber", groupNumber)
-            val serverGroupPluginJson =
-                HttpUtil.post(PropertiesUtil.getApiProperty(ApiUrl.QUERY_GROUP_PLUGIN), JsonUtil.obj2str(jsonObject))
-            logger.debug("群组插件配置:{}", serverGroupPluginJson)
-            val pluginInfoResponse = JsonUtil.toObjByType<RobotBaseResponse<List<PluginInfo?>>>(
-                serverGroupPluginJson,
-                object : TypeToken<RobotBaseResponse<List<PluginInfo?>?>?>() {}.type
-            )
-            val serverGroupPluginList = pluginInfoResponse.data
+            val pluginInfoResponse =
+                groupPluginBlockingStub!!.getPlugin(GetPluginRequest.newBuilder().setGroupNumber(groupNumber).build())
+            logger.debug("群组插件配置:{}", pluginInfoResponse)
+            val serverGroupPluginList = pluginInfoResponse.pluginList
             if (CollectionUtil.isNotEmpty(serverGroupPluginList)) {
                 val unActivePluginCodeSet =
-                    serverGroupPluginList.stream().filter { plugin -> plugin?.activeFlag == "0" }
+                    serverGroupPluginList!!.stream().filter { plugin -> plugin?.pluginStatus == 0 }
                         .map { plugin -> plugin?.pluginCode }.collect(Collectors.toSet())
                 messageEventHandlerList = messageEventHandlerList.filter { messageEventHandler: MessageEventHandler ->
                     val code = messageEventHandler.code()

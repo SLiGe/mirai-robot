@@ -25,3 +25,5 @@
     websocket开启标识,0关闭 1开启, 开启后则接收服务端推送消息
 ## 11.robot.websocket.url(无需修改)
     websocket服务端地址
+## 12.grpc.address
+    Grpc服务地址,无需修改

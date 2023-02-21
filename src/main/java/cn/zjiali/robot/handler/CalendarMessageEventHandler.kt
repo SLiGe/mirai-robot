@@ -54,7 +54,7 @@ class CalendarMessageEventHandler : AbstractMessageEventHandler() {
                 .event(event)
                 .fillObj(calendarResponse).templateCode(PluginCode.CALENDAR).build()
         }
-        return null
+        return OutMessage.empty()
     }
 
 }

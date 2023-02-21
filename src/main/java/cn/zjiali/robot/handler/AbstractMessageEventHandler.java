@@ -2,6 +2,7 @@ package cn.zjiali.robot.handler;
 
 import cn.zjiali.robot.constant.AppConstants;
 import cn.zjiali.robot.manager.PluginManager;
+import cn.zjiali.robot.util.GuiceUtil;
 import cn.zjiali.robot.util.PluginConfigUtil;
 import com.google.inject.Inject;
 import net.mamoe.mirai.event.events.GroupMessageEvent;
@@ -11,15 +12,16 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * 处理器基类
+ * 处理器基类,自行开发插件请继承此类
  *
  * @author zJiaLi
  * @since 2021-04-08 21:11
  */
 public abstract class AbstractMessageEventHandler implements MessageEventHandler {
 
-    @Inject
-    protected PluginManager pluginManager;
+    protected PluginManager pluginManager() {
+        return GuiceUtil.getBean(PluginManager.class);
+    }
 
     /**
      * 获取消息内容
@@ -72,7 +74,7 @@ public abstract class AbstractMessageEventHandler implements MessageEventHandler
         if (event instanceof GroupMessageEvent) {
             long groupId = ((GroupMessageEvent) event).getGroup().getId();
             long senderId = event.getSender().getId();
-            String command = pluginManager.getCommand(pluginCode, groupId, senderId);
+            String command = pluginManager().getCommand(pluginCode, groupId, senderId);
             List<String> commandArray = Arrays.asList(command.split(","));
             return containCommand(msg, commandArray);
         }
@@ -90,7 +92,7 @@ public abstract class AbstractMessageEventHandler implements MessageEventHandler
         if (event instanceof GroupMessageEvent) {
             long groupId = ((GroupMessageEvent) event).getGroup().getId();
             long senderId = event.getSender().getId();
-            return pluginManager.getCommand(pluginCode, groupId, senderId);
+            return pluginManager().getCommand(pluginCode, groupId, senderId);
         }
         return PluginConfigUtil.getCommand(pluginCode);
     }
@@ -116,7 +118,7 @@ public abstract class AbstractMessageEventHandler implements MessageEventHandler
         if (event instanceof GroupMessageEvent) {
             long groupId = ((GroupMessageEvent) event).getGroup().getId();
             long senderId = event.getSender().getId();
-            return pluginManager.getApiURL(pluginCode, groupId, senderId);
+            return pluginManager().getApiURL(pluginCode, groupId, senderId);
         }
         return PluginConfigUtil.getApiURL(pluginCode);
     }
@@ -131,7 +133,7 @@ public abstract class AbstractMessageEventHandler implements MessageEventHandler
      * @return 配置值
      */
     protected String getConfigVal(String pluginCode, String key, Long groupId, Long senderId) {
-        return pluginManager.getConfigVal(pluginCode, key, groupId, senderId);
+        return pluginManager().getConfigVal(pluginCode, key, groupId, senderId);
     }
 
     /**

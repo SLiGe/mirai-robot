@@ -1,0 +1,1 @@
+mvn clean kotlin:compile package -f pom.xml

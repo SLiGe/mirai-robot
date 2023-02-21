@@ -39,7 +39,7 @@ class GroupActionService {
                 group = bot.getGroup(groupNumber!!)
             }
         }
-        if (group == null && groupAction.actionType != GroupActionType.PULL_GROUP.ordinal) return
+        if (group == null) return
         when (groupAction.actionType) {
             GroupActionType.PULL_GROUP.ordinal -> {
                 val groupList = ArrayList<GroupInfo>()
@@ -59,16 +59,16 @@ class GroupActionService {
             }
 
             GroupActionType.PULL_MEMBER.ordinal -> {
-                postGroupMember(group!!)
+                postGroupMember(group)
             }
 
             GroupActionType.MUTE_MEMBER.ordinal -> {
                 val memberNumber = groupAction.memberNumber
-                group?.getMember(memberNumber!!)!!.mute(groupAction.muteTime!! * 60)
+                group.getMember(memberNumber!!)!!.mute(groupAction.muteTime!! * 60)
             }
 
             GroupActionType.REMOVE_MEMBER.ordinal -> {
-                group?.getMember(groupAction.memberNumber!!)!!
+                group.getMember(groupAction.memberNumber!!)!!
                     .kick(groupAction.kickMessage!!, (groupAction.kickBlockFlag!! == 1))
             }
         }

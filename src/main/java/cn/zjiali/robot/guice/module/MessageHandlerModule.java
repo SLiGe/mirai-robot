@@ -3,7 +3,6 @@ package cn.zjiali.robot.guice.module;
 import cn.zjiali.robot.config.AppConfig;
 import cn.zjiali.robot.config.Plugin;
 import cn.zjiali.robot.handler.*;
-import cn.zjiali.robot.util.CommonLogger;
 import com.google.inject.AbstractModule;
 import com.google.inject.Singleton;
 import com.google.inject.multibindings.Multibinder;
@@ -29,7 +28,7 @@ public class MessageHandlerModule extends AbstractModule {
                 try {
                     messageEventHandlerMultiBinder.addBinding()
                             .to((Class<? extends MessageEventHandler>) Class.forName(plugin.getHandler()))
-                            .in(Singleton.class);;
+                            .in(Singleton.class);
                     log.info("[loadAppConfig]====加载 [{}] 成功！", plugin.getName());
                 } catch (ClassNotFoundException e) {
                     throw new RuntimeException(e);

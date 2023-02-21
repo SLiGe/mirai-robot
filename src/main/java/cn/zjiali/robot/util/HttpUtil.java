@@ -8,7 +8,9 @@ import net.mamoe.mirai.utils.PlatformLogger;
 import okhttp3.*;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.time.Duration;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -23,11 +25,15 @@ public class HttpUtil {
 
     private static final OkHttpClient okHttpClient;
 
+    private static final List<String> ignoreAuthUrls = List.of("https://server.zjiali.cn");
+
     static {
         okHttpClient = new OkHttpClient.Builder().addInterceptor(chain -> {
             Request.Builder requestBuilder = chain.request().newBuilder();
             requestBuilder.addHeader("Client-Type", "robot");
-            if (!chain.request().url().toString().equals(AppConfig.getApplicationConfig().getServerUrl())) {
+            String url = chain.request().url().toString();
+            boolean requireAuth = ignoreAuthUrls.stream().anyMatch(url::contains);
+            if (!url.equals(AppConfig.getApplicationConfig().getServerUrl()) && requireAuth) {
                 ServerTokenManager serverTokenManager = GuiceUtil.getBean(ServerTokenManager.class);
                 requestBuilder.addHeader("Authorization", serverTokenManager.serverToken());
                 requestBuilder.addHeader("Cookie", "Admin-Token=" + serverTokenManager.serverToken());
@@ -82,6 +88,17 @@ public class HttpUtil {
             e.printStackTrace();
         }
         return result;
+    }
+
+    public static byte[] fileBytes(String url) {
+        miraiLogger.debug("[httpGet]====请求URL: " + url);
+        Request request = new Request.Builder().url(url).build();
+        try (Response response = okHttpClient.newCall(request).execute()) {
+            return Objects.requireNonNull(response.body()).bytes();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public static String post(String url, JsonObject data) {

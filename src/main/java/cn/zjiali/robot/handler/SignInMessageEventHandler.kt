@@ -71,7 +71,7 @@ class SignInMessageEventHandler : AbstractMessageEventHandler() {
                 .fillFlag(AppConstants.FILL_OUT_MESSAGE_OBJECT_FLAG)
                 .templateCode(MsgTemplate.QUERY_SIGN_TEMPLATE).fillObj(dataResponse).build()
         }
-        return null
+        return OutMessage.empty()
     }
 
     override fun next(): Boolean {

@@ -3,6 +3,7 @@ package cn.zjiali.robot.util
 import cn.zjiali.robot.config.AppConfig
 import cn.zjiali.robot.config.Plugin
 import cn.zjiali.robot.config.PluginTemplate
+import cn.zjiali.robot.constant.Constants
 import cn.zjiali.robot.constant.PluginProperty
 
 /**
@@ -19,7 +20,8 @@ object PluginConfigUtil {
     }
 
     fun getPlugin(pluginCode: String): Plugin {
-        return AppConfig.getApplicationConfig().plugins!!.stream().filter { plugin: Plugin -> pluginCode == plugin.code }
+        return AppConfig.getApplicationConfig().plugins!!.stream()
+            .filter { plugin: Plugin -> pluginCode == plugin.code }
             .findFirst().orElseThrow {
                 println("插件: $pluginCode 未找到!")
                 NullPointerException("未找到插件!")
@@ -34,7 +36,7 @@ object PluginConfigUtil {
     @JvmStatic
     fun getTemplate(pluginCode: String, templateCode: String?): String {
         val plugin = getPlugin(pluginCode)
-        return if ("1" == plugin.templateFlag)
+        return if (Constants.Y == plugin.templateFlag)
             getPlugin(pluginCode).template.orEmpty()
         else
             PluginTemplate.getInstance().getTemplate(templateCode)
@@ -68,7 +70,7 @@ object PluginConfigUtil {
     fun getIgnoreWords(pluginCode: String): ArrayList<String> {
         val ignoreKeyWords = getPlugin(pluginCode).ignoreKeyWords
         if (ObjectUtil.isNotNullOrEmpty(ignoreKeyWords)) {
-           return ignoreKeyWords?.split(",")?.toList() as ArrayList<String>
+            return ignoreKeyWords?.split(",")?.toList() as ArrayList<String>
         }
         return ArrayList()
     }
