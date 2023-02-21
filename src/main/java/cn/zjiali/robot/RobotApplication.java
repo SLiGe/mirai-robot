@@ -1,10 +1,11 @@
 package cn.zjiali.robot;
 
-import cn.zjiali.robot.annotation.Application;
+import cn.hutool.core.exceptions.ExceptionUtil;
 import cn.zjiali.robot.config.AppConfig;
 import cn.zjiali.robot.handler.GlobalMessageHandler;
 import cn.zjiali.robot.main.ApplicationBootStrap;
 import cn.zjiali.robot.main.system.SysLoginSolver;
+import cn.zjiali.robot.main.websocket.WebSocketManager;
 import cn.zjiali.robot.manager.RobotManager;
 import cn.zjiali.robot.util.CommonLogger;
 import cn.zjiali.robot.util.GuiceUtil;
@@ -29,7 +30,6 @@ import java.util.concurrent.CountDownLatch;
  * @author zJiaLi
  * @since 2020-10-29 11:09
  */
-@Application(basePackages = {"cn.zjiali.robot.service", "cn.zjiali.robot.main", "cn.zjiali.robot.manager"})
 public class RobotApplication {
 
     public static final CountDownLatch initLatch = new CountDownLatch(1);
@@ -69,7 +69,7 @@ public class RobotApplication {
         EventChannel<BotEvent> eventChannel = bot.getEventChannel();
         // 创建监听
         eventChannel.exceptionHandler(e -> {
-            e.printStackTrace();
+            logger.error("unknown error: {}", ExceptionUtil.stacktraceToString(e));
             return Unit.INSTANCE;
         });
         //保存robot实例
@@ -82,10 +82,12 @@ public class RobotApplication {
         eventChannel.subscribeAlways(NewFriendRequestEvent.class, NewFriendRequestEvent::accept);
         eventChannel.subscribeAlways(GroupTempMessageEvent.class, globalMessageHandler::handleOtherMessageEvent);
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            ManagedChannel managedChannel = GuiceUtil.getBean(ManagedChannel.class);
+            var managedChannel = GuiceUtil.getBean(ManagedChannel.class);
             if (managedChannel != null) {
                 managedChannel.shutdown();
             }
+            var webSocketManager = GuiceUtil.getBean(WebSocketManager.class);
+            webSocketManager.close();
         }));
         bot.join(); // 阻塞当前线程直到 bot 离线
     }

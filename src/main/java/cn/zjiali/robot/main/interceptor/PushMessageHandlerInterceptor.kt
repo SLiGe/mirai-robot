@@ -2,11 +2,9 @@ package cn.zjiali.robot.main.interceptor
 
 import cn.zjiali.robot.config.AppConfig
 import cn.zjiali.robot.main.websocket.WebSocketManager
-import cn.zjiali.robot.manager.WsSecurityManager
 import cn.zjiali.robot.util.CommonLogger
 import cn.zjiali.robot.util.JsonUtil
 import com.google.inject.Inject
-import com.google.inject.name.Named
 import net.mamoe.mirai.event.events.FriendMessageEvent
 import net.mamoe.mirai.event.events.GroupMessageEvent
 import net.mamoe.mirai.event.events.MessageEvent
@@ -17,9 +15,6 @@ import net.mamoe.mirai.message.data.At
  * @since 2022-12-01 16:37
  */
 class PushMessageHandlerInterceptor : HandlerInterceptor {
-    @Inject
-    @Named("DefaultWsSecurityManager")
-    private val wsSecurityManager: WsSecurityManager? = null
 
     private val logger: CommonLogger = CommonLogger(javaClass)
 
@@ -49,8 +44,7 @@ class PushMessageHandlerInterceptor : HandlerInterceptor {
             messageBody["nickName"] = messageEvent.sender.nick
             param["messageBody"] = messageBody
             val requestJson = JsonUtil.obj2str(param)
-            val session = webSocketManager?.getSession(AppConfig.getQQ())
-            session!!.send(wsSecurityManager!!.encryptMsgData(requestJson))
+            webSocketManager!!.sendText(requestJson)
             logger.info("send websocket:{}", requestJson)
         }
         return super.preHandle(messageEvent)

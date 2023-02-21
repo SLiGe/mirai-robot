@@ -17,7 +17,6 @@ import cn.zjiali.robot.manager.ServerConfigManager;
 import cn.zjiali.robot.manager.ServerTokenManager;
 import cn.zjiali.robot.model.ApplicationConfig;
 import cn.zjiali.robot.model.SystemConfig;
-import cn.zjiali.robot.task.WebSocketStatusTask;
 import cn.zjiali.robot.util.CommonLogger;
 import cn.zjiali.robot.util.GuiceUtil;
 import cn.zjiali.robot.util.JsonUtil;
@@ -188,10 +187,6 @@ public class ApplicationBootStrap {
         }
         if (AppConfig.serverControl()) {
             CronUtil.schedule("0 0 0/5 * * ?", (Runnable) () -> GuiceUtil.getBean(ServerTokenManager.class).genServerToken());
-        }
-        if (Constants.Y.equals(webSocketFlag)) {
-            //添加定时任务定时确认websocket连接状态
-            CronUtil.schedule("* 0/5 * ? * *", new WebSocketStatusTask());
         }
     }
 
