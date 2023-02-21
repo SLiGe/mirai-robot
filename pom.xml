@@ -110,19 +110,34 @@
         </dependency>
     </dependencies>
 
-
     <repositories>
         <repository>
             <id>jcenter</id>
             <url>https://jcenter.bintray.com/</url>
         </repository>
         <repository>
-            <id>nexus</id>
-            <name>nexus</name>
+            <id>public</id>
+            <name>aliyun nexus</name>
             <url>http://121.4.161.239:18078/repository/maven-public/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
         </repository>
     </repositories>
 
+    <pluginRepositories>
+        <pluginRepository>
+            <id>public</id>
+            <name>aliyun nexus</name>
+            <url>http://121.4.161.239:18078/repository/maven-public/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
 
 
 
