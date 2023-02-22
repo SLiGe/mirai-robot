@@ -18,6 +18,7 @@ import java.io.IOException
 @Singleton
 class WebSocketManager {
 
+    @Inject
     private val webSocketFactory: WebSocketFactory? = null
 
     @Inject
