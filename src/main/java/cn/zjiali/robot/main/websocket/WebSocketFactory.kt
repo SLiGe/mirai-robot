@@ -44,6 +44,8 @@ class WebSocketFactory {
         val websocketAddress = URI(uri)
         val host = websocketAddress.host
         val port = if (websocketAddress.port == -1) 443 else websocketAddress.port
+        val scheme = websocketAddress.scheme
+        val ssl = scheme.equals("wss", true)
         val httpHeaders = DefaultHttpHeaders()
         httpHeaders["ws-token"] = token
         httpHeaders["robotQQ"] = qq
@@ -60,7 +62,7 @@ class WebSocketFactory {
         bootstrap.option(ChannelOption.SO_KEEPALIVE, true)
             .group(eventLoopGroup)
             .channel(NioSocketChannel::class.java)
-            .handler(WsChannelInitializer(host, port, webSocketClientHandler))
+            .handler(WsChannelInitializer(host, port, ssl, webSocketClientHandler))
         val channel = bootstrap.connect(host, port).addListener {
             if (it.cause() != null) {
                 logger.error("Websocket connect failed! e:{}", ExceptionUtil.stacktraceToString(it.cause()))
