@@ -37,16 +37,13 @@ class WebsocketTest {
             throw RuntimeException(e)
         }
         val defaultWsSecurityManager = GuiceUtil.getBean("DefaultWsSecurityManager",  WsSecurityManager::class.java)
-        val webSocketManager = GuiceUtil.getBean(WebSocketManager::class.java)
-        val webSocketFactory = WebSocketFactory()
-        webSocketFactory.connect("wss://robot.zjiali.cn/websocket","357078415","b83689a385e5595d9a2a33e60a0bd8aa")
+        val webSocketFactory = GuiceUtil.getBean(WebSocketFactory::class.java)
+        webSocketFactory.connect("ws://localhost:8082/websocket","357078415","b83689a385e5595d9a2a33e60a0bd8aa")
         val channel = webSocketFactory.channel()
         channel.writeAndFlush(TextWebSocketFrame(defaultWsSecurityManager.encryptMsgData("{\"robot\":\"2364051402\",\"msgType\":1,\"messageBody\":{\"qq\":357078415,\"nickName\":\"(:\uD83C\uDDE8\uD83C\uDDF3\",\"content\":\"干什么呢\"}}")))
-        Thread.sleep(5000)
         channel.writeAndFlush(TextWebSocketFrame(defaultWsSecurityManager.encryptMsgData("{\"robot\":\"2364051402\",\"msgType\":1,\"messageBody\":{\"qq\":357078415,\"nickName\":\"(:\uD83C\uDDE8\uD83C\uDDF3\",\"content\":\"中午吃饭了吗\"}}")))
-        Thread.sleep(5000)
         channel.writeAndFlush(TextWebSocketFrame(defaultWsSecurityManager.encryptMsgData("{\"robot\":\"2364051402\",\"msgType\":1,\"messageBody\":{\"qq\":357078415,\"nickName\":\"(:\uD83C\uDDE8\uD83C\uDDF3\",\"content\":\"吃什么了\"}}")))
-        Thread.sleep(5000)
+        Thread.currentThread().join()
 
     }
 }

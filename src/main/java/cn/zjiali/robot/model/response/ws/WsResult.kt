@@ -1,9 +1,12 @@
 package cn.zjiali.robot.model.response.ws
 
+import kotlinx.serialization.Serializable
+
 /**
  * @author zJiaLi
  * @since 2021-07-28 20:09
  */
+@Serializable
 class WsResult {
     /**
      * 消息类型

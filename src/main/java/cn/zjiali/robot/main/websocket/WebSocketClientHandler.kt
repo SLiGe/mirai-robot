@@ -16,6 +16,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.slf4j.LoggerFactory
+import java.nio.charset.StandardCharsets
 import java.util.concurrent.TimeUnit
 
 /**
@@ -73,7 +74,11 @@ class WebSocketClientHandler(
             }
 
             is PongWebSocketFrame -> {
-                logger.debug("WebSocket Client received pong")
+                val pongFrame: PongWebSocketFrame = frame
+                logger.debug(
+                    "WebSocket Client received pong {}",
+                    pongFrame.content().toString(StandardCharsets.UTF_8)
+                )
             }
 
             is CloseWebSocketFrame -> {
