@@ -32,6 +32,10 @@ public class AppConfig {
         return getApplicationConfig().getQq();
     }
 
+    public static Long qq() {
+        return Long.parseLong(getApplicationConfig().getQq());
+    }
+
     public static List<MessageEventHandler> getMsgHandlers() {
         return msgMessageEventHandlers;
     }
