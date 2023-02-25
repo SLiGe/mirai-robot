@@ -2,6 +2,7 @@ package cn.zjiali.robot.guice.provider
 
 import cn.zjiali.server.grpc.api.ConfigGrpc
 import cn.zjiali.server.grpc.api.ConfigGrpc.ConfigBlockingStub
+import cn.zjiali.server.grpc.api.group.GroupGrpc
 import cn.zjiali.server.grpc.api.group.GroupPluginConfigGrpc
 import cn.zjiali.server.grpc.api.group.GroupPluginConfigGrpc.GroupPluginConfigBlockingStub
 import cn.zjiali.server.grpc.api.group.GroupPluginGrpc
@@ -36,5 +37,11 @@ class RpcServiceProvider : Module {
     @Singleton
     fun groupPluginBlockingStub(managedChannel: ManagedChannel?): GroupPluginGrpc.GroupPluginBlockingStub {
         return GroupPluginGrpc.newBlockingStub(managedChannel)
+    }
+
+    @Provides
+    @Singleton
+    fun groupBlockingStub(managedChannel: ManagedChannel?): GroupGrpc.GroupBlockingStub {
+        return GroupGrpc.newBlockingStub(managedChannel)
     }
 }
