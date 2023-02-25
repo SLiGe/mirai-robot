@@ -12,5 +12,5 @@ interface GlobalEventHandler {
     /**
      * 处理机器人被邀请入群事件
      */
-    suspend fun handleBotInvitedJoinGroupRequestEvent(event: BotInvitedJoinGroupRequestEvent?)
+    fun handleBotInvitedJoinGroupRequestEvent(event: BotInvitedJoinGroupRequestEvent?)
 }

@@ -6,6 +6,7 @@ import cn.zjiali.robot.config.AppConfig;
 import cn.zjiali.robot.config.Plugin;
 import cn.zjiali.robot.config.PluginTemplate;
 import cn.zjiali.robot.constant.Constants;
+import cn.zjiali.robot.guice.module.GlobalEventHandlerModule;
 import cn.zjiali.robot.guice.module.HandlerInterceptorModule;
 import cn.zjiali.robot.guice.module.ManagerModule;
 import cn.zjiali.robot.guice.module.SimpleMessageEventHandlerModule;
@@ -84,7 +85,9 @@ public class ApplicationBootStrap {
 
     private void initGuiceContext() {
         this.injector = Guice.createInjector(new RpcManagedChannelProvider(), new RpcServiceProvider(),
-                new ManagerModule(), new SimpleMessageEventHandlerModule(), new HandlerInterceptorModule());
+                new ManagerModule(), new SimpleMessageEventHandlerModule(),
+                new GlobalEventHandlerModule(),
+                new HandlerInterceptorModule());
     }
 
     /**
