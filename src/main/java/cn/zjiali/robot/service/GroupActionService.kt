@@ -1,14 +1,12 @@
 package cn.zjiali.robot.service
 
-import cn.zjiali.robot.constant.ApiUrl
+import cn.zjiali.robot.config.AppConfig
+import cn.zjiali.robot.constant.Constants
 import cn.zjiali.robot.enums.GroupActionType
 import cn.zjiali.robot.manager.RobotManager
 import cn.zjiali.robot.model.response.ws.GroupAction
-import cn.zjiali.robot.model.server.GroupInfo
-import cn.zjiali.robot.model.server.GroupMember
-import cn.zjiali.robot.util.HttpUtil
-import cn.zjiali.robot.util.JsonUtil
-import cn.zjiali.robot.util.PropertiesUtil
+import cn.zjiali.server.grpc.api.group.*
+import com.google.common.collect.Lists
 import com.google.inject.Inject
 import com.google.inject.Singleton
 import net.mamoe.mirai.contact.Group
@@ -28,6 +26,9 @@ class GroupActionService {
 
     @Inject
     private val robotManager: RobotManager? = null
+
+    @Inject
+    private val groupGrpc: GroupGrpc.GroupBlockingStub? = null
     private val logger: Logger = LoggerFactory.getLogger(javaClass)
 
     suspend fun doAction(groupAction: GroupAction) {
@@ -45,13 +46,12 @@ class GroupActionService {
                 val groupList = ArrayList<GroupInfo>()
                 bot?.groups!!.forEach { g ->
                     groupList.add(
-                        GroupInfo(
-                            g.name,
-                            g.id,
-                            g.owner.id,
-                            g.avatarUrl,
-                            bot.id
-                        )
+                        GroupInfo.newBuilder()
+                            .setGroupName(g.name)
+                            .setGroupNumber(g.id)
+                            .setGroupOwner(g.owner.id)
+                            .setGroupAvatar(g.avatarUrl)
+                            .build()
                     )
                 }
                 logger.debug("执行拉取群组信息操作,群信息数量:{}", groupList.size)
@@ -75,27 +75,34 @@ class GroupActionService {
     }
 
     private fun postGroup(groupList: ArrayList<GroupInfo>) {
-        HttpUtil.post(PropertiesUtil.getApiProperty(ApiUrl.POST_GROUP_INFO), JsonUtil.obj2str(groupList))
+        Lists.partition(groupList, 10).forEach {
+            groupGrpc!!.postGroup(PostGroupRequest.newBuilder().addAllGroup(it).setRobotQq(AppConfig.qq()).build())
+        }
     }
 
     private fun postGroupMember(group: Group) {
-        val members: MutableList<GroupMember> = ArrayList()
+        val members: MutableList<GroupMemberInfo> = ArrayList()
         group.members.forEach { member ->
             run {
                 members.add(
-                    GroupMember(
-                        member.id,
-                        member.nick,
-                        member.avatarUrl,
-                        if (member.isAdministrator()) "1" else "0",
-                        if (member.isMuted) "1" else "0",
-                        member.muteTimeRemaining.toLong(),
-                        group.id
-                    )
+                    GroupMemberInfo.newBuilder()
+                        .setMemberQq(member.id)
+                        .setMemberName(member.nick)
+                        .setMemberAvatar(member.avatarUrl)
+                        .setAdminFlag(if (member.isAdministrator()) Constants.Y else Constants.N)
+                        .setMuteFlag(if (member.isMuted) Constants.Y else Constants.N)
+                        .setMuteTime(member.muteTimeRemaining.toLong())
+                        .build()
                 )
             }
         }
+        Lists.partition(members, 10).forEach {
+            groupGrpc!!.postGroupMember(
+                PostGroupMemberRequest.newBuilder().setRobotQq(AppConfig.qq())
+                    .addAllGroupMember(it)
+                    .setGroupNumber(group.id).build()
+            )
+        }
         logger.debug("执行拉取群成员信息操作,当前群:{} ,群成员数量:{}", group.id, members.size)
-        HttpUtil.post(PropertiesUtil.getApiProperty(ApiUrl.POST_GROUP_MEMBER), JsonUtil.obj2str(members))
     }
 }

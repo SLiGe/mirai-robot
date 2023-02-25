@@ -64,4 +64,19 @@ object MsgType {
      * 图片消息
      */
     const val CONTENT_TYPE_IMG = "img"
+
+    /**
+     * 好友消息
+     */
+    const val FRIEND_MSG = 1
+
+    /**
+     * 群组消息
+     */
+    const val GROUP_MSG = 2
+
+    /**
+     * 邀请入群事件
+     */
+    const val INVITED_JOINED_GROUP_EVENT_MSG = 3
 }

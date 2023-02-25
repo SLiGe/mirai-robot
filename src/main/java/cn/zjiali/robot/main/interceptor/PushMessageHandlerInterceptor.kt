@@ -1,6 +1,8 @@
 package cn.zjiali.robot.main.interceptor
 
 import cn.zjiali.robot.config.AppConfig
+import cn.zjiali.robot.constant.Constants
+import cn.zjiali.robot.constant.MsgType
 import cn.zjiali.robot.main.websocket.WebSocketManager
 import cn.zjiali.robot.util.CommonLogger
 import cn.zjiali.robot.util.JsonUtil
@@ -9,6 +11,7 @@ import net.mamoe.mirai.event.events.FriendMessageEvent
 import net.mamoe.mirai.event.events.GroupMessageEvent
 import net.mamoe.mirai.event.events.MessageEvent
 import net.mamoe.mirai.message.data.At
+import net.mamoe.mirai.message.data.anyIsInstance
 
 /**
  * @author zJiaLi
@@ -25,18 +28,21 @@ class PushMessageHandlerInterceptor : HandlerInterceptor {
             val param = HashMap<String, Any>()
             param["robot"] = AppConfig.getQQ()
             val messageBody = HashMap<String, Any>()
+            val message = messageEvent.message
             if (messageEvent is FriendMessageEvent) {
-                param["msgType"] = 1
-                messageBody["content"] = messageEvent.message.contentToString()
+                param["msgType"] = MsgType.FRIEND_MSG
+                messageBody["content"] = message.contentToString()
             } else if (messageEvent is GroupMessageEvent) {
-                messageBody["content"] = messageEvent.message.contentToString()
-                param["msgType"] = 2
+                messageBody["content"] = message.contentToString()
+                param["msgType"] = MsgType.GROUP_MSG
                 messageBody["group"] = messageEvent.group.id
                 messageBody["groupName"] = messageEvent.group.name
-                for (singleMessage in messageEvent.message) {
-                    if (singleMessage is At) {
-                        messageBody["atFlag"] = "1"
-                        messageBody["content"] = singleMessage.contentToString()
+                if (message.anyIsInstance<At>()) {
+                    val at = message.filterIsInstance<At>().first()
+                    if (at.target == AppConfig.qq()) {
+                        messageBody["atFlag"] = Constants.Y
+                        messageBody["content"] = message.filterNot { it is At }.map { it.contentToString() }
+                            .reduce { s1, s2 -> s1 + s2 }
                     }
                 }
             }

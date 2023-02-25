@@ -2,6 +2,7 @@ package cn.zjiali.robot;
 
 import cn.hutool.core.exceptions.ExceptionUtil;
 import cn.zjiali.robot.config.AppConfig;
+import cn.zjiali.robot.handler.GlobalEventHandler;
 import cn.zjiali.robot.handler.GlobalMessageHandler;
 import cn.zjiali.robot.main.ApplicationBootStrap;
 import cn.zjiali.robot.main.system.SysLoginSolver;
@@ -81,6 +82,8 @@ public class RobotApplication {
         eventChannel.subscribeAlways(StrangerMessageEvent.class, globalMessageHandler::handleOtherMessageEvent);
         eventChannel.subscribeAlways(NewFriendRequestEvent.class, NewFriendRequestEvent::accept);
         eventChannel.subscribeAlways(GroupTempMessageEvent.class, globalMessageHandler::handleOtherMessageEvent);
+        GlobalEventHandler globalEventHandler = GuiceUtil.getBean(GlobalEventHandler.class);
+        eventChannel.subscribeAlways(BotInvitedJoinGroupRequestEvent.class, globalEventHandler::handleBotInvitedJoinGroupRequestEvent);
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             var managedChannel = GuiceUtil.getBean(ManagedChannel.class);
             if (managedChannel != null) {
