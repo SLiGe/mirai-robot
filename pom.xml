@@ -13,6 +13,7 @@
         <log4j-version>2.19.0</log4j-version>
         <grpc.version>1.52.1</grpc.version>
         <kotlin.version>1.7.10</kotlin.version>
+        <rpc.server.version>1.0.0</rpc.server.version>
     </properties>
 
     <dependencies>
@@ -92,7 +93,7 @@
         <dependency>
             <groupId>cn.zjiali.server.grpc.api</groupId>
             <artifactId>server-grpc-api</artifactId>
-            <version>3.8.2</version>
+            <version>${rpc.server.version}</version>
         </dependency>
         <dependency>
             <groupId>io.grpc</groupId>
