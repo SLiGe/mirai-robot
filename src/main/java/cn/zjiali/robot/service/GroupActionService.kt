@@ -1,6 +1,7 @@
 package cn.zjiali.robot.service
 
 import cn.zjiali.robot.config.AppConfig
+import cn.zjiali.robot.constant.Constants
 import cn.zjiali.robot.enums.GroupActionType
 import cn.zjiali.robot.manager.RobotManager
 import cn.zjiali.robot.model.response.ws.GroupAction
@@ -88,8 +89,8 @@ class GroupActionService {
                         .setMemberQq(member.id)
                         .setMemberName(member.nick)
                         .setMemberAvatar(member.avatarUrl)
-                        .setAdminFlag(if (member.isAdministrator()) "1" else "0")
-                        .setMuteFlag(if (member.isMuted) "1" else "0")
+                        .setAdminFlag(if (member.isAdministrator()) Constants.Y else Constants.N)
+                        .setMuteFlag(if (member.isMuted) Constants.Y else Constants.N)
                         .setMuteTime(member.muteTimeRemaining.toLong())
                         .build()
                 )
