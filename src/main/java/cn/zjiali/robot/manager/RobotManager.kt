@@ -1,5 +1,6 @@
 package cn.zjiali.robot.manager
 
+import cn.hutool.core.exceptions.ExceptionUtil
 import cn.hutool.core.lang.UUID
 import cn.zjiali.robot.util.CommonLogger
 import cn.zjiali.robot.util.HttpUtil
@@ -8,7 +9,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import net.mamoe.mirai.Bot
 import net.mamoe.mirai.contact.Contact.Companion.sendImage
+import net.mamoe.mirai.contact.Contact.Companion.uploadImage
 import net.mamoe.mirai.message.data.At
+import net.mamoe.mirai.message.data.Image
 import net.mamoe.mirai.message.data.Message
 import net.mamoe.mirai.message.data.PlainText
 import java.io.InputStream
@@ -50,7 +53,7 @@ class RobotManager {
         try {
             friend?.sendImage(imageStream)
         } catch (e: Exception) {
-            e.printStackTrace()
+            logger.warning("发送好友图片失败: {}", ExceptionUtil.stacktraceToString(e))
         } finally {
             withContext(Dispatchers.IO) {
                 imageStream.close()
@@ -70,10 +73,12 @@ class RobotManager {
         val imageStream = imageStream(tempFile, imgUrl)
         val group = bot!!.getGroup(groupId)
         try {
-            group?.sendImage(imageStream)
-            logger.debug("发送群图片成功,文件路径:{}", tempFile)
+//            group?.sendImage(imageStream)
+            val uploadImage = group?.uploadImage(imageStream)
+            group?.sendMessage(Image(uploadImage!!.imageId))
+            logger.info("发送群图片成功,文件路径:{}", tempFile)
         } catch (e: Exception) {
-            e.printStackTrace()
+            logger.warning("发送群图片失败: {}", ExceptionUtil.stacktraceToString(e))
         } finally {
             withContext(Dispatchers.IO) {
                 imageStream.close()
