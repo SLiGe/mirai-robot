@@ -35,14 +35,23 @@ class RpcManagedChannelProvider : Module {
         )
         val rpcAddress: String
         val channelBuilder: NettyChannelBuilder
-        if ("local" == serverEnv) {
-            val host: String = PropertiesUtil.getApplicationProperty("grpc.local.host")
-            val port: String = PropertiesUtil.getApplicationProperty("grpc.local.port")
-            rpcAddress = "${host}:${port}"
-            channelBuilder = NettyChannelBuilder.forTarget(rpcAddress).usePlaintext()
-        } else {
-            rpcAddress = PropertiesUtil.getApplicationProperty("grpc.address")
-            channelBuilder = NettyChannelBuilder.forTarget(rpcAddress).useTransportSecurity()
+        when (serverEnv) {
+            "local" -> {
+                val host: String = PropertiesUtil.getApplicationProperty("grpc.local.host")
+                val port: String = PropertiesUtil.getApplicationProperty("grpc.local.port")
+                rpcAddress = "${host}:${port}"
+                channelBuilder = NettyChannelBuilder.forTarget(rpcAddress).usePlaintext()
+            }
+            "server" -> {
+                val host: String = PropertiesUtil.getApplicationProperty("grpc.server.host")
+                val port: String = PropertiesUtil.getApplicationProperty("grpc.server.port")
+                rpcAddress = "${host}:${port}"
+                channelBuilder = NettyChannelBuilder.forTarget(rpcAddress).usePlaintext()
+            }
+            else -> {
+                rpcAddress = PropertiesUtil.getApplicationProperty("grpc.address")
+                channelBuilder = NettyChannelBuilder.forTarget(rpcAddress).useTransportSecurity()
+            }
         }
         logger.info("Grpc Address: $rpcAddress")
         managedChannel = channelBuilder.intercept(MetadataUtils.newAttachHeadersInterceptor(metadata))
