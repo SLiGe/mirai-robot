@@ -19,6 +19,7 @@ import net.mamoe.mirai.event.EventChannel;
 import net.mamoe.mirai.event.events.*;
 import net.mamoe.mirai.utils.BotConfiguration;
 import net.mamoe.mirai.utils.LoggerAdapters;
+import xyz.cssxsh.mirai.tool.FixProtocolVersion;
 
 import java.io.File;
 import java.util.Objects;
@@ -54,6 +55,7 @@ public class RobotApplication {
         long qq = Long.parseLong(Objects.requireNonNull(AppConfig.applicationConfig.getQq()));
         String password = AppConfig.applicationConfig.getPassword();
         assert password != null;
+        FixProtocolVersion.update();
         Bot bot = BotFactory.INSTANCE.newBot(qq, password, new BotConfiguration() {
             {
                 //设置登录解决器
@@ -92,6 +94,7 @@ public class RobotApplication {
             var webSocketManager = GuiceUtil.getBean(WebSocketManager.class);
             webSocketManager.close();
         }));
+        logger.info("Fix protocol Version: ", FixProtocolVersion.info());
         bot.join(); // 阻塞当前线程直到 bot 离线
     }
 
