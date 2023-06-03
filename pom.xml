@@ -14,20 +14,41 @@
         <grpc.version>1.52.1</grpc.version>
         <kotlin.version>1.7.10</kotlin.version>
         <rpc.server.version>1.0.0</rpc.server.version>
+        <mirai-core.version>2.15.0-M1</mirai-core.version>
+        <gson.version>2.10</gson.version>
+        <guava.version>31.1-android</guava.version>
+        <hutool-all.version>5.8.11</hutool-all.version>
+        <lombok.version>1.18.24</lombok.version>
+        <junit.version>4.13.2</junit.version>
+        <guice.version>5.1.0</guice.version>
+        <fix-protocol-version.version>1.5.1</fix-protocol-version.version>
+        <okhttp.version>4.10.0</okhttp.version>
+        <slf4j.version>2.0.7</slf4j.version>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>net.mamoe</groupId>
             <artifactId>mirai-core-jvm</artifactId>
-            <version>2.13.4</version>
+            <version>${mirai-core.version}</version>
         </dependency>
         <!--在依赖 mirai-core 或 mirai-core-api 的前提下额外添加日志转接模块. 版本号相同-->
         <dependency>
             <groupId>net.mamoe</groupId>
             <artifactId>mirai-logging-log4j2</artifactId>
-            <version>2.12.2</version>
+            <version>${mirai-core.version}</version>
         </dependency>
+        <dependency>
+            <groupId>xyz.cssxsh.mirai</groupId>
+            <artifactId>fix-protocol-version</artifactId>
+            <version>${fix-protocol-version.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.miglayout</groupId>
+            <artifactId>miglayout-swing</artifactId>
+            <version>11.1</version>
+        </dependency>
+
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-api</artifactId>
@@ -43,7 +64,6 @@
             <artifactId>log4j-slf4j-impl</artifactId>
             <version>${log4j-version}</version>
         </dependency>
-
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-stdlib-jdk8</artifactId>
@@ -57,38 +77,38 @@
         <dependency>
             <groupId>com.squareup.okhttp3</groupId>
             <artifactId>okhttp</artifactId>
-            <version>4.10.0</version>
+            <version>${okhttp.version}</version>
         </dependency>
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
-            <version>2.10</version>
+            <version>${gson.version}</version>
         </dependency>
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>31.1-android</version>
+            <version>${guava.version}</version>
         </dependency>
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>
-            <version>5.8.11</version>
+            <version>${hutool-all.version}</version>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.24</version>
+            <version>${lombok.version}</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.13.2</version>
+            <version>${junit.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>com.google.inject</groupId>
             <artifactId>guice</artifactId>
-            <version>5.1.0</version>
+            <version>${guice.version}</version>
         </dependency>
         <dependency>
             <groupId>cn.zjiali.server.grpc.api</groupId>
@@ -109,11 +129,6 @@
             <groupId>io.grpc</groupId>
             <artifactId>grpc-stub</artifactId>
             <version>${grpc.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>xyz.cssxsh.mirai</groupId>
-            <artifactId>fix-protocol-version</artifactId>
-            <version>1.5.1</version>
         </dependency>
     </dependencies>
 

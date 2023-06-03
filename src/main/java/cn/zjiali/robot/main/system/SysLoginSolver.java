@@ -59,7 +59,7 @@ public class SysLoginSolver extends LoginSolver {
     @Override
     public Object onSolveSliderCaptcha(@NotNull Bot bot, @NotNull String s, @NotNull Continuation<? super String> continuation) {
         commonLogger.warning("请打开以下网址后,完成滑动验证码验证!");
-        commonLogger.warning("完成后在控制台输入任意字符");
+        commonLogger.warning("完成后在控制台输入Ticket!");
         commonLogger.warning(s);
         return userVerify();
     }
