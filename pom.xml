@@ -14,7 +14,7 @@
         <grpc.version>1.52.1</grpc.version>
         <kotlin.version>1.7.10</kotlin.version>
         <rpc.server.version>1.0.0</rpc.server.version>
-        <mirai-core.version>2.15.0-M1</mirai-core.version>
+        <mirai-core.version>2.15.0-dev-98</mirai-core.version>
         <gson.version>2.10</gson.version>
         <guava.version>31.1-android</guava.version>
         <hutool-all.version>5.8.11</hutool-all.version>
@@ -36,19 +36,13 @@
         <dependency>
             <groupId>net.mamoe</groupId>
             <artifactId>mirai-logging-log4j2</artifactId>
-            <version>${mirai-core.version}</version>
+            <version>2.15.0-M1</version>
         </dependency>
         <dependency>
             <groupId>xyz.cssxsh.mirai</groupId>
             <artifactId>fix-protocol-version</artifactId>
             <version>${fix-protocol-version.version}</version>
         </dependency>
-        <dependency>
-            <groupId>com.miglayout</groupId>
-            <artifactId>miglayout-swing</artifactId>
-            <version>11.1</version>
-        </dependency>
-
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-api</artifactId>
@@ -63,6 +57,12 @@
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-slf4j-impl</artifactId>
             <version>${log4j-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-slf4j2-impl</artifactId>
+            <version>2.20.0</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
@@ -88,6 +88,12 @@
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
             <version>${guava.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.google.errorprone</groupId>
+                    <artifactId>error_prone_annotations</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>cn.hutool</groupId>
@@ -109,6 +115,12 @@
             <groupId>com.google.inject</groupId>
             <artifactId>guice</artifactId>
             <version>${guice.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.google.guava</groupId>
+                    <artifactId>guava</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>cn.zjiali.server.grpc.api</groupId>
@@ -119,6 +131,12 @@
             <groupId>io.grpc</groupId>
             <artifactId>grpc-netty-shaded</artifactId>
             <version>${grpc.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.google.code.gson</groupId>
+                    <artifactId>gson</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>io.grpc</groupId>

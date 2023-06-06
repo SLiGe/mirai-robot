@@ -56,17 +56,15 @@ public class RobotApplication {
         String password = AppConfig.applicationConfig.getPassword();
         assert password != null;
         FixProtocolVersion.update();
-        Bot bot = BotFactory.INSTANCE.newBot(qq, password, new BotConfiguration() {
-            {
-                //设置登录解决器
-                setLoginSolver(GuiceUtil.getBean(SysLoginSolver.class));
-                // 选择协议
-                setProtocol(switchProtocol());
-                setCacheDir(new File(System.getProperty("robot.workdir") + "/cache"));
-                setWorkingDir(new File(System.getProperty("robot.workdir")));
-                fileBasedDeviceInfo("device.json");
-            }
-        });
+        BotConfiguration botConfiguration = new BotConfiguration();
+        //设置登录解决器
+        botConfiguration.setLoginSolver(GuiceUtil.getBean(SysLoginSolver.class));
+        // 选择协议
+        botConfiguration.setProtocol(switchProtocol());
+        botConfiguration.setCacheDir(new File(System.getProperty("robot.workdir") + "/cache"));
+        botConfiguration.setWorkingDir(new File(System.getProperty("robot.workdir")));
+        botConfiguration.fileBasedDeviceInfo("device.json");
+        Bot bot = BotFactory.INSTANCE.newBot(qq, password, botConfiguration);
         bot.login();
         initLatch.countDown();
         EventChannel<BotEvent> eventChannel = bot.getEventChannel();
@@ -107,9 +105,6 @@ public class RobotApplication {
         String robotProtocol = System.getProperty("robot.protocol");
         if (!ObjectUtil.isNullOrEmpty(robotProtocol)) {
             switch (robotProtocol) {
-                case "0" -> {
-                    return (BotConfiguration.MiraiProtocol.ANDROID_PHONE);
-                }
                 case "1" -> {
                     return (BotConfiguration.MiraiProtocol.ANDROID_PAD);
                 }
@@ -121,6 +116,9 @@ public class RobotApplication {
                 }
                 case "4" -> {
                     return (BotConfiguration.MiraiProtocol.MACOS);
+                }
+                default -> {
+                    return BotConfiguration.MiraiProtocol.ANDROID_PHONE;
                 }
             }
         }
