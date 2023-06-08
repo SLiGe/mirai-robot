@@ -7,6 +7,7 @@ import kotlin.coroutines.Continuation;
 import kotlin.coroutines.CoroutineContext;
 import kotlin.coroutines.EmptyCoroutineContext;
 import net.mamoe.mirai.Bot;
+import net.mamoe.mirai.auth.QRCodeLoginListener;
 import net.mamoe.mirai.utils.DeviceVerificationRequests;
 import net.mamoe.mirai.utils.DeviceVerificationResult;
 import net.mamoe.mirai.utils.LoginSolver;
@@ -35,10 +36,35 @@ public class SysLoginSolver extends LoginSolver {
         return true;
     }
 
+    @NotNull
+    @Override
+    public QRCodeLoginListener createQRCodeLoginListener(@NotNull Bot bot) {
+        return new QRCodeLoginListener() {
+            @Override
+            public void onStateChanged(@NotNull Bot bot, @NotNull QRCodeLoginListener.State state) {
+                commonLogger.info("扫码登录状态: {}", state);
+                if (state.equals(State.TIMEOUT)) {
+                    throw new RuntimeException("二维码失效，请重新登录!");
+                }
+            }
+
+            @Override
+            public void onFetchQRCode(@NotNull Bot bot, byte @NotNull [] bytes) {
+                JsonObject jsonObject = new JsonObject();
+                jsonObject.addProperty("qq", String.valueOf(bot.getId()));
+                jsonObject.addProperty("base64", Base64.encode(bytes));
+                String responseJson = HttpUtil.post(PropertiesUtil.getApiProperty(VERIFY_CODE_VIEW_URL), jsonObject);
+                JsonObject response = JsonUtil.json2obj(responseJson, JsonObject.class);
+                String verifyCodeUrl = response.get("data").getAsString();
+                commonLogger.warning("请打开以下网址后进行扫码!");
+                commonLogger.warning(verifyCodeUrl);
+            }
+        };
+    }
+
     @Nullable
     @Override
     public Object onSolvePicCaptcha(@NotNull Bot bot, byte[] bytes, @NotNull Continuation<? super String> continuation) {
-
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("qq", String.valueOf(bot.getId()));
         jsonObject.addProperty("base64", Base64.encode(bytes));

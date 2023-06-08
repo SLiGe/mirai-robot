@@ -15,6 +15,7 @@ import io.grpc.ManagedChannel;
 import kotlin.Unit;
 import net.mamoe.mirai.Bot;
 import net.mamoe.mirai.BotFactory;
+import net.mamoe.mirai.auth.BotAuthorization;
 import net.mamoe.mirai.event.EventChannel;
 import net.mamoe.mirai.event.events.*;
 import net.mamoe.mirai.utils.BotConfiguration;
@@ -64,7 +65,14 @@ public class RobotApplication {
         botConfiguration.setCacheDir(new File(System.getProperty("robot.workdir") + "/cache"));
         botConfiguration.setWorkingDir(new File(System.getProperty("robot.workdir")));
         botConfiguration.fileBasedDeviceInfo("device.json");
-        Bot bot = BotFactory.INSTANCE.newBot(qq, password, botConfiguration);
+        String loginType = System.getProperty("login.type");
+        Bot bot = null;
+        if ("qr".equals(loginType)) {
+            //扫码登录只支持2-watch和4-mac协议
+            bot = BotFactory.INSTANCE.newBot(qq, BotAuthorization.byQRCode(), botConfiguration);
+        } else {
+            bot = BotFactory.INSTANCE.newBot(qq, password, botConfiguration);
+        }
         bot.login();
         initLatch.countDown();
         EventChannel<BotEvent> eventChannel = bot.getEventChannel();
