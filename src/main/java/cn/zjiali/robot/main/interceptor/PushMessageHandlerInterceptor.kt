@@ -38,6 +38,15 @@ class PushMessageHandlerInterceptor : HandlerInterceptor {
                 messageBody["group"] = messageEvent.group.id
                 messageBody["groupName"] = messageEvent.group.name
                 if (message.anyIsInstance<At>()) {
+                    val atList = ArrayList<Map<Long, String>>()
+                    message.filterIsInstance<At>().forEach { at ->
+                        run {
+                            val atInfo = HashMap<Long, String>()
+                            atInfo[at.target] = at.getDisplay(messageEvent.group)
+                            atList.add(atInfo)
+                        }
+                    }
+                    messageBody["atList"] = atList
                     val at = message.filterIsInstance<At>().first()
                     if (at.target == AppConfig.qq()) {
                         messageBody["atFlag"] = Constants.Y
