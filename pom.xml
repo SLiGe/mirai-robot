@@ -152,6 +152,10 @@
 
     <repositories>
         <repository>
+            <id>maven-public</id>
+            <url>https://nexus.fanlisky.cn/repository/maven-public/</url>
+        </repository>
+        <repository>
             <id>jcenter</id>
             <url>https://jcenter.bintray.com/</url>
         </repository>
