@@ -12,7 +12,6 @@ import com.google.inject.Singleton
 import net.mamoe.mirai.contact.Group
 import net.mamoe.mirai.contact.getMember
 import net.mamoe.mirai.contact.isAdministrator
-import net.mamoe.mirai.containsGroup
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
@@ -36,11 +35,10 @@ class GroupActionService {
         var group: Group? = null
         val bot = robotManager?.bot
         if (groupAction.actionType != GroupActionType.PULL_GROUP.ordinal) {
-            if (bot?.containsGroup(groupNumber!!) == true) {
-                group = bot.getGroup(groupNumber!!)
-            }
+            group = bot?.getGroup(groupNumber!!)
+            logger.warn("群{} 不存在!", groupNumber)
+            if (group == null) return
         }
-        if (group == null) return
         when (groupAction.actionType) {
             GroupActionType.PULL_GROUP.ordinal -> {
                 val groupList = ArrayList<GroupInfo>()
@@ -54,21 +52,21 @@ class GroupActionService {
                             .build()
                     )
                 }
-                logger.debug("执行拉取群组信息操作,群信息数量:{}", groupList.size)
+                logger.info("执行拉取群组信息操作,群信息数量:{}", groupList.size)
                 postGroup(groupList)
             }
 
             GroupActionType.PULL_MEMBER.ordinal -> {
-                postGroupMember(group)
+                postGroupMember(group!!)
             }
 
             GroupActionType.MUTE_MEMBER.ordinal -> {
                 val memberNumber = groupAction.memberNumber
-                group.getMember(memberNumber!!)!!.mute(groupAction.muteTime!! * 60)
+                group!!.getMember(memberNumber!!)!!.mute(groupAction.muteTime!! * 60)
             }
 
             GroupActionType.REMOVE_MEMBER.ordinal -> {
-                group.getMember(groupAction.memberNumber!!)!!
+                group!!.getMember(groupAction.memberNumber!!)!!
                     .kick(groupAction.kickMessage!!, (groupAction.kickBlockFlag!! == 1))
             }
         }
@@ -82,6 +80,7 @@ class GroupActionService {
 
     private fun postGroupMember(group: Group) {
         val members: MutableList<GroupMemberInfo> = ArrayList()
+        logger.info("群:{} ,成员数量: {}", group.id, group.members.size)
         group.members.forEach { member ->
             run {
                 members.add(
@@ -103,6 +102,6 @@ class GroupActionService {
                     .setGroupNumber(group.id).build()
             )
         }
-        logger.debug("执行拉取群成员信息操作,当前群:{} ,群成员数量:{}", group.id, members.size)
+        logger.info("执行拉取群成员信息操作,当前群:{} ,群成员数量:{}", group.id, members.size)
     }
 }

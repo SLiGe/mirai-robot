@@ -11,10 +11,7 @@ import cn.zjiali.robot.util.CommonLogger
 import cn.zjiali.robot.util.JsonUtil
 import com.google.inject.Inject
 import com.google.inject.Singleton
-import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import net.mamoe.mirai.event.events.BotInvitedJoinGroupRequestEvent
 
 /**
@@ -22,9 +19,10 @@ import net.mamoe.mirai.event.events.BotInvitedJoinGroupRequestEvent
  * @since 2023-02-24 17:36
  */
 @Singleton
-class ServerGlobalEventHandler : GlobalEventHandler {
+class ServerGlobalEventHandler(private val dispatcher: CoroutineDispatcher = Dispatchers.Default) : GlobalEventHandler {
 
     private val logger: CommonLogger = CommonLogger(javaClass)
+
 
     @Inject
     private val robotManager: RobotManager? = null
@@ -37,7 +35,7 @@ class ServerGlobalEventHandler : GlobalEventHandler {
 
     @OptIn(DelicateCoroutinesApi::class)
     override fun handleBotInvitedJoinGroupRequestEvent(event: BotInvitedJoinGroupRequestEvent?) {
-        GlobalScope.launch(Dispatchers.Unconfined) {
+        GlobalScope.launch(dispatcher) {
             event!!.accept()
             val param = HashMap<String, Any>()
             param["robot"] = AppConfig.getQQ()

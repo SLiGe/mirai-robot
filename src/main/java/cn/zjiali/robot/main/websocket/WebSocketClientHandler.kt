@@ -11,10 +11,7 @@ import io.grpc.netty.shaded.io.netty.channel.SimpleChannelInboundHandler
 import io.grpc.netty.shaded.io.netty.handler.codec.http.FullHttpResponse
 import io.grpc.netty.shaded.io.netty.handler.codec.http.websocketx.*
 import io.grpc.netty.shaded.io.netty.util.CharsetUtil
-import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import org.slf4j.LoggerFactory
 import java.nio.charset.StandardCharsets
 import java.util.concurrent.TimeUnit
@@ -27,7 +24,8 @@ import java.util.concurrent.TimeUnit
 class WebSocketClientHandler(
     private val handshaker: WebSocketClientHandshaker,
     private val wsSecurityManager: WsSecurityManager,
-    private val webSocketService: WebSocketService
+    private val webSocketService: WebSocketService,
+    private val dispatcher: CoroutineDispatcher = Dispatchers.Default
 ) : SimpleChannelInboundHandler<Any>() {
 
     lateinit var handshakeFuture: ChannelPromise
@@ -67,7 +65,7 @@ class WebSocketClientHandler(
                 val decryptMsgData = wsSecurityManager.decryptMsgData(textFrame.text())
                 logger.info("[WebSocket]====收到消息: {}", decryptMsgData)
                 val wsResult = JsonUtil.json2obj(decryptMsgData, WsResult::class.java)
-                GlobalScope.launch(Dispatchers.Unconfined) {
+                GlobalScope.launch(dispatcher) {
                     val handleWsResult = webSocketService.handleWsResult(wsResult)
                     channel.writeAndFlush(TextWebSocketFrame(handleWsResult))
                 }
