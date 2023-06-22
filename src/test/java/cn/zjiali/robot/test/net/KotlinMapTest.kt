@@ -12,6 +12,12 @@ import org.junit.Test
 class KotlinMapTest {
 
     @Test
+    fun testDrop(){
+        val a = "@1111";
+        println(a.drop(1))
+    }
+
+    @Test
     fun testMap(): Unit {
         val queryReplyBlacklistParamMap: MutableMap<String, Any> = mutableMapOf()
         queryReplyBlacklistParamMap["1"] = "1"
