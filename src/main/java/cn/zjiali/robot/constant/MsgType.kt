@@ -79,4 +79,6 @@ object MsgType {
      * 邀请入群事件
      */
     const val INVITED_JOINED_GROUP_EVENT_MSG = 3
+
+    const val ONLINE_STATUS = 5
 }
