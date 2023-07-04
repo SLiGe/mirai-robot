@@ -14,7 +14,7 @@
         <grpc.version>1.52.1</grpc.version>
         <kotlin.version>1.7.10</kotlin.version>
         <rpc.server.version>1.0.0</rpc.server.version>
-        <mirai-core.version>2.15.0-dev-98</mirai-core.version>
+        <mirai-core.version>2.15.0-dev-105</mirai-core.version>
         <gson.version>2.10</gson.version>
         <guava.version>31.1-android</guava.version>
         <hutool-all.version>5.8.20</hutool-all.version>
