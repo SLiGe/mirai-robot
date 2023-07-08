@@ -7,6 +7,12 @@ import cn.zjiali.robot.manager.RobotManager
 import cn.zjiali.robot.model.response.ws.WsResult
 import cn.zjiali.robot.util.GuiceUtil
 import cn.zjiali.robot.util.JsonUtil
+import kotlinx.coroutines.*
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
+import java.lang.Runnable
+import java.util.concurrent.atomic.AtomicInteger
+import kotlin.system.exitProcess
 
 /**
  * @author zJiaLi
@@ -14,6 +20,8 @@ import cn.zjiali.robot.util.JsonUtil
  */
 class RobotOnlineStatusTask : Runnable {
     private var wsResult: WsResult = WsResult()
+    private val reConnectCount: AtomicInteger= AtomicInteger(1)
+    private val logger: Logger = LoggerFactory.getLogger(javaClass)
 
     init {
         wsResult.msgType = MsgType.ONLINE_STATUS
@@ -29,5 +37,14 @@ class RobotOnlineStatusTask : Runnable {
         """.trimIndent()
         val webSocketManager = GuiceUtil.getBean(WebSocketManager::class.java)
         webSocketManager.sendText(JsonUtil.obj2str(wsResult))
+        if (!online) {
+            val count = reConnectCount.getAndIncrement()
+            if (count <= 3) {
+                logger.info("...机器人尝试第{}次重新连接...", count)
+                runBlocking { robotManager.bot!!.login() }
+            } else {
+                exitProcess(0)
+            }
+        }
     }
 }

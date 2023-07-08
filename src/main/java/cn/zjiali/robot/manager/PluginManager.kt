@@ -155,7 +155,7 @@ class PluginManager {
                     plugin.code = it.pluginCode
                     plugin.name = it.pluginName
                     plugin.handler = it.pluginClass
-                    val pluginHandler = Class.forName(plugin.handler).newInstance()
+                    val pluginHandler = Class.forName(plugin.handler).getDeclaredConstructor().newInstance()
                     injectClassField(pluginHandler)
                     msgHandlers.add((pluginHandler as MessageEventHandler?))
                     val properties = HashMap<String, String>()

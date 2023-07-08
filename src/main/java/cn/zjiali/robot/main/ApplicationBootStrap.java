@@ -189,7 +189,7 @@ public class ApplicationBootStrap {
             CronUtil.setMatchSecond(true);
             CronUtil.start();
         }
-        CronUtil.schedule("0 0/1 * * * ?", new RobotOnlineStatusTask());
+        CronUtil.schedule("0 0/2 * * * ?", new RobotOnlineStatusTask());
         if (AppConfig.serverControl()) {
             CronUtil.schedule("0 0 0/5 * * ?", (Runnable) () -> GuiceUtil.getBean(ServerTokenManager.class).genServerToken());
         }

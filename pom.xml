@@ -24,6 +24,7 @@
         <fix-protocol-version.version>1.5.1</fix-protocol-version.version>
         <okhttp.version>4.10.0</okhttp.version>
         <slf4j.version>2.0.7</slf4j.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <dependencies>
