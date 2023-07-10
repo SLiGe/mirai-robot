@@ -106,13 +106,13 @@ class WebSocketService {
                         }
 
                         MsgType.SEND_GROUP_PRIVATE_CHAT -> {
-                            robotManager?.bot?.getGroup(senderMessageRes.sendGroup!!.toLong())
+                            robotManager?.botInstance()?.getGroup(senderMessageRes.sendGroup!!.toLong())
                                 ?.getMember(senderMessageRes.receiver!!.toLong())
                                 ?.sendMessage(senderMessageRes.sendMessage!!)
                         }
 
                         MsgType.SEND_GROUP_AT_ALL -> {
-                            robotManager?.bot?.getGroup(senderMessageRes.sendGroup!!.toLong())
+                            robotManager?.botInstance()?.getGroup(senderMessageRes.sendGroup!!.toLong())
                                 ?.sendMessage(AtAll.plus(senderMessageRes.sendMessage!!))
                         }
                     }

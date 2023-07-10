@@ -7,13 +7,11 @@ import cn.zjiali.robot.config.AppConfig
 import cn.zjiali.robot.handler.GlobalEventHandler
 import cn.zjiali.robot.handler.GlobalMessageHandler
 import cn.zjiali.robot.main.system.SysLoginSolver
-import cn.zjiali.robot.main.websocket.WebSocketManager
 import cn.zjiali.robot.util.CommonLogger
 import cn.zjiali.robot.util.GuiceUtil
 import cn.zjiali.robot.util.HttpUtil
 import cn.zjiali.robot.util.ObjectUtil
 import com.google.inject.Singleton
-import io.grpc.ManagedChannel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
@@ -47,12 +45,11 @@ private const val ROBOT_WORKDIR = "robot.workdir"
  */
 @Singleton
 class RobotManager(private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO) {
-    var bot: Bot? = null
-        private set
+    private var botInstance: Bot? = null
     private val logger = CommonLogger(RobotManager::class.java)
 
     fun init(bot: Bot?) {
-        this.bot = bot
+        this.botInstance = bot
         val tempBqbPath = Path.of(System.getProperty(ROBOT_WORKDIR), "tempDir", "bqb")
         Files.exists(tempBqbPath).let {
             if (!it) {
@@ -61,9 +58,14 @@ class RobotManager(private val ioDispatcher: CoroutineDispatcher = Dispatchers.I
         }
     }
 
+    fun botInstance(): Bot? {
+        return this.botInstance
+    }
+
     fun initBotClocking(): Bot = runBlocking { init() }
 
     suspend fun init(): Bot {
+        this.botInstance?.close()
         val qq = Objects.requireNonNull(AppConfig.applicationConfig.qq)!!.toLong()
         val password = AppConfig.applicationConfig.password!!
         update()
@@ -121,22 +123,13 @@ class RobotManager(private val ioDispatcher: CoroutineDispatcher = Dispatchers.I
                 event
             )
         }
-        Runtime.getRuntime().addShutdownHook(Thread {
-            val managedChannel = GuiceUtil.getBean(ManagedChannel::class.java)
-            managedChannel?.shutdown()
-            val webSocketManager =
-                GuiceUtil.getBean(
-                    WebSocketManager::class.java
-                )
-            webSocketManager.close()
-        })
         logger.info("Fix protocol Version: ", info())
         return bot
     }
 
 
     suspend fun sendFriendMessage(qq: Long, message: String?) {
-        val friend = bot!!.getFriend(qq)
+        val friend = botInstance!!.getFriend(qq)
         friend?.sendMessage(message!!)
     }
 
@@ -144,7 +137,7 @@ class RobotManager(private val ioDispatcher: CoroutineDispatcher = Dispatchers.I
         val finalImageName = UUID.randomUUID().toString() + imageName.substring(imageName.lastIndexOf("."))
         val tempFile = Path.of(System.getProperty(ROBOT_WORKDIR), "tempDir", "bqb", finalImageName)
         val imageStream = imageStream(tempFile, imgUrl)
-        val friend = bot!!.getFriend(qq)
+        val friend = botInstance!!.getFriend(qq)
         try {
             friend?.sendImage(imageStream)
         } catch (e: Exception) {
@@ -166,7 +159,7 @@ class RobotManager(private val ioDispatcher: CoroutineDispatcher = Dispatchers.I
         val finalImageName = UUID.randomUUID().toString() + imageName.substring(imageName.lastIndexOf("."))
         val tempFile = Path.of(System.getProperty(ROBOT_WORKDIR), "tempDir", "bqb", finalImageName)
         val imageStream = imageStream(tempFile, imgUrl)
-        val group = bot!!.getGroup(groupId)
+        val group = botInstance!!.getGroup(groupId)
         try {
             val uploadImage = group?.uploadImage(imageStream)
             group?.sendMessage(Image(uploadImage!!.imageId))
@@ -192,7 +185,7 @@ class RobotManager(private val ioDispatcher: CoroutineDispatcher = Dispatchers.I
     }
 
     private suspend fun sendGroup(groupId: Long, message: Message?) {
-        val group = bot!!.getGroup(groupId)
+        val group = botInstance!!.getGroup(groupId)
         group?.sendMessage(message!!)
     }
 
