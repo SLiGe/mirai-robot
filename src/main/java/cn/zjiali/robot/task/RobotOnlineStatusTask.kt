@@ -41,7 +41,7 @@ class RobotOnlineStatusTask : Runnable {
             val count = reConnectCount.getAndIncrement()
             if (count <= 3) {
                 logger.info("...机器人尝试第{}次重新连接...", count)
-                runBlocking { robotManager.bot!!.login() }
+                runBlocking { robotManager.init() }
             } else {
                 exitProcess(0)
             }
