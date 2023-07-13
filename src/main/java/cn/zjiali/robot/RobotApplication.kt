@@ -5,6 +5,7 @@ import cn.zjiali.robot.main.ApplicationBootStrap
 import cn.zjiali.robot.manager.RobotManager
 import cn.zjiali.robot.util.CommonLogger
 import cn.zjiali.robot.util.GuiceUtil
+import kotlinx.coroutines.runBlocking
 import net.mamoe.mirai.utils.LoggerAdapters.useLog4j2
 import java.util.concurrent.CountDownLatch
 
@@ -15,9 +16,10 @@ import java.util.concurrent.CountDownLatch
  * @since 2020-10-29 11:09
  */
 object RobotApplication {
-    @JvmField
-    val initLatch = CountDownLatch(1)
     private val logger = CommonLogger(RobotApplication::class.java)
+
+    @JvmField
+    var initLatch = CountDownLatch(1)
     private fun init() {
         logger.info("====初始化配置中====")
         val startInitTime = System.currentTimeMillis()
@@ -31,11 +33,12 @@ object RobotApplication {
     }
 
     @JvmStatic
-    suspend fun main(args: Array<String>) {
+    fun main(args: Array<String>) {
         useLog4j2()
         init()
         val robotManager = GuiceUtil.getBean(RobotManager::class.java)
         val bot = robotManager.initBotBlocking()
-        bot.join()
+        runBlocking { bot.join() }
     }
+
 }
