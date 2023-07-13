@@ -1,14 +1,14 @@
 package cn.zjiali.robot.test.json
 
-import cn.zjiali.robot.config.AppConfig
-import cn.zjiali.robot.constant.Constants
 import cn.zjiali.robot.model.response.ServerResponse
 import cn.zjiali.robot.model.server.PluginInfo
 import cn.zjiali.robot.util.JsonUtil
+import cn.zjiali.robot.util.ObjectUtil
 import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import net.mamoe.mirai.utils.BotConfiguration
 import org.junit.Test
+import xyz.cssxsh.mirai.tool.FixProtocolVersion
 
 /**
  *
@@ -37,6 +37,42 @@ class InnerJsonTest {
         param["robot"] = "357078415"
         val encodeToString = JsonUtil.obj2str(param)
         println(encodeToString)
+        println(switchProtocol("2"))
+        println(switchProtocol(""))
+        println(switchProtocol("1"))
+        println(switchProtocol("3"))
+        println(switchProtocol("4"))
     }
 
+    private fun switchProtocol(robotProtocol: String): BotConfiguration.MiraiProtocol {
+        val protocol: BotConfiguration.MiraiProtocol = if (!ObjectUtil.isNullOrEmpty(robotProtocol)) {
+            when (robotProtocol) {
+                "1" -> {
+                    BotConfiguration.MiraiProtocol.ANDROID_PAD
+                }
+
+                "2" -> {
+                    BotConfiguration.MiraiProtocol.ANDROID_WATCH
+                }
+
+                "3" -> {
+                    BotConfiguration.MiraiProtocol.IPAD
+                }
+
+                "4" -> {
+                    BotConfiguration.MiraiProtocol.MACOS
+                }
+
+                else -> {
+                    BotConfiguration.MiraiProtocol.ANDROID_PHONE
+                }
+            }
+        } else {
+            BotConfiguration.MiraiProtocol.ANDROID_PHONE
+        }
+        /*FixProtocolVersion.sync(protocol)
+        FixProtocolVersion.load(protocol)*/
+        println("${protocol}是否支持QR登录${protocol.isQRLoginSupported}")
+        return protocol
+    }
 }

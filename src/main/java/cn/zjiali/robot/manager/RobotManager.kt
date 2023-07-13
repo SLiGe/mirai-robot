@@ -28,6 +28,7 @@ import net.mamoe.mirai.message.data.Message
 import net.mamoe.mirai.message.data.PlainText
 import net.mamoe.mirai.utils.BotConfiguration
 import net.mamoe.mirai.utils.BotConfiguration.MiraiProtocol
+import xyz.cssxsh.mirai.tool.FixProtocolVersion
 import xyz.cssxsh.mirai.tool.FixProtocolVersion.info
 import xyz.cssxsh.mirai.tool.FixProtocolVersion.update
 import java.io.File
@@ -58,11 +59,10 @@ class RobotManager(private val ioDispatcher: CoroutineDispatcher = Dispatchers.I
         }
     }
 
+    fun initBotBlocking(): Bot = runBlocking { init() }
     fun botInstance(): Bot? {
         return this.botInstance
     }
-
-    fun initBotClocking(): Bot = runBlocking { init() }
 
     suspend fun init(): Bot {
         this.botInstance?.close()
@@ -89,7 +89,6 @@ class RobotManager(private val ioDispatcher: CoroutineDispatcher = Dispatchers.I
         bot.login()
         RobotApplication.initLatch.countDown()
         val eventChannel = bot.eventChannel
-        // 创建监听
         // 创建监听
         eventChannel.exceptionHandler { e: Throwable? ->
             logger.error("unknown error: {}", ExceptionUtil.stacktraceToString(e))
@@ -196,7 +195,7 @@ class RobotManager(private val ioDispatcher: CoroutineDispatcher = Dispatchers.I
      */
     private fun switchProtocol(): MiraiProtocol {
         val robotProtocol = System.getProperty("robot.protocol")
-        return if (!ObjectUtil.isNullOrEmpty(robotProtocol)) {
+        val protocol: MiraiProtocol = if (!ObjectUtil.isNullOrEmpty(robotProtocol)) {
             when (robotProtocol) {
                 "1" -> {
                     MiraiProtocol.ANDROID_PAD
@@ -218,6 +217,13 @@ class RobotManager(private val ioDispatcher: CoroutineDispatcher = Dispatchers.I
                     MiraiProtocol.ANDROID_PHONE
                 }
             }
-        } else MiraiProtocol.ANDROID_PHONE
+        } else {
+            MiraiProtocol.ANDROID_PHONE
+        }
+        if (protocol !== MiraiProtocol.ANDROID_WATCH) {
+            FixProtocolVersion.sync(protocol)
+            FixProtocolVersion.load(protocol)
+        }
+        return protocol
     }
 }
