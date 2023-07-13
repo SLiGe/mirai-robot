@@ -37,11 +37,11 @@ class InnerJsonTest {
         param["robot"] = "357078415"
         val encodeToString = JsonUtil.obj2str(param)
         println(encodeToString)
-        println(switchProtocol("2"))
-        println(switchProtocol(""))
-        println(switchProtocol("1"))
-        println(switchProtocol("3"))
         println(switchProtocol("4"))
+        println(switchProtocol("3"))
+        println(switchProtocol("1"))
+        println(switchProtocol(""))
+        println(switchProtocol("2"))
     }
 
     private fun switchProtocol(robotProtocol: String): BotConfiguration.MiraiProtocol {
@@ -70,8 +70,8 @@ class InnerJsonTest {
         } else {
             BotConfiguration.MiraiProtocol.ANDROID_PHONE
         }
-        /*FixProtocolVersion.sync(protocol)
-        FixProtocolVersion.load(protocol)*/
+        FixProtocolVersion.sync(protocol)
+//        FixProtocolVersion.load(protocol)
         println("${protocol}是否支持QR登录${protocol.isQRLoginSupported}")
         return protocol
     }
