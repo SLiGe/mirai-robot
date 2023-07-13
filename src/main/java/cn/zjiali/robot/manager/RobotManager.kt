@@ -220,7 +220,8 @@ class RobotManager(private val ioDispatcher: CoroutineDispatcher = Dispatchers.I
         } else {
             MiraiProtocol.ANDROID_PHONE
         }
-        if (protocol !== MiraiProtocol.ANDROID_WATCH) {
+        val notFixArray = arrayOf(MiraiProtocol.ANDROID_PHONE, MiraiProtocol.ANDROID_PAD)
+        if (notFixArray.contains(protocol)) {
             FixProtocolVersion.sync(protocol)
             FixProtocolVersion.load(protocol)
         }
