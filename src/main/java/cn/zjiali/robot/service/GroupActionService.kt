@@ -33,7 +33,7 @@ class GroupActionService {
     suspend fun doAction(groupAction: GroupAction) {
         val groupNumber = groupAction.groupNumber
         var group: Group? = null
-        val bot = robotManager?.bot
+        val bot = robotManager?.botInstance()
         if (groupAction.actionType != GroupActionType.PULL_GROUP.ordinal) {
             group = bot?.getGroup(groupNumber!!)
             logger.warn("群{} 不存在!", groupNumber)

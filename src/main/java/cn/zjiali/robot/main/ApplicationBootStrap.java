@@ -25,6 +25,7 @@ import cn.zjiali.robot.util.JsonUtil;
 import cn.zjiali.robot.util.PropertiesUtil;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import io.grpc.ManagedChannel;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -132,8 +133,19 @@ public class ApplicationBootStrap {
             WebSocketManager webSocketManager = this.injector.getInstance(WebSocketManager.class);
             webSocketManager.connect();
             commonLogger.info("[WebSocket]====加载完成");
+            hookShutdownWebSocket();
+
         }
 
+    }
+
+    private void hookShutdownWebSocket() {
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            var managedChannel = GuiceUtil.getBean(ManagedChannel.class);
+            managedChannel.shutdown();
+            var webSocketManager = GuiceUtil.getBean(WebSocketManager.class);
+            webSocketManager.close();
+        }));
     }
 
 

@@ -25,7 +25,7 @@ import java.net.URI
 @Singleton
 class WebSocketFactory {
 
-    private lateinit var channel: Channel
+    private var channel: Channel? = null
 
     private val eventLoopGroup = NioEventLoopGroup()
 
@@ -75,7 +75,7 @@ class WebSocketFactory {
     }
 
     fun channel(): Channel {
-        return this.channel
+        return this.channel!!
     }
 
 

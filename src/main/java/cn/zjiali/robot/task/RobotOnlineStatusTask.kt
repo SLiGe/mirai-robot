@@ -20,7 +20,7 @@ import kotlin.system.exitProcess
  */
 class RobotOnlineStatusTask : Runnable {
     private var wsResult: WsResult = WsResult()
-    private val reConnectCount: AtomicInteger= AtomicInteger(1)
+    private val reConnectCount: AtomicInteger = AtomicInteger(1)
     private val logger: Logger = LoggerFactory.getLogger(javaClass)
 
     init {
@@ -31,7 +31,7 @@ class RobotOnlineStatusTask : Runnable {
 
     override fun run() {
         val robotManager = GuiceUtil.getBean(RobotManager::class.java)
-        val online = robotManager.bot!!.isOnline
+        val online = robotManager.botInstance()!!.isOnline
         wsResult.dataJson = """
             {"online":$online}
         """.trimIndent()
