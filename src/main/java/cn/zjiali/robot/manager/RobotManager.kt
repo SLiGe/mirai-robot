@@ -31,6 +31,7 @@ import net.mamoe.mirai.utils.BotConfiguration.MiraiProtocol
 import xyz.cssxsh.mirai.tool.FixProtocolVersion
 import xyz.cssxsh.mirai.tool.FixProtocolVersion.info
 import xyz.cssxsh.mirai.tool.FixProtocolVersion.update
+import xyz.cssxsh.mirai.tool.KFCFactory
 import java.io.File
 import java.io.InputStream
 import java.nio.file.Files
@@ -69,6 +70,9 @@ class RobotManager(private val ioDispatcher: CoroutineDispatcher = Dispatchers.I
         val qq = Objects.requireNonNull(AppConfig.applicationConfig.qq)!!.toLong()
         val password = AppConfig.applicationConfig.password!!
         update()
+        // 获取 8.9.63 版本协议
+        FixProtocolVersion.fetch(MiraiProtocol.ANDROID_PHONE, "8.9.58");
+        KFCFactory.install()
         val botConfiguration = BotConfiguration()
         //设置登录解决器
         //设置登录解决器

@@ -21,10 +21,11 @@
         <lombok.version>1.18.24</lombok.version>
         <junit.version>4.13.2</junit.version>
         <guice.version>5.1.0</guice.version>
-        <fix-protocol-version.version>1.9.4</fix-protocol-version.version>
+        <fix-protocol-version.version>1.9.10</fix-protocol-version.version>
         <okhttp.version>4.10.0</okhttp.version>
         <slf4j.version>2.0.7</slf4j.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <async-http-client.version>2.12.3</async-http-client.version>
     </properties>
 
     <dependencies>
@@ -43,6 +44,11 @@
             <groupId>xyz.cssxsh.mirai</groupId>
             <artifactId>fix-protocol-version</artifactId>
             <version>${fix-protocol-version.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.asynchttpclient</groupId>
+            <artifactId>async-http-client</artifactId>
+            <version>${async-http-client.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
