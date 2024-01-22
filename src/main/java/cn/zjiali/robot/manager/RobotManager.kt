@@ -38,6 +38,7 @@ import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.StandardOpenOption
 import java.util.*
+import kotlin.math.log
 
 private const val ROBOT_WORKDIR = "robot.workdir"
 
@@ -69,7 +70,7 @@ class RobotManager(private val ioDispatcher: CoroutineDispatcher = Dispatchers.I
         this.botInstance?.close()
         val qq = Objects.requireNonNull(AppConfig.applicationConfig.qq)!!.toLong()
         val password = AppConfig.applicationConfig.password!!
-        update()
+        //update()
         // 获取 8.9.63 版本协议
         FixProtocolVersion.fetch(MiraiProtocol.ANDROID_PHONE, "8.9.58");
         KFCFactory.install()
@@ -90,6 +91,7 @@ class RobotManager(private val ioDispatcher: CoroutineDispatcher = Dispatchers.I
         } else {
             newBot(qq, password, botConfiguration)
         }
+        logger.info("签名信息: {} ",FixProtocolVersion.info())
         bot.login()
         RobotApplication.initLatch.countDown()
         val eventChannel = bot.eventChannel
